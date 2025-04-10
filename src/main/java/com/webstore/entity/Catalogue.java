@@ -1,10 +1,18 @@
 package com.webstore.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "catalogue", schema = "web_store")
+@Data // Generates getters, setters, toString, equals, and hashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder // Optional: for builder pattern
 public class Catalogue {
 
     @Id
@@ -19,73 +27,17 @@ public class Catalogue {
     @Column(name = "catalogue_description")
     private String catalogueDescription;
 
-    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "created_by")
     private String createdBy;
 
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(name = "updated_by")
     private String updatedBy;
-
-    // Getters and Setters
-
-    public Integer getCatalogueId() {
-        return catalogueId;
-    }
-
-    public void setCatalogueId(Integer catalogueId) {
-        this.catalogueId = catalogueId;
-    }
-
-    public String getCatalogueName() {
-        return catalogueName;
-    }
-
-    public void setCatalogueName(String catalogueName) {
-        this.catalogueName = catalogueName;
-    }
-
-    public String getCatalogueDescription() {
-        return catalogueDescription;
-    }
-
-    public void setCatalogueDescription(String catalogueDescription) {
-        this.catalogueDescription = catalogueDescription;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
 }
