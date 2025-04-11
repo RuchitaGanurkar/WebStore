@@ -21,8 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
 
 @Data
 @Entity
@@ -41,7 +40,6 @@ public class Product {
     @Column(name = "product_description", length = 100)
     private String productDescription;
 
-    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
@@ -60,19 +58,9 @@ public class Product {
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<ProductPrice> productPrices = new HashSet<>();
 
-    // Helper methods for bidirectional relationship
-    public void addProductPrice(ProductPrice productPrice) {
-        this.productPrices.add(productPrice);
-        productPrice.setProduct(this);
-    }
 
-    public void removeProductPrice(ProductPrice productPrice) {
-        this.productPrices.remove(productPrice);
-        productPrice.setProduct(null);
-    }
 }

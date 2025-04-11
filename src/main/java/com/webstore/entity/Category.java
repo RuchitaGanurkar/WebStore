@@ -19,8 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
 
 @Data
 @Entity
@@ -53,34 +52,12 @@ public class Category {
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<>();
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CatalogueCategory> catalogueCategories = new HashSet<>();
 
-    // Helper methods for bidirectional relationship
-    public void addProduct(Product product) {
-        this.products.add(product);
-        product.setCategory(this);
-    }
-
-    public void removeProduct(Product product) {
-        this.products.remove(product);
-        product.setCategory(null);
-    }
-
-    public void addCatalogueCategory(CatalogueCategory catalogueCategory) {
-        this.catalogueCategories.add(catalogueCategory);
-        catalogueCategory.setCategory(this);
-    }
-
-    public void removeCatalogueCategory(CatalogueCategory catalogueCategory) {
-        this.catalogueCategories.remove(catalogueCategory);
-        catalogueCategory.setCategory(null);
-    }
 }
