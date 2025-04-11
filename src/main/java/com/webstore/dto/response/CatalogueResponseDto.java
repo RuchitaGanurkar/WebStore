@@ -7,14 +7,13 @@ import com.webstore.dto.request.CategoryRequestDto;
 import lombok.Data;
 
 @Data
-public class ProductResponseDto {
-    private Integer productId;
-    private String productName;
-    private String productDescription;
-    private CategoryRequestDto category;
+public class CatalogueResponseDto {
+    private Integer catalogueId;
+    private String catalogueName;
+    private String catalogueDescription;
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
-    private List<ProductPriceResponseDto> prices;
+    private List<CategoryRequestDto> categories;
 }
