@@ -13,4 +13,7 @@ public class ProductResponseDto {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+
+    public void setCategoryName(String categoryName) {
+    }
 }
