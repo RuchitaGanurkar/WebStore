@@ -127,7 +127,8 @@ VALUES
 INSERT INTO web_store.users (username, email, full_name, role)
 VALUES
     ('admin', 'admin@webstore.com', 'Admin User', 'ADMIN'),
-    ('user1', 'user1@example.com', 'Test User', 'USER');
+    ('user1', 'user1@example.com', 'Test User', 'USER'),
+    ('system', 'system@example.com', 'System User', 'SYSTEM');
 
 -- Insert test data for Catalogue
 INSERT INTO web_store.catalogue (catalogue_name, catalogue_description, created_by, updated_by)
