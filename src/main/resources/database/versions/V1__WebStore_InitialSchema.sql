@@ -94,17 +94,18 @@ CREATE TABLE IF NOT EXISTS web_store.product_price (
 
 -- Create Catalogue_Category Table
 CREATE TABLE IF NOT EXISTS web_store.catalogue_category (
+    catalogue_category_id INT NOT NULL DEFAULT nextval('web_store.seq_catalogue_category_id') PRIMARY KEY,
     catalogue_id INT NOT NULL,
     category_id INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(50),
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by VARCHAR(50),
-    PRIMARY KEY (catalogue_id, category_id),
     CONSTRAINT fk_catalogue_category_catalogue
         FOREIGN KEY (catalogue_id) REFERENCES web_store.catalogue (catalogue_id) ON DELETE CASCADE,
     CONSTRAINT fk_catalogue_category_category
-        FOREIGN KEY (category_id) REFERENCES web_store.category (category_id) ON DELETE CASCADE
+        FOREIGN KEY (category_id) REFERENCES web_store.category (category_id) ON DELETE CASCADE,
+    CONSTRAINT uq_catalogue_category UNIQUE (catalogue_id , category_id)
 );
 
 -- Create indexes for better query performance
