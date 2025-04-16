@@ -8,6 +8,7 @@ import jakarta.persistence.MappedSuperclass;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Getter;
@@ -31,6 +32,7 @@ public abstract class BasicEntities {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @LastModifiedBy
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
 }

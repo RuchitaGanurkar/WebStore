@@ -1,6 +1,5 @@
 package com.webstore.entity;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,15 +14,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import lombok.EqualsAndHashCode;
 import lombok.Data;
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "catalogue", schema = "web_store")
-public class Catalogue {
+public class Catalogue extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "catalogue_generator")
@@ -36,20 +34,6 @@ public class Catalogue {
 
     @Column(name = "catalogue_description", length = 255)
     private String catalogueDescription;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
 
     @OneToMany(mappedBy = "catalogue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CatalogueCategory> catalogueCategories = new HashSet<>();

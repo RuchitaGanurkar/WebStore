@@ -1,6 +1,5 @@
 package com.webstore.entity;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,16 +14,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.EqualsAndHashCode;
 
 import lombok.Data;
 
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "category", schema = "web_store")
-public class Category {
+public class Category extends BasicEntities  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_generator")
@@ -38,24 +37,8 @@ public class Category {
     @Column(name = "category_description", length = 100)
     private String categoryDescription;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
-
-
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<>();
-
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CatalogueCategory> catalogueCategories = new HashSet<>();

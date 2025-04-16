@@ -1,7 +1,5 @@
 package com.webstore.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,13 +12,12 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import lombok.EqualsAndHashCode;
 import lombok.Data;
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(
         name = "product_price",
         schema = "web_store",
@@ -29,7 +26,7 @@ import lombok.Data;
                 columnNames = {"product_id", "currency_id"}
         )
 )
-public class ProductPrice {
+public class ProductPrice extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_price_generator")
@@ -50,17 +47,4 @@ public class ProductPrice {
     @Column(name = "price_amount", nullable = false)
     private Long priceAmount;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
 }

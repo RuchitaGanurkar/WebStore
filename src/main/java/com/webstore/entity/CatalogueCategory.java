@@ -1,7 +1,5 @@
 package com.webstore.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,13 +12,12 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import lombok.EqualsAndHashCode;
 import lombok.Data;
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(
         name = "catalogue_category",
         schema = "web_store",
@@ -29,7 +26,7 @@ import lombok.Data;
                 columnNames = {"catalogue_id", "category_id"}
         )
 )
-public class CatalogueCategory {
+public class CatalogueCategory extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "catalogue_category_generator")
@@ -47,17 +44,4 @@ public class CatalogueCategory {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
 }
