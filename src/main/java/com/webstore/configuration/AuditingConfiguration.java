@@ -15,10 +15,10 @@ public class AuditingConfiguration {
 
     @Bean
     public AuditorAware<String> auditorProvider() {
-        return new AuditorAwareImpl();
+        return new AuditorAwareImplementation();
     }
 
-    public static class AuditorAwareImpl implements AuditorAware<String> {
+    public static class AuditorAwareImplementation implements AuditorAware<String> {
         @Override
         public Optional<String> getCurrentAuditor() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
