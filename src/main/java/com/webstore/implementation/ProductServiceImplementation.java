@@ -1,65 +1,110 @@
 package com.webstore.implementation;
 
+import com.webstore.dto.request.CategoryRequestDto;
+import com.webstore.dto.request.ProductRequestDto;
 import com.webstore.dto.response.ProductResponseDto;
+import com.webstore.entity.Category;
 import com.webstore.entity.Product;
+import com.webstore.repository.CategoryRepository;
 import com.webstore.repository.ProductRepository;
 import com.webstore.service.ProductService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ProductServiceImplementation implements ProductService {
-        private final ProductRepository productRepository;
 
-        @Override
-        @Transactional(readOnly = true)
+    @Autowired
+    private ProductRepository productRepository;
 
-        public List<ProductResponseDto> getAllProducts() {
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-            List<Product> products = productRepository.findAll();
+    @Override
+    public ProductResponseDto createProduct(ProductRequestDto dto) {
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
-            if (products.isEmpty()) {
-                System.out.println("No products found in the database");
-                return Collections.emptyList();
-            }
+        Product product = new Product();
+        product.setProductName(dto.getProductName());
+        product.setProductDescription(dto.getProductDescription());
+        product.setCategory(category);
+        product.setCreatedBy(dto.getCreatedBy());
+        product.setCreatedAt(LocalDateTime.now());
+        product.setUpdatedAt(LocalDateTime.now());
+        product.setUpdatedBy(dto.getCreatedBy());
 
-            List<ProductResponseDto> responseDtos = new ArrayList<>();
-
-            for (Product product : products) {
-                ProductResponseDto dto = new ProductResponseDto();
-                dto.setProductId(product.getProductId());
-                dto.setProductName(product.getProductName());
-                dto.setProductDescription(product.getProductDescription());
-                dto.setCreatedAt(product.getCreatedAt());
-                dto.setCreatedBy(product.getCreatedBy());
-                dto.setUpdatedAt(product.getUpdatedAt());
-                dto.setUpdatedBy(product.getUpdatedBy());
-                dto.setPrices(new ArrayList<>());
-
-                responseDtos.add(dto);
-            }
-
-            System.out.println("Fetching All Products");
-            for (ProductResponseDto dto : responseDtos) {
-                System.out.println("  {");
-                System.out.println("    \"productId\": " + dto.getProductId() + ",");
-                System.out.println("    \"productName\": \"" + dto.getProductName() + "\",");
-                System.out.println("    \"productDescription\": \"" + dto.getProductDescription() + "\",");
-                System.out.println("    \"createdAt\": \"" + dto.getCreatedAt() + "\",");
-                System.out.println("    \"createdBy\": \"" + dto.getCreatedBy() + "\",");
-                System.out.println("    \"updatedAt\": \"" + dto.getUpdatedAt() + "\",");
-                System.out.println("    \"updatedBy\": \"" + dto.getUpdatedBy() + "\"");
-                System.out.println("  }");
-            }
-
-
-            return responseDtos;
-        }
+        Product saved = productRepository.save(product);
+        return convertToDto(saved);
     }
+
+    @Override
+    public List<ProductResponseDto> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductResponseDto updateProduct(Integer id, ProductRequestDto dto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        product.setProductName(dto.getProductName());
+        product.setProductDescription(dto.getProductDescription());
+        product.setCategory(category);
+        product.setUpdatedAt(LocalDateTime.now());
+        product.setUpdatedBy(dto.getCreatedBy());
+
+        return convertToDto(productRepository.save(product));
+    }
+
+    @Override
+    public ProductResponseDto getProductById(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        return convertToDto(product);
+    }
+
+    @Override
+    public void deleteProduct(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        productRepository.delete(product);
+    }
+
+    private ProductResponseDto convertToDto(Product product) {
+        ProductResponseDto dto = new ProductResponseDto();
+        dto.setProductId(product.getProductId());
+        dto.setProductName(product.getProductName());
+        dto.setProductDescription(product.getProductDescription());
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setUpdatedAt(product.getUpdatedAt());
+        dto.setCreatedBy(product.getCreatedBy());
+        dto.setUpdatedBy(product.getUpdatedBy());
+
+        Category category = product.getCategory();
+        if (category != null) {
+            CategoryRequestDto categoryDto = new CategoryRequestDto();
+            categoryDto.setCategoryId(category.getCategoryId());
+            categoryDto.setCategoryName(category.getCategoryName());
+            categoryDto.setCategoryDescription(category.getCategoryDescription());
+            categoryDto.setCreatedBy(category.getCreatedBy());
+
+            dto.setCategory(categoryDto);
+        }
+
+        return dto;
+    }
+}
+
