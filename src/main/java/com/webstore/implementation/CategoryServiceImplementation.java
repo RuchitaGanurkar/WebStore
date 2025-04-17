@@ -5,6 +5,7 @@ import com.webstore.dto.response.CategoryResponseDto;
 import com.webstore.entity.Category;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.service.CategoryService;
+import com.webstore.util.AuthUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,21 +32,20 @@ public class CategoryServiceImplementation implements CategoryService {
         Category category = new Category();
         category.setCategoryName(dto.getCategoryName());
         category.setCategoryDescription(dto.getCategoryDescription());
-        category.setCreatedBy(dto.getCreatedBy());
-        category.setUpdatedBy(dto.getCreatedBy());
+
+        String currentUser = AuthUtils.getCurrentUsername();
+        category.setCreatedBy(currentUser);
+        category.setUpdatedBy(currentUser);
 
         return mapToResponse(categoryRepository.save(category));
     }
 
     @Override
     public List<CategoryResponseDto> getAllCategories(int page, int size) {
-
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
 
-
-        return categoryRepository.findAll()
-                .stream()
+        return categoryPage.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -69,7 +69,7 @@ public class CategoryServiceImplementation implements CategoryService {
 
         category.setCategoryName(dto.getCategoryName());
         category.setCategoryDescription(dto.getCategoryDescription());
-        category.setUpdatedBy(dto.getCreatedBy());
+        category.setUpdatedBy(AuthUtils.getCurrentUsername());
 
         return mapToResponse(categoryRepository.save(category));
     }

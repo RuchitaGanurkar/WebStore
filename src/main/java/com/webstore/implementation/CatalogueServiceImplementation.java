@@ -5,6 +5,7 @@ import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.entity.Catalogue;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.service.CatalogueService;
+import com.webstore.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,10 @@ public class CatalogueServiceImplementation implements CatalogueService {
         Catalogue catalogue = new Catalogue();
         catalogue.setCatalogueName(dto.getCatalogueName());
         catalogue.setCatalogueDescription(dto.getCatalogueDescription());
-        catalogue.setCreatedBy(dto.getCreatedBy());
-        catalogue.setUpdatedBy(dto.getCreatedBy());
+
+        String currentUser = AuthUtils.getCurrentUsername(); // 🔑 Fetch user
+        catalogue.setCreatedBy(currentUser);
+        catalogue.setUpdatedBy(currentUser);
 
         return convertToDto(catalogueRepository.save(catalogue));
     }
@@ -52,7 +55,7 @@ public class CatalogueServiceImplementation implements CatalogueService {
 
         catalogue.setCatalogueName(dto.getCatalogueName());
         catalogue.setCatalogueDescription(dto.getCatalogueDescription());
-        catalogue.setUpdatedBy(dto.getCreatedBy());
+        catalogue.setUpdatedBy(AuthUtils.getCurrentUsername());
 
         return convertToDto(catalogueRepository.save(catalogue));
     }

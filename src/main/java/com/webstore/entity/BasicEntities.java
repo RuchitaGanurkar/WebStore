@@ -1,4 +1,5 @@
 package com.webstore.entity;
+
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;

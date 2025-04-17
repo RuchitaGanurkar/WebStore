@@ -4,6 +4,7 @@ import com.webstore.dto.request.CurrencyRequestDto;
 import com.webstore.dto.response.CurrencyResponseDto;
 import com.webstore.service.CurrencyService;
 import jakarta.validation.Valid;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,21 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Setter
 @RestController
 @RequestMapping("api/currencies")
 public class CurrencyController {
 
-    private final CurrencyService currencyService;
+    // ✅ Setter Injection (replaces @Autowired constructor)
+    private CurrencyService currencyService;
 
     @Autowired
-    public CurrencyController(CurrencyService currencyService) {
+    public void setCurrencyService(CurrencyService currencyService) {
         this.currencyService = currencyService;
     }
-
-//  page=0, size=2 gives you currencies 1-5
-//  page=1, size=2 gives you currencies 6-10
-//  page=2, size=2 gives you currencies 11-15
-
     @GetMapping
     public ResponseEntity<List<CurrencyResponseDto>> getAllCurrencies(
             @RequestParam(defaultValue = "0") int page,

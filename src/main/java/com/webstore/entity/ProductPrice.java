@@ -1,5 +1,7 @@
 package com.webstore.entity;
 
+import static com.webstore.DatabaseConstants.SCHEMA_NAME;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +13,7 @@ import java.math.BigInteger;
 @EqualsAndHashCode(callSuper = true)
 @Table(
         name = "product_price",
-        schema = "web_store",
+        schema = SCHEMA_NAME,
         uniqueConstraints = @UniqueConstraint(
                 name = "uk_product_currency",
                 columnNames = {"product_id", "currency_id"}
@@ -21,7 +23,11 @@ public class ProductPrice extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_price_generator")
-    @SequenceGenerator(name = "product_price_generator", sequenceName = "web_store.seq_product_price_id", allocationSize = 1)
+    @SequenceGenerator(
+            name = "product_price_generator",
+            sequenceName = SCHEMA_NAME + ".seq_product_price_id",
+            allocationSize = 1
+    )
     @Column(name = "product_price_id")
     private Integer productPriceId;
 

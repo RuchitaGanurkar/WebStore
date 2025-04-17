@@ -1,25 +1,24 @@
 package com.webstore.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import static com.webstore.DatabaseConstants.SCHEMA_NAME;
 
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "currency", schema = "web_store")
+@Table(name = "currency", schema = SCHEMA_NAME)
 public class Currency extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_generator")
-    @SequenceGenerator(name = "currency_generator", sequenceName = "web_store.seq_currency_id", allocationSize = 1)
+    @SequenceGenerator(
+            name = "currency_generator",
+            sequenceName = SCHEMA_NAME + ".seq_currency_id",
+            allocationSize = 1
+    )
     @Column(name = "currency_id")
     private Integer currencyId;
 
@@ -31,5 +30,4 @@ public class Currency extends BasicEntities {
 
     @Column(name = "currency_symbol", length = 5, nullable = false)
     private String currencySymbol;
-
 }

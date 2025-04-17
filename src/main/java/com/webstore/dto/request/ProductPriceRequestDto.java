@@ -21,9 +21,9 @@ public class ProductPriceRequestDto {
     @Digits(integer = 12, fraction = 0, groups = ProductPriceValidation.class, message = "Price amount must be in paise as whole number")
     private BigInteger priceAmount;
 
-    @NotNull(groups = ProductPriceValidation.class, message = "Created by is required")
-    @NotBlank(groups = ProductPriceValidation.class, message = "Created by should not be blank")
-    @Size(min = 3, max = 50, groups = ProductPriceValidation.class, message = "Created by must be between 3 and 50 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9._-]+$", groups = ProductPriceValidation.class, message = "Created by can only contain letters, numbers, dots, underscores and hyphens")
-    private String createdBy;
+//    @NotNull(groups = ProductPriceValidation.class, message = "Created by is required")
+//    @NotBlank(groups = ProductPriceValidation.class, message = "Created by should not be blank")
+//    @Size(min = 3, max = 50, groups = ProductPriceValidation.class, message = "Created by must be between 3 and 50 characters")
+//    @Pattern(regexp = "^[a-zA-Z0-9._-]+$", groups = ProductPriceValidation.class, message = "Created by can only contain letters, numbers, dots, underscores and hyphens")
+//    private String createdBy;
 }

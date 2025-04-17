@@ -9,27 +9,42 @@ import com.webstore.repository.CategoryRepository;
 import com.webstore.repository.ProductRepository;
 import com.webstore.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImplementation implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional
+
+    public void deleteProductById(Integer id) {
+        log.info("Deleting product by ID (deleteProductById): {}", id);
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id));
+
+        productRepository.delete(product);
+
+        log.info("Product with ID: {} has been deleted via deleteProductById", id);
+    }
+
     public ProductResponseDto createProduct(ProductRequestDto dto) {
+        log.info("Creating product with name: {}", dto.getProductName());
+
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
@@ -37,17 +52,21 @@ public class ProductServiceImplementation implements ProductService {
         product.setProductName(dto.getProductName());
         product.setProductDescription(dto.getProductDescription());
         product.setCategory(category);
-        product.setCreatedBy(dto.getCreatedBy());
+//        product.setCreatedBy(dto.getCreatedBy());
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
-        product.setUpdatedBy(dto.getCreatedBy());
+//        product.setUpdatedBy(dto.getCreatedBy());
 
         Product saved = productRepository.save(product);
+        log.info("Product created with ID: {}", saved.getProductId());
+
         return convertToDto(saved);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
+        log.info("Fetching all products");
         return productRepository.findAll()
                 .stream()
                 .map(this::convertToDto)
@@ -55,7 +74,10 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponseDto updateProduct(Integer id, ProductRequestDto dto) {
+        log.info("Updating product with ID: {}", id);
+
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
@@ -66,34 +88,37 @@ public class ProductServiceImplementation implements ProductService {
         product.setProductDescription(dto.getProductDescription());
         product.setCategory(category);
         product.setUpdatedAt(LocalDateTime.now());
-        product.setUpdatedBy(dto.getCreatedBy());
+//        product.setUpdatedBy(dto.getCreatedBy());
 
-        return convertToDto(productRepository.save(product));
+        Product updated = productRepository.save(product);
+        log.info("Product with ID: {} updated successfully", id);
+
+        return convertToDto(updated);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductResponseDto getProductById(Integer id) {
+        log.info("Fetching product with ID: {}", id);
+
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
         return convertToDto(product);
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Integer id) {
+        log.info("Deleting product with ID: {}", id);
+
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        productRepository.delete(product);
-    }
-    @Transactional
-    @Override
-    public void deleteProductById(Integer id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
 
-        // This is now safe if cascade and orphanRemoval are set
         productRepository.delete(product);
-    }
 
+        log.info("Product with ID: {} has been deleted", id);
+    }
 
     private ProductResponseDto convertToDto(Product product) {
         ProductResponseDto dto = new ProductResponseDto();
@@ -105,18 +130,16 @@ public class ProductServiceImplementation implements ProductService {
         dto.setCreatedBy(product.getCreatedBy());
         dto.setUpdatedBy(product.getUpdatedBy());
 
-        Category category = product.getCategory();
-        if (category != null) {
+        if (product.getCategory() != null) {
+            Category category = product.getCategory();
             CategoryRequestDto categoryDto = new CategoryRequestDto();
             categoryDto.setCategoryId(category.getCategoryId());
             categoryDto.setCategoryName(category.getCategoryName());
             categoryDto.setCategoryDescription(category.getCategoryDescription());
-            categoryDto.setCreatedBy(category.getCreatedBy());
-
+//            categoryDto.setCreatedBy(category.getCreatedBy());
             dto.setCategory(categoryDto);
         }
 
         return dto;
     }
 }
-

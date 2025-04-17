@@ -3,26 +3,31 @@ package com.webstore.controller;
 import com.webstore.dto.request.CategoryRequestDto;
 import com.webstore.dto.response.CategoryResponseDto;
 import com.webstore.service.CategoryService;
+import jakarta.validation.Valid;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Setter
 @RestController
 @RequestMapping("api/categories")
 public class CategoryController {
 
-    @Autowired
+    // ✅ Setter Injection (preferred over @Autowired)
     private CategoryService categoryService;
+    @Autowired
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDto>> getAllCategories(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size)
-    {
+            @RequestParam(defaultValue = "5") int size) {
 
         List<CategoryResponseDto> categories = categoryService.getAllCategories(page, size);
         return ResponseEntity.ok(categories);
@@ -34,9 +39,8 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-
     @PostMapping
-    public ResponseEntity <CategoryResponseDto> createCategory(@RequestBody @Valid CategoryRequestDto dto) {
+    public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody @Valid CategoryRequestDto dto) {
         CategoryResponseDto createdCategory = categoryService.createCategory(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
     }
@@ -53,6 +57,4 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }

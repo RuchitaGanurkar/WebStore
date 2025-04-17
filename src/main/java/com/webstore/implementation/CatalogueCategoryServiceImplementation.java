@@ -1,4 +1,4 @@
-package com.webstore.service.serviceImplementation;
+package com.webstore.implementation;
 
 import com.webstore.dto.request.CatalogueCategoryRequestDto;
 import com.webstore.dto.response.CatalogueCategoryResponseDto;
@@ -9,6 +9,7 @@ import com.webstore.repository.CatalogueCategoryRepository;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.service.CatalogueCategoryService;
+import com.webstore.util.AuthUtils; // <-- Make sure to import this
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,13 @@ public class CatalogueCategoryServiceImplementation implements CatalogueCategory
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
 
+        String currentUsername = AuthUtils.getCurrentUsername(); // 🔑 Get from token
+
         CatalogueCategory catalogueCategory = new CatalogueCategory();
         catalogueCategory.setCatalogue(catalogue);
         catalogueCategory.setCategory(category);
-        catalogueCategory.setCreatedBy(dto.getCreatedBy());
-        catalogueCategory.setUpdatedBy(dto.getCreatedBy());
+        catalogueCategory.setCreatedBy(currentUsername); // 👈 No longer from DTO
+        catalogueCategory.setUpdatedBy(currentUsername);
 
         catalogueCategoryRepository.save(catalogueCategory);
 

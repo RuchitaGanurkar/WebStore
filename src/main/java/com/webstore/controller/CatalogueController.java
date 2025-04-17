@@ -4,18 +4,18 @@ import com.webstore.dto.request.CatalogueRequestDto;
 import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.service.CatalogueService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/catalogues")
 public class CatalogueController {
 
-    @Autowired
-    private CatalogueService catalogueService;
+    private final CatalogueService catalogueService;
 
     @PostMapping
     public ResponseEntity<CatalogueResponseDto> createCatalogue(@RequestBody @Valid CatalogueRequestDto dto) {

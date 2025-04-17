@@ -2,11 +2,14 @@ package com.webstore.implementation;
 
 import com.webstore.dto.request.ProductPriceRequestDto;
 import com.webstore.dto.response.ProductPriceResponseDto;
-import com.webstore.entity.*;
+import com.webstore.entity.Currency;
+import com.webstore.entity.Product;
+import com.webstore.entity.ProductPrice;
 import com.webstore.repository.*;
 import com.webstore.service.ProductPriceService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductPriceServiceImplementation implements ProductPriceService {
@@ -26,8 +30,7 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
     @Override
     @Transactional
     public ProductPriceResponseDto createProductPrice(ProductPriceRequestDto request) {
-        System.out.printf("Creating product price for productId: %s and currencyId: %s%n",
-                request.getProductId(), request.getCurrencyId());
+        log.info("Creating product price for productId={} and currencyId={}", request.getProductId(), request.getCurrencyId());
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + request.getProductId()));
@@ -42,8 +45,8 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
             throw new IllegalArgumentException("Price already exists for this product and currency combination");
         }
 
-        if (request.getPriceAmount().compareTo(BigInteger.ZERO) < 0) {
-            throw new IllegalArgumentException("Price amount cannot be negative");
+        if (request.getPriceAmount() == null || request.getPriceAmount().compareTo(BigInteger.ZERO) < 0) {
+            throw new IllegalArgumentException("Price amount must be non-null and non-negative");
         }
 
         ProductPrice productPrice = new ProductPrice();
@@ -52,7 +55,7 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         productPrice.setPriceAmount(request.getPriceAmount());
 
         ProductPrice savedProductPrice = productPriceRepository.save(productPrice);
-        System.out.printf("Product price created with id: %s%n", savedProductPrice.getProductPriceId());
+        log.info("Product price created with id={}", savedProductPrice.getProductPriceId());
 
         return mapToResponseDto(savedProductPrice);
     }
@@ -60,7 +63,7 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
     @Override
     @Transactional(readOnly = true)
     public ProductPriceResponseDto getProductPriceById(Integer id) {
-        System.out.printf("Fetching product price with id: %s%n", id);
+        log.info("Fetching product price with id={}", id);
 
         ProductPrice productPrice = productPriceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product price not found with id: " + id));
@@ -71,10 +74,10 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
     @Override
     @Transactional
     public ProductPriceResponseDto updateProductPrice(Integer id, BigInteger priceAmount) {
-        System.out.printf("Updating product price with id: %s to new amount: %s%n", id, priceAmount);
+        log.info("Updating product price with id={} to new amount={}", id, priceAmount);
 
-        if (priceAmount.compareTo(BigInteger.ZERO) < 0) {
-            throw new IllegalArgumentException("Price amount cannot be negative");
+        if (priceAmount == null || priceAmount.compareTo(BigInteger.ZERO) < 0) {
+            throw new IllegalArgumentException("Price amount must be non-null and non-negative");
         }
 
         ProductPrice productPrice = productPriceRepository.findById(id)
@@ -83,20 +86,21 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         productPrice.setPriceAmount(priceAmount);
         ProductPrice updatedProductPrice = productPriceRepository.save(productPrice);
 
+        log.info("Updated price for productPriceId={} successfully", id);
         return mapToResponseDto(updatedProductPrice);
     }
 
     @Override
     @Transactional
     public void deleteProductPrice(Integer id) {
-        System.out.printf("Deleting product price with id: %s%n", id);
+        log.info("Deleting product price with id={}", id);
 
         ProductPrice productPrice = productPriceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product price not found with id: " + id));
 
         productPriceRepository.delete(productPrice);
 
-        System.out.printf("Product price with id: %s has been deleted%n", id);
+        log.info("Product price with id={} has been deleted", id);
     }
 
     private ProductPriceResponseDto mapToResponseDto(ProductPrice productPrice) {
@@ -110,7 +114,8 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         responseDto.setPriceAmount(productPrice.getPriceAmount());
 
         String formattedPrice = formatPrice(productPrice.getPriceAmount(), productPrice.getCurrency().getCurrencySymbol());
-        System.out.printf("Formatted price for display: %s%n", formattedPrice);
+        log.info("Formatted price for display: {}", formattedPrice);
+        responseDto.setFormattedPrice(formattedPrice);
 
         responseDto.setCreatedAt(productPrice.getCreatedAt());
         responseDto.setCreatedBy(productPrice.getCreatedBy());

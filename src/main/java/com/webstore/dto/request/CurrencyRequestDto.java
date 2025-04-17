@@ -24,8 +24,8 @@ public class CurrencyRequestDto {
     @Size(min = 1, max = 5, groups = CurrencyValidation.class, message = "Currency symbol must be between 1 and 5 characters")
     private String currencySymbol;
 
-    @NotNull(groups = CurrencyValidation.class, message = "Created by is required")
-    @NotBlank(groups = CurrencyValidation.class, message = "Created by should not be blank")
-    private String createdBy;
+//    @NotNull(groups = CurrencyValidation.class, message = "Created by is required")
+//    @NotBlank(groups = CurrencyValidation.class, message = "Created by should not be blank")
+//    private String createdBy;
 
 }

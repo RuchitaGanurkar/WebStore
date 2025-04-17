@@ -17,4 +17,7 @@ public class ProductPriceResponseDto {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+
+    public void setFormattedPrice(String formattedPrice) {
+    }
 }

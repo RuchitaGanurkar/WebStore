@@ -4,6 +4,7 @@ import com.webstore.dto.request.ProductRequestDto;
 import com.webstore.dto.response.ProductResponseDto;
 import com.webstore.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Setter
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
+    // ✅ Setter injection with NO @Autowired
     private ProductService productService;
 
+    @Autowired // ✅ This is REQUIRED
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
     @PostMapping
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto dto) {
         ProductResponseDto createdProduct = productService.createProduct(dto);
