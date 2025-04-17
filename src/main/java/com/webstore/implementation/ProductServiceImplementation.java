@@ -8,6 +8,8 @@ import com.webstore.entity.Product;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.repository.ProductRepository;
 import com.webstore.service.ProductService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,16 @@ public class ProductServiceImplementation implements ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         productRepository.delete(product);
     }
+    @Transactional
+    @Override
+    public void deleteProductById(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+
+        // This is now safe if cascade and orphanRemoval are set
+        productRepository.delete(product);
+    }
+
 
     private ProductResponseDto convertToDto(Product product) {
         ProductResponseDto dto = new ProductResponseDto();

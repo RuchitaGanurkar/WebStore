@@ -3,7 +3,6 @@ package com.webstore.implementation;
 import com.webstore.dto.request.ProductPriceRequestDto;
 import com.webstore.dto.response.ProductPriceResponseDto;
 import com.webstore.entity.*;
-import com.webstore.entity.Currency;
 import com.webstore.repository.*;
 import com.webstore.service.ProductPriceService;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,8 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +29,12 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         System.out.printf("Creating product price for productId: %s and currencyId: %s%n",
                 request.getProductId(), request.getCurrencyId());
 
-        // Validate product exists
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + request.getProductId()));
 
-        // Validate currency exists
         Currency currency = currencyRepository.findById(request.getCurrencyId())
                 .orElseThrow(() -> new EntityNotFoundException("Currency not found with id: " + request.getCurrencyId()));
 
-        // Check for duplicate product-currency combination
         Optional<ProductPrice> existingPrice = productPriceRepository
                 .findByProductProductIdAndCurrencyCurrencyId(request.getProductId(), request.getCurrencyId());
 
@@ -45,12 +42,10 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
             throw new IllegalArgumentException("Price already exists for this product and currency combination");
         }
 
-        // Validate price (no negative values)
-        if (request.getPriceAmount() < 0) {
+        if (request.getPriceAmount().compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("Price amount cannot be negative");
         }
 
-        // Create new product price
         ProductPrice productPrice = new ProductPrice();
         productPrice.setProduct(product);
         productPrice.setCurrency(currency);
@@ -75,11 +70,10 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
 
     @Override
     @Transactional
-    public ProductPriceResponseDto updateProductPrice(Integer id, Long priceAmount) {
+    public ProductPriceResponseDto updateProductPrice(Integer id, BigInteger priceAmount) {
         System.out.printf("Updating product price with id: %s to new amount: %s%n", id, priceAmount);
 
-        // Validate price
-        if (priceAmount < 0) {
+        if (priceAmount.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("Price amount cannot be negative");
         }
 
@@ -115,10 +109,20 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         responseDto.setCurrencySymbol(productPrice.getCurrency().getCurrencySymbol());
         responseDto.setPriceAmount(productPrice.getPriceAmount());
 
-        // Format display price (assuming price is stored in smallest units)
-        String formattedPrice = productPrice.getCurrency().getCurrencySymbol() +
-                String.format("%.2f", productPrice.getPriceAmount() / 100.0);
+        String formattedPrice = formatPrice(productPrice.getPriceAmount(), productPrice.getCurrency().getCurrencySymbol());
+        System.out.printf("Formatted price for display: %s%n", formattedPrice);
+
+        responseDto.setCreatedAt(productPrice.getCreatedAt());
+        responseDto.setCreatedBy(productPrice.getCreatedBy());
+        responseDto.setUpdatedAt(productPrice.getUpdatedAt());
+        responseDto.setUpdatedBy(productPrice.getUpdatedBy());
 
         return responseDto;
+    }
+
+    // Utility method for formatting paise to rupees string
+    private String formatPrice(BigInteger amountInPaise, String currencySymbol) {
+        BigDecimal amountInRupees = new BigDecimal(amountInPaise).divide(BigDecimal.valueOf(100));
+        return currencySymbol + amountInRupees.toPlainString();
     }
 }

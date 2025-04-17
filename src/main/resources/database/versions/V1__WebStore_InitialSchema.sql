@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS web_store.product_price (
     product_price_id INT NOT NULL DEFAULT nextval('web_store.seq_product_price_id') PRIMARY KEY,
     product_id INT NOT NULL,
     currency_id INT NOT NULL,
-    price_amount BIGINT NOT NULL,
+    price_amount NUMERIC(38, 0) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(50),
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

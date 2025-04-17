@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class ProductPriceController {
     public ResponseEntity<ProductPriceResponseDto> updateProductPrice(
             @PathVariable Integer id,
             @RequestBody Long priceAmount) {
-         return ResponseEntity.ok(productPriceService.updateProductPrice(id, priceAmount));
+         return ResponseEntity.ok(productPriceService.updateProductPrice(id, BigInteger.valueOf(priceAmount)));
     }
 
     @DeleteMapping("/{id}")

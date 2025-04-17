@@ -1,6 +1,8 @@
 package com.webstore.entity;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -41,8 +43,9 @@ public class Product extends BasicEntities  {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ProductPrice> productPrices = new HashSet<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductPrice> productPrices = new ArrayList<>();
+
 
 
 }
