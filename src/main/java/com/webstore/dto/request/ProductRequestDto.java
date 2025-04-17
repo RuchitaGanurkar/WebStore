@@ -21,7 +21,4 @@ public class ProductRequestDto {
     @NotNull(groups = ProductValidation.class, message = "Category ID is required")
     private Integer categoryId;
 
-    @NotNull(groups = ProductValidation.class, message = "Created by is required")
-    @NotBlank(groups = ProductValidation.class, message = "Created by should not be blank")
-    private String createdBy;
 }

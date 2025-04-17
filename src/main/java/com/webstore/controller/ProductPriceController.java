@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -21,25 +19,48 @@ public class ProductPriceController {
 
     @PostMapping
     public ResponseEntity<ProductPriceResponseDto> createProductPrice(@RequestBody ProductPriceRequestDto request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productPriceService.createProductPrice(request));
+        log.info("Creating new product price");
+        if (log.isDebugEnabled()) {
+            log.debug("Product price request: productId={}, priceAmount={}",
+                    request.getProductId(),
+                    request.getPriceAmount());
+        }
+
+        ProductPriceResponseDto response = productPriceService.createProductPrice(request);
+        log.info("Product price created successfully with ID: {}", response.getProductId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductPriceResponseDto> getProductPriceById(@PathVariable Integer id) {
-        return ResponseEntity.ok(productPriceService.getProductPriceById(id));
+        log.info("Retrieving product price with ID: {}", id);
+
+        ProductPriceResponseDto response = productPriceService.getProductPriceById(id);
+        log.info("Retrieved product price for productId: {}", response.getProductId());
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductPriceResponseDto> updateProductPrice(
             @PathVariable Integer id,
             @RequestBody Long priceAmount) {
-         return ResponseEntity.ok(productPriceService.updateProductPrice(id, priceAmount));
+        log.info("Updating product price with ID: {}, new price amount: {}", id, priceAmount);
+
+        ProductPriceResponseDto response = productPriceService.updateProductPrice(id, priceAmount);
+        log.info("Product price updated successfully for productId: {}", response.getProductId());
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductPrice(@PathVariable Integer id) {
+        log.info("Deleting product price with ID: {}", id);
+
         productPriceService.deleteProductPrice(id);
+        log.info("Product price with ID: {} deleted successfully", id);
+
         return ResponseEntity.noContent().build();
     }
 }

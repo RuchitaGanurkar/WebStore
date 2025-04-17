@@ -1,44 +1,53 @@
 package com.webstore.implementation;
 
 import com.webstore.dto.request.CategoryRequestDto;
+import com.webstore.dto.request.ProductPriceRequestDto;
 import com.webstore.dto.request.ProductRequestDto;
+import com.webstore.dto.response.CurrencyResponseDto;
+import com.webstore.dto.response.ProductPriceResponseDto;
 import com.webstore.dto.response.ProductResponseDto;
 import com.webstore.entity.Category;
 import com.webstore.entity.Product;
+import com.webstore.entity.ProductPrice;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.repository.ProductRepository;
 import com.webstore.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the ProductService interface.
+ *
+ * Uses setter injection for dependencies following best practices.
+ * Exception handling is standardized to use specific exception types
+ * that will be caught by the GlobalExceptionHandler.
+ */
+@Setter
+@RequiredArgsConstructor
 @Service
 public class ProductServiceImplementation implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @Override
     public ProductResponseDto createProduct(ProductRequestDto dto) {
         Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + dto.getCategoryId()));
 
         Product product = new Product();
         product.setProductName(dto.getProductName());
         product.setProductDescription(dto.getProductDescription());
         product.setCategory(category);
-        product.setCreatedBy(dto.getCreatedBy());
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
-        product.setUpdatedBy(dto.getCreatedBy());
 
         Product saved = productRepository.save(product);
         return convertToDto(saved);
@@ -55,32 +64,31 @@ public class ProductServiceImplementation implements ProductService {
     @Override
     public ProductResponseDto updateProduct(Integer id, ProductRequestDto dto) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
 
         Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + dto.getCategoryId()));
 
         product.setProductName(dto.getProductName());
         product.setProductDescription(dto.getProductDescription());
         product.setCategory(category);
         product.setUpdatedAt(LocalDateTime.now());
-        product.setUpdatedBy(dto.getCreatedBy());
-
         return convertToDto(productRepository.save(product));
     }
 
     @Override
     public ProductResponseDto getProductById(Integer id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
         return convertToDto(product);
     }
 
     @Override
     public void deleteProduct(Integer id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        productRepository.delete(product);
+        if (!productRepository.existsById(id)) {
+            throw new EntityNotFoundException("Product not found with ID: " + id);
+        }
+        productRepository.deleteById(id);
     }
 
     private ProductResponseDto convertToDto(Product product) {
@@ -99,12 +107,9 @@ public class ProductServiceImplementation implements ProductService {
             categoryDto.setCategoryId(category.getCategoryId());
             categoryDto.setCategoryName(category.getCategoryName());
             categoryDto.setCategoryDescription(category.getCategoryDescription());
-            categoryDto.setCreatedBy(category.getCreatedBy());
 
             dto.setCategory(categoryDto);
         }
-
         return dto;
     }
 }
-

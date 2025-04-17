@@ -6,19 +6,26 @@ import com.webstore.entity.User;
 import com.webstore.repository.UserRepository;
 import com.webstore.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the UserService interface.
+ *
+ * Uses setter injection for dependencies following best practices.
+ * Exception handling is standardized to use specific exception types
+ * that will be caught by the GlobalExceptionHandler.
+ */
+@Setter
 @Service
-@RequiredArgsConstructor
 public class UserServiceImplementation implements UserService {
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -40,7 +47,6 @@ public class UserServiceImplementation implements UserService {
     @Override
     @Transactional
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
-
         // Check if username already exists
         if (userRepository.existsByUsername((userRequestDto.getUsername()))) {
             throw new IllegalArgumentException("Username already exists: " + userRequestDto.getUsername());
@@ -50,20 +56,16 @@ public class UserServiceImplementation implements UserService {
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new IllegalArgumentException("Email already exists: " + userRequestDto.getEmail());
         }
-
         User user = new User();
         mapToUser(userRequestDto, user);
         User savedUser = userRepository.save(user);
-
-        System.out.println("Created user with ID: " + savedUser.getUserId());
         return mapToUserResponseDto(savedUser);
     }
 
     @Override
     @Transactional
     public UserResponseDto updateUser(Integer userId, UserRequestDto userRequestDto) {
-        System.out.println("Updating user with ID: " + userId);
-        User user = userRepository.findById(userId)
+         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
 
         // Check if trying to change username to one that already exists
@@ -80,11 +82,8 @@ public class UserServiceImplementation implements UserService {
 
         mapToUser(userRequestDto, user);
         User updatedUser = userRepository.save(user);
-
-        System.out.println("Updated user with ID: " + updatedUser.getUserId());
         return mapToUserResponseDto(updatedUser);
     }
-
 
     @Override
     @Transactional
@@ -93,7 +92,6 @@ public class UserServiceImplementation implements UserService {
             throw new EntityNotFoundException("User not found with ID: " + userId);
         }
         userRepository.deleteById(userId);
-        System.out.println("Deleted user with ID: " + userId);
     }
 
     // Helper method to map User entity to UserResponseDto
@@ -116,8 +114,4 @@ public class UserServiceImplementation implements UserService {
         user.setFullName(userRequestDto.getFullName());
         user.setRole(userRequestDto.getRole());
     }
-
-
-
 }
-

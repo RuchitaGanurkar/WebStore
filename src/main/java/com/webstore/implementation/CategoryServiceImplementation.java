@@ -5,9 +5,9 @@ import com.webstore.dto.response.CategoryResponseDto;
 import com.webstore.entity.Category;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.service.CategoryService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,35 +16,40 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the CategoryService interface.
+ *
+ * Uses setter injection for dependencies following best practices.
+ * Exception handling is standardized to use specific exception types
+ * that will be caught by the GlobalExceptionHandler.
+ */
+
+@Setter
 @Service
 public class CategoryServiceImplementation implements CategoryService {
 
-    @Autowired
     private CategoryRepository categoryRepository;
+
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto dto) {
         if (categoryRepository.existsByCategoryName(dto.getCategoryName())) {
-            throw new EntityExistsException("Category name already exists");
+            throw new EntityExistsException("Category name already exists: " + dto.getCategoryName());
         }
 
         Category category = new Category();
         category.setCategoryName(dto.getCategoryName());
         category.setCategoryDescription(dto.getCategoryDescription());
-        category.setCreatedBy(dto.getCreatedBy());
-        category.setUpdatedBy(dto.getCreatedBy());
 
         return mapToResponse(categoryRepository.save(category));
     }
 
     @Override
     public List<CategoryResponseDto> getAllCategories(int page, int size) {
-
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
 
-
-        return categoryRepository.findAll()
+        return categoryPage.getContent()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -69,7 +74,6 @@ public class CategoryServiceImplementation implements CategoryService {
 
         category.setCategoryName(dto.getCategoryName());
         category.setCategoryDescription(dto.getCategoryDescription());
-        category.setUpdatedBy(dto.getCreatedBy());
 
         return mapToResponse(categoryRepository.save(category));
     }

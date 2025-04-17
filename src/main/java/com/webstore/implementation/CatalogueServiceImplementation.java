@@ -5,18 +5,26 @@ import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.entity.Catalogue;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.service.CatalogueService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the CatalogueService interface.
+ *
+ * Uses setter injection for dependencies following best practices.
+ * Setter injection provides better testability and flexibility.
+ *
+ * Exception handling is standardized to use specific exception types
+ * that will be caught by the GlobalExceptionHandler.
+ */
+@Setter
 @Service
 public class CatalogueServiceImplementation implements CatalogueService {
 
-    @Autowired
     private CatalogueRepository catalogueRepository;
 
     @Override
@@ -24,8 +32,6 @@ public class CatalogueServiceImplementation implements CatalogueService {
         Catalogue catalogue = new Catalogue();
         catalogue.setCatalogueName(dto.getCatalogueName());
         catalogue.setCatalogueDescription(dto.getCatalogueDescription());
-        catalogue.setCreatedBy(dto.getCreatedBy());
-        catalogue.setUpdatedBy(dto.getCreatedBy());
 
         return convertToDto(catalogueRepository.save(catalogue));
     }
@@ -41,27 +47,27 @@ public class CatalogueServiceImplementation implements CatalogueService {
     @Override
     public CatalogueResponseDto getCatalogueById(Integer id) {
         Catalogue catalogue = catalogueRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Catalogue not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Catalogue not found with ID: " + id));
         return convertToDto(catalogue);
     }
 
     @Override
     public CatalogueResponseDto updateCatalogue(Integer id, CatalogueRequestDto dto) {
         Catalogue catalogue = catalogueRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Catalogue not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Catalogue not found with ID: " + id));
 
         catalogue.setCatalogueName(dto.getCatalogueName());
         catalogue.setCatalogueDescription(dto.getCatalogueDescription());
-        catalogue.setUpdatedBy(dto.getCreatedBy());
 
         return convertToDto(catalogueRepository.save(catalogue));
     }
 
     @Override
     public void deleteCatalogue(Integer id) {
-        Catalogue catalogue = catalogueRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Catalogue not found"));
-        catalogueRepository.delete(catalogue);
+        if (!catalogueRepository.existsById(id)) {
+            throw new EntityNotFoundException("Catalogue not found with ID: " + id);
+        }
+        catalogueRepository.deleteById(id);
     }
 
     @Override

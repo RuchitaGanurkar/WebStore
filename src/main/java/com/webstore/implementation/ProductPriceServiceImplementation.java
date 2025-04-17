@@ -7,21 +7,26 @@ import com.webstore.entity.Currency;
 import com.webstore.repository.*;
 import com.webstore.service.ProductPriceService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
+/**
+ * Implementation of the ProductPriceService interface.
+ *
+ * Uses setter injection for dependencies following best practices.
+ * Exception handling is standardized to use specific exception types
+ * that will be caught by the GlobalExceptionHandler.
+ */
+@Setter
 @Service
-@RequiredArgsConstructor
 public class ProductPriceServiceImplementation implements ProductPriceService {
 
-    private final ProductPriceRepository productPriceRepository;
-    private final ProductRepository productRepository;
-    private final CurrencyRepository currencyRepository;
-    private final CategoryRepository categoryRepository;
+    private ProductPriceRepository productPriceRepository;
+    private ProductRepository productRepository;
+    private CurrencyRepository currencyRepository;
+    private CategoryRepository categoryRepository;
+
 
     @Override
     @Transactional
@@ -38,10 +43,9 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
                 .orElseThrow(() -> new EntityNotFoundException("Currency not found with id: " + request.getCurrencyId()));
 
         // Check for duplicate product-currency combination
-        Optional<ProductPrice> existingPrice = productPriceRepository
-                .findByProductProductIdAndCurrencyCurrencyId(request.getProductId(), request.getCurrencyId());
-
-        if (existingPrice.isPresent()) {
+        if (productPriceRepository
+                .findByProductProductIdAndCurrencyCurrencyId(request.getProductId(), request.getCurrencyId())
+                .isPresent()) {
             throw new IllegalArgumentException("Price already exists for this product and currency combination");
         }
 
@@ -97,11 +101,11 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
     public void deleteProductPrice(Integer id) {
         System.out.printf("Deleting product price with id: %s%n", id);
 
-        ProductPrice productPrice = productPriceRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product price not found with id: " + id));
+        if (!productPriceRepository.existsById(id)) {
+            throw new EntityNotFoundException("Product price not found with id: " + id);
+        }
 
-        productPriceRepository.delete(productPrice);
-
+        productPriceRepository.deleteById(id);
         System.out.printf("Product price with id: %s has been deleted%n", id);
     }
 
@@ -114,10 +118,6 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         responseDto.setCurrencyCode(productPrice.getCurrency().getCurrencyCode());
         responseDto.setCurrencySymbol(productPrice.getCurrency().getCurrencySymbol());
         responseDto.setPriceAmount(productPrice.getPriceAmount());
-
-        // Format display price (assuming price is stored in smallest units)
-        String formattedPrice = productPrice.getCurrency().getCurrencySymbol() +
-                String.format("%.2f", productPrice.getPriceAmount() / 100.0);
 
         return responseDto;
     }

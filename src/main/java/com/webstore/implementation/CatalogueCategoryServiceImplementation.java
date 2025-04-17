@@ -1,4 +1,4 @@
-package com.webstore.service.serviceImplementation;
+package com.webstore.implementation;
 
 import com.webstore.dto.request.CatalogueCategoryRequestDto;
 import com.webstore.dto.response.CatalogueCategoryResponseDto;
@@ -9,39 +9,46 @@ import com.webstore.repository.CatalogueCategoryRepository;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.service.CatalogueCategoryService;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the CatalogueCategoryService interface.
+ *
+ * Uses setter injection for dependencies following best practices.
+ * Exception handling is standardized to use specific exception types
+ * that will be caught by the GlobalExceptionHandler.
+ */
+@Setter
 @Service
-@RequiredArgsConstructor
 public class CatalogueCategoryServiceImplementation implements CatalogueCategoryService {
 
-    private final CatalogueCategoryRepository catalogueCategoryRepository;
-    private final CatalogueRepository catalogueRepository;
-    private final CategoryRepository categoryRepository;
+    private CatalogueCategoryRepository catalogueCategoryRepository;
+    private CatalogueRepository catalogueRepository;
+    private CategoryRepository categoryRepository;
+
 
     @Override
     public ResponseEntity<String> createCatalogueCategory(CatalogueCategoryRequestDto dto) {
-
-        if (catalogueCategoryRepository.existsByCatalogueCatalogueIdAndCategoryCategoryId(dto.getCatalogueId(), dto.getCategoryId())) {
-            return ResponseEntity.badRequest().body("Catalogue-Category mapping already exists.");
+        if (catalogueCategoryRepository.existsByCatalogueCatalogueIdAndCategoryCategoryId(
+                dto.getCatalogueId(), dto.getCategoryId())) {
+            throw new IllegalArgumentException("Catalogue-Category mapping already exists");
         }
 
         Catalogue catalogue = catalogueRepository.findById(dto.getCatalogueId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Catalogue ID"));
+                .orElseThrow(() -> new EntityNotFoundException("Invalid Catalogue ID: " + dto.getCatalogueId()));
 
         Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
+                .orElseThrow(() -> new EntityNotFoundException("Invalid Category ID: " + dto.getCategoryId()));
 
         CatalogueCategory catalogueCategory = new CatalogueCategory();
         catalogueCategory.setCatalogue(catalogue);
         catalogueCategory.setCategory(category);
-        catalogueCategory.setCreatedBy(dto.getCreatedBy());
-        catalogueCategory.setUpdatedBy(dto.getCreatedBy());
 
         catalogueCategoryRepository.save(catalogueCategory);
 

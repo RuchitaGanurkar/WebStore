@@ -6,6 +6,7 @@ import com.webstore.service.UserService;
 import com.webstore.validation.UserValidation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,46 +15,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("api/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
 
-
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        System.out.println("\n==== GET ALL USERS REQUEST ====");
-        System.out.println("Endpoint: GET /api/users");
+        log.info("GET ALL USERS REQUEST - Endpoint: GET /api/users");
 
         List<UserResponseDto> users = userService.getAllUsers();
 
-        System.out.println("Response: Found " + users.size() + " users");
-        printUserList(users);
-        System.out.println("==== END GET ALL USERS ====\n");
+        log.info("Response: Found {} users", users.size());
+        if (log.isDebugEnabled()) {
+            logUserList(users);
+        }
 
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Integer userId) {
-        System.out.println("\n==== GET USER BY ID REQUEST ====");
-        System.out.println("Endpoint: GET /api/users/" + userId);
-        System.out.println("Request Parameter: userId = " + userId);
+        log.info("GET USER BY ID REQUEST - Endpoint: GET /api/users/{}", userId);
+        log.debug("Request Parameter: userId = {}", userId);
 
         try {
             UserResponseDto user = userService.getUserById(userId);
 
-            System.out.println("Response: User found");
-            printUser(user);
-            System.out.println("==== END GET USER BY ID ====\n");
+            log.info("Response: User found with ID {}", userId);
+            if (log.isDebugEnabled()) {
+                logUser(user);
+            }
 
             return ResponseEntity.ok(user);
         } catch (EntityNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("Response: 404 Not Found");
-            System.out.println("==== END GET USER BY ID ====\n");
-
+            log.error("Error retrieving user with ID {}: {}", userId, e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
@@ -61,24 +59,22 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(
             @Validated(UserValidation.class) @RequestBody UserRequestDto userRequestDto) {
-        System.out.println("\n==== CREATE USER REQUEST ====");
-        System.out.println("Endpoint: POST /api/users");
-        System.out.println("Request Body:");
-        printUserRequest(userRequestDto);
+        log.info("CREATE USER REQUEST - Endpoint: POST /api/users");
+        if (log.isDebugEnabled()) {
+            log.debug("Request Body: {}", userRequestDto);
+        }
 
         try {
             UserResponseDto createdUser = userService.createUser(userRequestDto);
 
-            System.out.println("Response: 201 Created");
-            printUser(createdUser);
-            System.out.println("==== END CREATE USER ====\n");
+            log.info("User created successfully with ID: {}", createdUser.getUserId());
+            if (log.isDebugEnabled()) {
+                logUser(createdUser);
+            }
 
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("Response: 400 Bad Request");
-            System.out.println("==== END CREATE USER ====\n");
-
+            log.error("Error creating user: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -87,99 +83,71 @@ public class UserController {
     public ResponseEntity<?> updateUser(
             @PathVariable Integer userId,
             @Validated(UserValidation.class) @RequestBody UserRequestDto userRequestDto) {
-        System.out.println("\n==== UPDATE USER REQUEST ====");
-        System.out.println("Endpoint: PUT /api/users/" + userId);
-        System.out.println("Request Parameter: userId = " + userId);
-        System.out.println("Request Body:");
-        printUserRequest(userRequestDto);
+        log.info("UPDATE USER REQUEST - Endpoint: PUT /api/users/{}", userId);
+        log.debug("Request Parameter: userId = {}", userId);
+        if (log.isDebugEnabled()) {
+            log.debug("Request Body: {}", userRequestDto);
+        }
 
         try {
             UserResponseDto updatedUser = userService.updateUser(userId, userRequestDto);
 
-            System.out.println("Response: 200 OK");
-            printUser(updatedUser);
-            System.out.println("==== END UPDATE USER ====\n");
+            log.info("User with ID {} updated successfully", userId);
+            if (log.isDebugEnabled()) {
+                logUser(updatedUser);
+            }
 
             return ResponseEntity.ok(updatedUser);
         } catch (EntityNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("Response: 404 Not Found");
-            System.out.println("==== END UPDATE USER ====\n");
-
+            log.error("Error updating user with ID {}: User not found", userId);
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("Response: 400 Bad Request");
-            System.out.println("==== END UPDATE USER ====\n");
-
+            log.error("Error updating user with ID {}: {}", userId, e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
-        System.out.println("\n==== DELETE USER REQUEST ====");
-        System.out.println("Endpoint: DELETE /api/users/" + userId);
-        System.out.println("Request Parameter: userId = " + userId);
+        log.info("DELETE USER REQUEST - Endpoint: DELETE /api/users/{}", userId);
+        log.debug("Request Parameter: userId = {}", userId);
 
         try {
             userService.deleteUser(userId);
 
-            System.out.println("Response: 204 No Content");
-            System.out.println("User with ID " + userId + " successfully deleted");
-            System.out.println("==== END DELETE USER ====\n");
-
+            log.info("User with ID {} successfully deleted", userId);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("Response: 404 Not Found");
-            System.out.println("==== END DELETE USER ====\n");
-
+            log.error("Error deleting user with ID {}: User not found", userId);
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Helper methods for printing
-    private void printUserRequest(UserRequestDto userRequestDto) {
-        System.out.println("  {");
-        System.out.println("    \"username\": \"" + userRequestDto.getUsername() + "\",");
-        System.out.println("    \"email\": \"" + userRequestDto.getEmail() + "\",");
-        System.out.println("    \"fullName\": \"" + userRequestDto.getFullName() + "\",");
-        System.out.println("    \"role\": \"" + userRequestDto.getRole() + "\"");
-        System.out.println("  }");
+    // Helper methods for detailed logging
+    private void logUser(UserResponseDto user) {
+        log.debug("User details: id={}, username={}, email={}, fullName={}, role={}, createdAt={}, updatedAt={}",
+                user.getUserId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFullName(),
+                user.getRole(),
+                user.getCreatedAt(),
+                user.getUpdatedAt());
     }
 
-    private void printUser(UserResponseDto user) {
-        System.out.println("  {");
-        System.out.println("    \"userId\": " + user.getUserId() + ",");
-        System.out.println("    \"username\": \"" + user.getUsername() + "\",");
-        System.out.println("    \"email\": \"" + user.getEmail() + "\",");
-        System.out.println("    \"fullName\": \"" + user.getFullName() + "\",");
-        System.out.println("    \"role\": \"" + user.getRole() + "\",");
-        System.out.println("    \"createdAt\": \"" + user.getCreatedAt() + "\",");
-        System.out.println("    \"updatedAt\": \"" + user.getUpdatedAt() + "\"");
-        System.out.println("  }");
-    }
-
-    private void printUserList(List<UserResponseDto> users) {
-        System.out.println("  [");
+    private void logUserList(List<UserResponseDto> users) {
+        log.debug("User list details:");
         for (int i = 0; i < users.size(); i++) {
             UserResponseDto user = users.get(i);
-            System.out.println("    {");
-            System.out.println("      \"userId\": " + user.getUserId() + ",");
-            System.out.println("      \"username\": \"" + user.getUsername() + "\",");
-            System.out.println("      \"email\": \"" + user.getEmail() + "\",");
-            System.out.println("      \"fullName\": \"" + user.getFullName() + "\",");
-            System.out.println("      \"role\": \"" + user.getRole() + "\",");
-            System.out.println("      \"createdAt\": \"" + user.getCreatedAt() + "\",");
-            System.out.println("      \"updatedAt\": \"" + user.getUpdatedAt() + "\"");
-            System.out.print("    }");
-            if (i < users.size() - 1) {
-                System.out.println(",");
-            } else {
-                System.out.println();
-            }
+            log.debug("  User {}: id={}, username={}, email={}, fullName={}, role={}, createdAt={}, updatedAt={}",
+                    i + 1,
+                    user.getUserId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFullName(),
+                    user.getRole(),
+                    user.getCreatedAt(),
+                    user.getUpdatedAt());
         }
-        System.out.println("  ]");
     }
 }
