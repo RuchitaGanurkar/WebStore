@@ -6,7 +6,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on("task", {
-        async connectDB(){
+        async connectDB(queryString: string) {
           const client = new Client({
             user: "postgres",
             password: "postgres",
@@ -16,7 +16,7 @@ export default defineConfig({
             port: 5432
           })
           await client.connect();
-          const res = await client.query('SELECT currency_code FROM web_store.currency WHERE currency_id = 1;');
+          const res = await client.query(queryString);
           await client.end();
           return res.rows;
         }
