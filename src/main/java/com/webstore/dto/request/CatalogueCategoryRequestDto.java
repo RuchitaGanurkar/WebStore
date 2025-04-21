@@ -17,5 +17,4 @@ public class CatalogueCategoryRequestDto {
     @NotNull(groups = CatalogueCategoryValidation.class, message = "Category ID is required")
     @Min(value = 1, groups = CatalogueCategoryValidation.class, message = "Category ID must be positive")
     private Integer categoryId;
-
 }

@@ -1,33 +1,27 @@
 package com.webstore.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import static com.webstore.constant.DatabaseConstants.SCHEMA_NAME;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "product", schema = "web_store")
-public class Product extends BasicEntities  {
+@Table(name = "product", schema = SCHEMA_NAME)
+public class Product extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_generator")
-    @SequenceGenerator(name = "product_generator", sequenceName = "web_store.seq_product_id", allocationSize = 1)
+    @SequenceGenerator(
+            name = "product_generator",
+            sequenceName = SCHEMA_NAME + ".seq_product_id",
+            allocationSize = 1
+    )
     @Column(name = "product_id")
     private Integer productId;
 
@@ -41,8 +35,6 @@ public class Product extends BasicEntities  {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ProductPrice> productPrices = new HashSet<>();
-
-
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductPrice> productPrices = new ArrayList<>();
 }

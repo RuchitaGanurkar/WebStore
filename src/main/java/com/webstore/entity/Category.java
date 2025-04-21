@@ -1,33 +1,27 @@
 package com.webstore.entity;
 
+import static com.webstore.constant.DatabaseConstants.SCHEMA_NAME;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
-import lombok.EqualsAndHashCode;
-
+import jakarta.persistence.*;
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "category", schema = "web_store")
-public class Category extends BasicEntities  {
+@Table(name = "category", schema = SCHEMA_NAME)
+public class Category extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_generator")
-    @SequenceGenerator(name = "category_generator", sequenceName = "web_store.seq_category_id", allocationSize = 1)
+    @SequenceGenerator(
+            name = "category_generator",
+            sequenceName = SCHEMA_NAME + ".seq_category_id",
+            allocationSize = 1
+    )
     @Column(name = "category_id")
     private Integer categoryId;
 
@@ -42,5 +36,4 @@ public class Category extends BasicEntities  {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CatalogueCategory> catalogueCategories = new HashSet<>();
-
 }

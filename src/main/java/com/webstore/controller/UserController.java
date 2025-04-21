@@ -5,8 +5,9 @@ import com.webstore.dto.response.UserResponseDto;
 import com.webstore.service.UserService;
 import com.webstore.validation.UserValidation;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,44 +15,36 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/users")
-@RequiredArgsConstructor
 @Slf4j
+@Setter
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    // ✅ Setter Injection
+    private UserService userService;
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        log.info("GET ALL USERS REQUEST - Endpoint: GET /api/users");
-
+        log.info("Processing request to get all users");
         List<UserResponseDto> users = userService.getAllUsers();
-
-        log.info("Response: Found {} users", users.size());
-        if (log.isDebugEnabled()) {
-            logUserList(users);
-        }
-
+        log.info("Retrieved {} users successfully", users.size());
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Integer userId) {
-        log.info("GET USER BY ID REQUEST - Endpoint: GET /api/users/{}", userId);
-        log.debug("Request Parameter: userId = {}", userId);
-
+        log.info("Processing request to get user with id: {}", userId);
         try {
             UserResponseDto user = userService.getUserById(userId);
-
-            log.info("Response: User found with ID {}", userId);
-            if (log.isDebugEnabled()) {
-                logUser(user);
-            }
-
+            log.info("User with id: {} retrieved successfully", userId);
             return ResponseEntity.ok(user);
         } catch (EntityNotFoundException e) {
-            log.error("Error retrieving user with ID {}: {}", userId, e.getMessage());
+            log.error("User with id: {} not found", userId);
             return ResponseEntity.notFound().build();
         }
     }
@@ -59,22 +52,13 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(
             @Validated(UserValidation.class) @RequestBody UserRequestDto userRequestDto) {
-        log.info("CREATE USER REQUEST - Endpoint: POST /api/users");
-        if (log.isDebugEnabled()) {
-            log.debug("Request Body: {}", userRequestDto);
-        }
-
+        log.info("Processing request to create a new user");
         try {
             UserResponseDto createdUser = userService.createUser(userRequestDto);
-
-            log.info("User created successfully with ID: {}", createdUser.getUserId());
-            if (log.isDebugEnabled()) {
-                logUser(createdUser);
-            }
-
+            log.info("User created successfully with id: {}", createdUser.getUserId());
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            log.error("Error creating user: {}", e.getMessage());
+            log.error("Failed to create user: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -83,71 +67,30 @@ public class UserController {
     public ResponseEntity<?> updateUser(
             @PathVariable Integer userId,
             @Validated(UserValidation.class) @RequestBody UserRequestDto userRequestDto) {
-        log.info("UPDATE USER REQUEST - Endpoint: PUT /api/users/{}", userId);
-        log.debug("Request Parameter: userId = {}", userId);
-        if (log.isDebugEnabled()) {
-            log.debug("Request Body: {}", userRequestDto);
-        }
-
+        log.info("Processing request to update user with id: {}", userId);
         try {
             UserResponseDto updatedUser = userService.updateUser(userId, userRequestDto);
-
-            log.info("User with ID {} updated successfully", userId);
-            if (log.isDebugEnabled()) {
-                logUser(updatedUser);
-            }
-
+            log.info("User with id: {} updated successfully", userId);
             return ResponseEntity.ok(updatedUser);
         } catch (EntityNotFoundException e) {
-            log.error("Error updating user with ID {}: User not found", userId);
+            log.error("User with id: {} not found for update", userId);
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            log.error("Error updating user with ID {}: {}", userId, e.getMessage());
+            log.error("Failed to update user: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
-        log.info("DELETE USER REQUEST - Endpoint: DELETE /api/users/{}", userId);
-        log.debug("Request Parameter: userId = {}", userId);
-
+        log.info("Processing request to delete user with id: {}", userId);
         try {
             userService.deleteUser(userId);
-
-            log.info("User with ID {} successfully deleted", userId);
+            log.info("User with id: {} deleted successfully", userId);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
-            log.error("Error deleting user with ID {}: User not found", userId);
+            log.error("User with id: {} not found for deletion", userId);
             return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Helper methods for detailed logging
-    private void logUser(UserResponseDto user) {
-        log.debug("User details: id={}, username={}, email={}, fullName={}, role={}, createdAt={}, updatedAt={}",
-                user.getUserId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getFullName(),
-                user.getRole(),
-                user.getCreatedAt(),
-                user.getUpdatedAt());
-    }
-
-    private void logUserList(List<UserResponseDto> users) {
-        log.debug("User list details:");
-        for (int i = 0; i < users.size(); i++) {
-            UserResponseDto user = users.get(i);
-            log.debug("  User {}: id={}, username={}, email={}, fullName={}, role={}, createdAt={}, updatedAt={}",
-                    i + 1,
-                    user.getUserId(),
-                    user.getUsername(),
-                    user.getEmail(),
-                    user.getFullName(),
-                    user.getRole(),
-                    user.getCreatedAt(),
-                    user.getUpdatedAt());
         }
     }
 }

@@ -23,6 +23,4 @@ public class CurrencyRequestDto {
     @NotBlank(groups = CurrencyValidation.class, message = "Currency symbol should not be blank")
     @Size(min = 1, max = 5, groups = CurrencyValidation.class, message = "Currency symbol must be between 1 and 5 characters")
     private String currencySymbol;
-
-
 }
