@@ -1,28 +1,28 @@
 package com.webstore.entity;
 
+import static com.webstore.DatabaseConstants.SCHEMA_NAME;
+
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Data
 @Entity
-@Table(name = "users", schema = "web_store")
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "users", schema = SCHEMA_NAME)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
-    @SequenceGenerator(name = "user_generator", sequenceName = "web_store.seq_user_id", allocationSize = 1)
+    @SequenceGenerator(
+            name = "user_generator",
+            sequenceName = SCHEMA_NAME + ".seq_user_id",
+            allocationSize = 1
+    )
     @Column(name = "user_id")
     private Integer userId;
 
