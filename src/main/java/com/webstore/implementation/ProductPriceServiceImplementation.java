@@ -90,18 +90,19 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         return mapToResponseDto(updatedProductPrice);
     }
 
+
     @Override
     @Transactional
     public void deleteProductPrice(Integer id) {
-        log.info("Deleting product price with id={}", id);
+        if (!productPriceRepository.existsById(id)) {
+            throw new EntityNotFoundException("Product price not found with id: " + id);
+        }
 
-        ProductPrice productPrice = productPriceRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product price not found with id: " + id));
-
-        productPriceRepository.delete(productPrice);
+        productPriceRepository.deleteById(id);
 
         log.info("Product price with id={} has been deleted", id);
     }
+
 
     private ProductPriceResponseDto mapToResponseDto(ProductPrice productPrice) {
         ProductPriceResponseDto responseDto = new ProductPriceResponseDto();
