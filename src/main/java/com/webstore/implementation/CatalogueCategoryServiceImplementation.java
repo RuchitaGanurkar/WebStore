@@ -11,6 +11,7 @@ import com.webstore.repository.CategoryRepository;
 import com.webstore.service.CatalogueCategoryService;
 import com.webstore.util.AuthUtils; // <-- Make sure to import this
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,16 @@ import java.util.stream.Collectors;
 @Service
 public class CatalogueCategoryServiceImplementation implements CatalogueCategoryService {
 
-    private CatalogueCategoryRepository catalogueCategoryRepository;
-    private CatalogueRepository catalogueRepository;
-    private CategoryRepository categoryRepository;
+    private final CatalogueCategoryRepository catalogueCategoryRepository;
+    private final CatalogueRepository catalogueRepository;
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public CatalogueCategoryServiceImplementation(CatalogueCategoryRepository catalogueCategoryRepository, CatalogueRepository catalogueRepository, CategoryRepository categoryRepository) {
+        this.catalogueCategoryRepository = catalogueCategoryRepository;
+        this.catalogueRepository = catalogueRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public ResponseEntity<String> createCatalogueCategory(CatalogueCategoryRequestDto dto) {

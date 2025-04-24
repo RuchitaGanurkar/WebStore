@@ -18,7 +18,11 @@ import java.util.stream.Collectors;
 public class CatalogueServiceImplementation implements CatalogueService {
 
     @Autowired
-    private CatalogueRepository catalogueRepository;
+    private final CatalogueRepository catalogueRepository;
+
+    public CatalogueServiceImplementation(CatalogueRepository catalogueRepository) {
+        this.catalogueRepository = catalogueRepository;
+    }
 
     @Override
     public CatalogueResponseDto createCatalogue(CatalogueRequestDto dto) {

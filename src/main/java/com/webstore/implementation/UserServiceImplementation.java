@@ -5,8 +5,8 @@ import com.webstore.dto.response.UserResponseDto;
 import com.webstore.entity.User;
 import com.webstore.repository.UserRepository;
 import com.webstore.service.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +17,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-
 public class UserServiceImplementation implements UserService {
 
     private UserRepository userRepository;
+
+    @Autowired // Add this annotation to make the dependency injection explicit
+    public UserServiceImplementation(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)

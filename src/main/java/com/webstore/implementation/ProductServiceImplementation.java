@@ -11,6 +11,7 @@ import com.webstore.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +26,15 @@ import java.util.stream.Collectors;
 
 public class ProductServiceImplementation implements ProductService {
 
-    private ProductRepository productRepository;
-    private CategoryRepository categoryRepository;
+
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public ProductServiceImplementation(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     @Transactional

@@ -21,7 +21,11 @@ import java.util.stream.Collectors;
 public class CategoryServiceImplementation implements CategoryService {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+
+    public CategoryServiceImplementation(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto dto) {
