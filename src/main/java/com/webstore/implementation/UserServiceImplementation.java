@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+
 public class UserServiceImplementation implements UserService {
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)

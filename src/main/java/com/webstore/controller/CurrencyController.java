@@ -17,13 +17,13 @@ import java.util.List;
 @RequestMapping("api/currencies")
 public class CurrencyController {
 
-    // ✅ Setter Injection (replaces @Autowired constructor)
     private CurrencyService currencyService;
-
     @Autowired
     public void setCurrencyService(CurrencyService currencyService) {
         this.currencyService = currencyService;
     }
+
+
     @GetMapping
     public ResponseEntity<List<CurrencyResponseDto>> getAllCurrencies(
             @RequestParam(defaultValue = "0") int page,

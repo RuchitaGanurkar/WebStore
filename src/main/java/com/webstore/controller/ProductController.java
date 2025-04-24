@@ -17,13 +17,14 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    // ✅ Setter injection with NO @Autowired
-    private ProductService productService;
 
-    @Autowired // ✅ This is REQUIRED
+    private ProductService productService;
+    @Autowired
     public void setProductService(ProductService productService) {
         this.productService = productService;
     }
+
+
     @PostMapping
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto dto) {
         ProductResponseDto createdProduct = productService.createProduct(dto);

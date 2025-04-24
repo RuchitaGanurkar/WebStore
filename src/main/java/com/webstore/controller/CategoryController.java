@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("api/categories")
 public class CategoryController {
 
-    // ✅ Setter Injection (preferred over @Autowired)
+
     private CategoryService categoryService;
     @Autowired
     public void setCategoryService(CategoryService categoryService) {
