@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+
 public class ProductServiceImplementation implements ProductService {
 
-    private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     @Transactional

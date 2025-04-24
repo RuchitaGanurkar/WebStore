@@ -3,19 +3,29 @@ package com.webstore.controller;
 import com.webstore.dto.request.CatalogueRequestDto;
 import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.service.CatalogueService;
+import com.webstore.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Setter
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/catalogues")
 public class CatalogueController {
 
-    private final CatalogueService catalogueService;
+    private CatalogueService catalogueService;
+    @Autowired
+    public void setCatalogueService(CatalogueService catalogueService) {
+        this.catalogueService = catalogueService;
+    }
+
+
 
     @PostMapping
     public ResponseEntity<CatalogueResponseDto> createCatalogue(@RequestBody @Valid CatalogueRequestDto dto) {
@@ -43,15 +53,5 @@ public class CatalogueController {
     public ResponseEntity<Void> deleteCatalogue(@PathVariable Integer id) {
         catalogueService.deleteCatalogue(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search/name")
-    public ResponseEntity<List<CatalogueResponseDto>> searchByName(@RequestParam String name) {
-        return ResponseEntity.ok(catalogueService.searchByName(name));
-    }
-
-    @GetMapping("/search/description")
-    public ResponseEntity<List<CatalogueResponseDto>> searchByDescription(@RequestParam String description) {
-        return ResponseEntity.ok(catalogueService.searchByDescription(description));
     }
 }

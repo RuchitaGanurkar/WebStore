@@ -18,12 +18,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CatalogueCategoryServiceImplementation implements CatalogueCategoryService {
 
-    private final CatalogueCategoryRepository catalogueCategoryRepository;
-    private final CatalogueRepository catalogueRepository;
-    private final CategoryRepository categoryRepository;
+    private CatalogueCategoryRepository catalogueCategoryRepository;
+    private CatalogueRepository catalogueRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     public ResponseEntity<String> createCatalogueCategory(CatalogueCategoryRequestDto dto) {

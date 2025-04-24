@@ -4,6 +4,7 @@ import com.webstore.dto.request.ProductPriceRequestDto;
 import com.webstore.dto.response.ProductPriceResponseDto;
 import com.webstore.service.ProductPriceService;
 import jakarta.validation.Valid;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigInteger;
 
 @Slf4j
+@Setter
 @RestController
 @RequestMapping("api/product-price")
 public class ProductPriceController {
 
     private ProductPriceService productPriceService;
-
     @Autowired
     public void setProductPriceService(ProductPriceService productPriceService) {
         this.productPriceService = productPriceService;

@@ -19,13 +19,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ProductPriceServiceImplementation implements ProductPriceService {
 
-    private final ProductPriceRepository productPriceRepository;
-    private final ProductRepository productRepository;
-    private final CurrencyRepository currencyRepository;
-    private final CategoryRepository categoryRepository;
+    private ProductPriceRepository productPriceRepository;
+    private ProductRepository productRepository;
+    private CurrencyRepository currencyRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     @Transactional

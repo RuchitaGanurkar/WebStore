@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    // ✅ Setter Injection
+
     private UserService userService;
     @Autowired
     public void setUserService(UserService userService) {
