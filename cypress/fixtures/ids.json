@@ -1,4 +1,8 @@
 {
   "productIds": [1, 2, 3, 4],
-  "catalogueIds": [1, 2]
+  "catalogueIds": [1, 2],
+  "currencyIds": [1, 2, 3],
+  "categoryIds": [1, 2, 3],
+  "productPriceIds": [1, 2, 3, 4, 5],
+  "catNames" : ["summer", "winter", "s", "w", "sum", "win" ]
 }

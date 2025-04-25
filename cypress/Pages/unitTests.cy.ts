@@ -37,9 +37,16 @@ export function getRequestID(url: string, expectedStatus: number, ID: any, type:
     .then((response) => {
         expect(response.status).to.eq(expectedStatus);
         expect(response.body).to.be.an('object');
+
         if(type == 'products')
             expect(response.body.productId).to.eq(ID);
         else if(type == 'catalogues')
             expect(response.body.catalogueId).to.eq(ID);
+        else if(type == 'currencies')
+            expect(response.body.currencyId).to.eq(ID);
+        else if(type == 'categories')
+            expect(response.body.categoryId).to.eq(ID);
+        else if(type == 'product-price')
+            expect(response.body.productPriceId).to.eq(ID);
     });
 }

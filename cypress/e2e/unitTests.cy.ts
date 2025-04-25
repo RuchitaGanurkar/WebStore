@@ -37,25 +37,41 @@ describe('Product Catalogue API Tests - GET Requests', () => {
             });
         });
     });
-    /*
+    
     it('Get Currencies by ID', () => {
-        getRequest('http://localhost:8080/api/currencies/1', 200);
+        cy.fixture('ids.json').then((ids) => {
+            ids.currencyIds.forEach((currID) => {
+                getRequestID('http://localhost:8080/api/currencies/' + currID, 200, currID, 'currencies');
+            });
+        });
     });
-
+    
     it('Get Categories by ID', () => {
-        getRequest('http://localhost:8080/api/categories/2', 200);
+        cy.fixture('ids.json').then((ids) => {
+            ids.categoryIds.forEach((catID) => {
+                getRequestID('http://localhost:8080/api/categories/' + catID, 200, catID, 'categories');
+            });
+        });
     });
-
+    
+    it('Get Product Price Detail by ID', () => {
+        cy.fixture('ids.json').then((ids) => {
+            ids.productPriceIds.forEach((pPID) => {
+                getRequestID('http://localhost:8080/api/product-price/' + pPID, 200, pPID, 'product-price');
+            });
+        });
+    });
+    /*
     it('Get Catalogues by Name', () => {
-        getRequest('http://localhost:8080/api/catalogues/search/name?name=Winter', 200);
+        cy.fixture('ids.json').then((ids) => {
+            ids.catNames.forEach((catName) => {
+                getRequestID('http://localhost:8080/api/catalogues/search/name?name=' + catName, 200, catName, 'cat-byName');
+            });
+        });
     });
-
+    
     it('Get Catalogues by Description', () => {
         getRequest('http://localhost:8080/api/catalogues/search/description?description=for', 200);
-    });
-
-    it('Get Product Price Detail by ID', () => {
-        getRequest('http://localhost:8080/api/currencies/1', 200);
     }); 
 */
 });
