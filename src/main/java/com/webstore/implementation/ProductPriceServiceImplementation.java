@@ -10,6 +10,7 @@ import com.webstore.service.ProductPriceService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +22,18 @@ import java.util.Optional;
 @Service
 public class ProductPriceServiceImplementation implements ProductPriceService {
 
-    private ProductPriceRepository productPriceRepository;
-    private ProductRepository productRepository;
-    private CurrencyRepository currencyRepository;
-    private CategoryRepository categoryRepository;
+    private final ProductPriceRepository productPriceRepository;
+    private final ProductRepository productRepository;
+    private final CurrencyRepository currencyRepository;
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public ProductPriceServiceImplementation(ProductPriceRepository productPriceRepository, ProductRepository productRepository, CurrencyRepository currencyRepository, CategoryRepository categoryRepository) {
+        this.productPriceRepository = productPriceRepository;
+        this.productRepository = productRepository;
+        this.currencyRepository = currencyRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     @Transactional

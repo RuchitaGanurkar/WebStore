@@ -5,6 +5,7 @@ import com.webstore.dto.response.UserResponseDto;
 import com.webstore.service.UserService;
 import com.webstore.validation.UserValidation;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.List;
 @Slf4j
 @Setter
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
