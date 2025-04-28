@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.controller.UserControllerTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:13" hostname="LAPTOP-AVARR59S" time="0.317">
+  <properties/>
+  <testcase name="testCreateUserWithValidationFailure()" classname="com.webstore.controller.UserControllerTest" time="0.187"/>
+  <testcase name="testUpdateUserNotFound()" classname="com.webstore.controller.UserControllerTest" time="0.021"/>
+  <testcase name="testGetAllUsers()" classname="com.webstore.controller.UserControllerTest" time="0.011"/>
+  <testcase name="testUpdateUser()" classname="com.webstore.controller.UserControllerTest" time="0.015"/>
+  <testcase name="testUpdateUserValidationFailure()" classname="com.webstore.controller.UserControllerTest" time="0.016"/>
+  <testcase name="testCreateUser()" classname="com.webstore.controller.UserControllerTest" time="0.017"/>
+  <testcase name="testDeleteUser()" classname="com.webstore.controller.UserControllerTest" time="0.01"/>
+  <testcase name="testGetUserById()" classname="com.webstore.controller.UserControllerTest" time="0.014"/>
+  <testcase name="testGetUserByIdNotFound()" classname="com.webstore.controller.UserControllerTest" time="0.012"/>
+  <testcase name="testDeleteUserNotFound()" classname="com.webstore.controller.UserControllerTest" time="0.012"/>
+  <system-out><![CDATA[2025-04-28T16:38:13.878+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.879+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.879+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.994+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to create a new user
+2025-04-28T16:38:13.995+05:30 ERROR 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Failed to create user: Invalid user data
+2025-04-28T16:38:14.006+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.007+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.007+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.015+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to update user with id: 99
+2025-04-28T16:38:14.017+05:30 ERROR 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User with id: 99 not found for update
+2025-04-28T16:38:14.025+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.025+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.026+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.027+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to get all users
+2025-04-28T16:38:14.027+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Retrieved 1 users successfully
+2025-04-28T16:38:14.037+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.038+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.038+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.043+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to update user with id: 1
+2025-04-28T16:38:14.043+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User with id: 1 updated successfully
+2025-04-28T16:38:14.052+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.052+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.053+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2025-04-28T16:38:14.060+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to update user with id: 1
+2025-04-28T16:38:14.060+05:30 ERROR 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Failed to update user: Invalid user data
+2025-04-28T16:38:14.070+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.071+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.071+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.076+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to create a new user
+2025-04-28T16:38:14.076+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User created successfully with id: 1
+2025-04-28T16:38:14.086+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.087+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.087+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.088+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to delete user with id: 1
+2025-04-28T16:38:14.088+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User with id: 1 deleted successfully
+2025-04-28T16:38:14.097+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.097+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.097+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.099+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to get user with id: 1
+2025-04-28T16:38:14.100+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User with id: 1 retrieved successfully
+2025-04-28T16:38:14.111+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.112+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.112+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.113+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to get user with id: 99
+2025-04-28T16:38:14.114+05:30 ERROR 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User with id: 99 not found
+2025-04-28T16:38:14.122+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:14.123+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:14.123+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:14.125+05:30  INFO 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : Processing request to delete user with id: 99
+2025-04-28T16:38:14.126+05:30 ERROR 10408 --- [V1-local] [    Test worker] com.webstore.controller.UserController   : User with id: 99 not found for deletion
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

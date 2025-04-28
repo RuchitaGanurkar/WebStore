@@ -31,20 +31,31 @@ class CatalogueCategoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @SuppressWarnings("removal")
-    @MockBean
+    @MockBean(name = "catalogueCategoryServiceImplementation") // VERY IMPORTANT!!
     private CatalogueCategoryService catalogueCategoryService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     private CatalogueCategoryRequestDto requestDto;
+    private CatalogueCategoryResponseDto responseDto;
 
     @BeforeEach
     void setup() {
         requestDto = new CatalogueCategoryRequestDto();
         requestDto.setCatalogueId(1);
         requestDto.setCategoryId(2);
+
+        responseDto = new CatalogueCategoryResponseDto();
+        responseDto.setCatalogueCategoryId(1001);
+        responseDto.setCatalogueId(1);
+        responseDto.setCatalogueName("Electronics");
+        responseDto.setCategoryId(2);
+        responseDto.setCategoryName("Laptops");
+        responseDto.setCreatedAt(LocalDateTime.now());
+        responseDto.setUpdatedAt(LocalDateTime.now());
+        responseDto.setCreatedBy("admin");
+        responseDto.setUpdatedBy("admin");
     }
 
     @Test
@@ -77,32 +88,22 @@ class CatalogueCategoryControllerTest {
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/catalogue-categories"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void testGetAllMappingsWithData() throws Exception {
-        CatalogueCategoryResponseDto responseDto = new CatalogueCategoryResponseDto();
-        responseDto.setCatalogueId(1);
-        responseDto.setCatalogueName("Electronics");
-        responseDto.setCategoryId(2);
-        responseDto.setCategoryName("Laptops");
-        responseDto.setCreatedAt(LocalDateTime.now());
-        responseDto.setUpdatedAt(LocalDateTime.now());
-        responseDto.setCreatedBy("admin");
-        responseDto.setUpdatedBy("admin");
-
         Mockito.when(catalogueCategoryService.getAllCatalogueCategories())
                 .thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/api/catalogue-categories"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].catalogueId").value(1))
-                .andExpect(jsonPath("$[0].catalogueName").value("Electronics"))
-                .andExpect(jsonPath("$[0].categoryId").value(2))
-                .andExpect(jsonPath("$[0].categoryName").value("Laptops"))
-                .andExpect(jsonPath("$[0].createdBy").value("admin"))
-                .andExpect(jsonPath("$[0].updatedBy").value("admin"));
+                .andExpect(jsonPath("$[0].catalogueCategoryId").value(responseDto.getCatalogueCategoryId()))
+                .andExpect(jsonPath("$[0].catalogueId").value(responseDto.getCatalogueId()))
+                .andExpect(jsonPath("$[0].categoryId").value(responseDto.getCategoryId()))
+                .andExpect(jsonPath("$[0].catalogueName").value(responseDto.getCatalogueName()))
+                .andExpect(jsonPath("$[0].categoryName").value(responseDto.getCategoryName()))
+                .andExpect(jsonPath("$[0].createdBy").value(responseDto.getCreatedBy()))
+                .andExpect(jsonPath("$[0].updatedBy").value(responseDto.getUpdatedBy()));
     }
 }

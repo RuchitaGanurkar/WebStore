@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.implementation.CatalogueServiceImplementationTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:14" hostname="LAPTOP-AVARR59S" time="0.021">
+  <properties/>
+  <testcase name="testUpdateCatalogue()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.004"/>
+  <testcase name="testGetAllCatalogues()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.002"/>
+  <testcase name="testCreateCatalogue()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.001"/>
+  <testcase name="testSearchByName()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.002"/>
+  <testcase name="testSearchByDescription()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.002"/>
+  <testcase name="testGetCatalogueById()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.002"/>
+  <testcase name="testDeleteCatalogue()" classname="com.webstore.implementation.CatalogueServiceImplementationTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.controller.ProductPriceControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:13" hostname="LAPTOP-AVARR59S" time="0.124">
+  <properties/>
+  <testcase name="testDeleteProductPrice()" classname="com.webstore.controller.ProductPriceControllerTest" time="0.049"/>
+  <testcase name="testUpdateProductPrice()" classname="com.webstore.controller.ProductPriceControllerTest" time="0.027"/>
+  <testcase name="testGetProductPriceById()" classname="com.webstore.controller.ProductPriceControllerTest" time="0.011"/>
+  <testcase name="testCreateProductPrice()" classname="com.webstore.controller.ProductPriceControllerTest" time="0.021"/>
+  <testcase name="testUpdateProductPriceWithNullValue()" classname="com.webstore.controller.ProductPriceControllerTest" time="0.014"/>
+  <system-out><![CDATA[2025-04-28T16:38:13.715+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.715+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.715+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.717+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Deleting product price with id=1
+2025-04-28T16:38:13.732+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.733+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.733+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.735+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Updating product price with id=1 to new amount=2000
+2025-04-28T16:38:13.761+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.762+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.762+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.763+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Fetching product price with id=1
+2025-04-28T16:38:13.773+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.773+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.774+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2025-04-28T16:38:13.782+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Received request to create product price for productId=1, currencyId=1
+2025-04-28T16:38:13.794+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.794+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.794+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.799+05:30  WARN 10408 --- [V1-local] [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<com.webstore.dto.response.ProductPriceResponseDto> com.webstore.controller.ProductPriceController.updateProductPrice(java.lang.Integer,java.lang.Long)]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

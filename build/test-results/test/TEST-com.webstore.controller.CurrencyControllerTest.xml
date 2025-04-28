@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.controller.CurrencyControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:13" hostname="LAPTOP-AVARR59S" time="0.171">
+  <properties/>
+  <testcase name="testGetCurrencyById()" classname="com.webstore.controller.CurrencyControllerTest" time="0.107"/>
+  <testcase name="testUpdateCurrency()" classname="com.webstore.controller.CurrencyControllerTest" time="0.019"/>
+  <testcase name="testCreateCurrency()" classname="com.webstore.controller.CurrencyControllerTest" time="0.018"/>
+  <testcase name="testGetAllCurrencies()" classname="com.webstore.controller.CurrencyControllerTest" time="0.015"/>
+  <testcase name="testDeleteCurrency()" classname="com.webstore.controller.CurrencyControllerTest" time="0.009"/>
+  <system-out><![CDATA[2025-04-28T16:38:13.531+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.531+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.532+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2025-04-28T16:38:13.559+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.559+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.559+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.578+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.578+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.579+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2025-04-28T16:38:13.596+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.596+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.596+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-28T16:38:13.609+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-28T16:38:13.610+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-28T16:38:13.610+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

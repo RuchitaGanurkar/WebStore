@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.implementation.ProductServiceImplementationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:14" hostname="LAPTOP-AVARR59S" time="0.021">
+  <properties/>
+  <testcase name="testCreateProduct()" classname="com.webstore.implementation.ProductServiceImplementationTest" time="0.004"/>
+  <testcase name="testUpdateProduct()" classname="com.webstore.implementation.ProductServiceImplementationTest" time="0.004"/>
+  <testcase name="testDeleteProduct_NotFound()" classname="com.webstore.implementation.ProductServiceImplementationTest" time="0.005"/>
+  <testcase name="testGetProductById()" classname="com.webstore.implementation.ProductServiceImplementationTest" time="0.002"/>
+  <testcase name="testDeleteProduct()" classname="com.webstore.implementation.ProductServiceImplementationTest" time="0.003"/>
+  <testcase name="testGetAllProducts()" classname="com.webstore.implementation.ProductServiceImplementationTest" time="0.002"/>
+  <system-out><![CDATA[2025-04-28T16:38:14.753+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Creating product with name: Test Product
+2025-04-28T16:38:14.755+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Product created with ID: 1
+2025-04-28T16:38:14.758+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Updating product with ID: 1
+2025-04-28T16:38:14.759+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Product with ID: 1 updated successfully
+2025-04-28T16:38:14.762+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Deleting product with ID: 1
+2025-04-28T16:38:14.766+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Fetching product with ID: 1
+2025-04-28T16:38:14.769+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Deleting product with ID: 1
+2025-04-28T16:38:14.769+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Product with ID: 1 has been deleted
+2025-04-28T16:38:14.771+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.ProductServiceImplementation       : Fetching all products
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
