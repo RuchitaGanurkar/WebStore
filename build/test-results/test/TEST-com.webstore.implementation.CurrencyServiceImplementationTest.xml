@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.webstore.implementation.CurrencyServiceImplementationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:14" hostname="LAPTOP-AVARR59S" time="0.118">
+<testsuite name="com.webstore.implementation.CurrencyServiceImplementationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2025-04-30T12:49:26" hostname="LAPTOP-AVARR59S" time="0.08">
   <properties/>
-  <testcase name="createCurrency_WhenCurrencyExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.051"/>
-  <testcase name="getCurrencyByCode_WhenCurrencyDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
-  <testcase name="getCurrencyByCode_WhenCurrencyExists_ShouldReturnCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
-  <testcase name="getCurrencyById_WhenCurrencyExists_ShouldReturnCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.003"/>
-  <testcase name="updateCurrency_WhenCurrencyExists_ShouldUpdateCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.037"/>
-  <testcase name="deleteCurrency_WhenCurrencyExists_ShouldDeleteCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.001"/>
-  <testcase name="deleteCurrency_WhenCurrencyDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
-  <testcase name="getAllCurrencies_ShouldReturnListOfCurrencies()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.003"/>
-  <testcase name="getCurrencyById_WhenCurrencyDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.004"/>
-  <testcase name="updateCurrency_WhenCurrencyDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
-  <testcase name="createCurrency_WhenCurrencyDoesNotExist_ShouldCreateCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
-  <testcase name="updateCurrency_WhenNewCodeAlreadyExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.003"/>
+  <testcase name="updateCurrency_WhenNewCodeExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.035"/>
+  <testcase name="updateCurrency_WhenCurrencyNotFound_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.001"/>
+  <testcase name="deleteCurrency_WhenNotExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.001"/>
+  <testcase name="deleteCurrency_WhenExists_ShouldDelete()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.001"/>
+  <testcase name="getCurrencyByCode_WhenExists_ShouldReturnCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.003"/>
+  <testcase name="getCurrencyById_WhenExists_ShouldReturnCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
+  <testcase name="getAllCurrencies_ShouldReturnListOfCurrencies()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
+  <testcase name="createCurrency_WhenNotExists_ShouldCreateCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.023"/>
+  <testcase name="getCurrencyById_WhenNotExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.003"/>
+  <testcase name="getCurrencyByCode_WhenNotExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
+  <testcase name="createCurrency_WhenAlreadyExists_ShouldThrowException()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.002"/>
+  <testcase name="updateCurrency_WhenExists_ShouldUpdateCurrency()" classname="com.webstore.implementation.CurrencyServiceImplementationTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

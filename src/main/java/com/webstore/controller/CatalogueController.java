@@ -32,7 +32,11 @@ public class CatalogueController {
 
     @GetMapping
     public ResponseEntity<List<CatalogueResponseDto>> getAllCatalogues() {
-        return ResponseEntity.ok(catalogueService.getAllCatalogues());
+        List<CatalogueResponseDto> catalogues = catalogueService.getAllCatalogues();
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 204 No Content
+        }
+        return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping("/{id}")

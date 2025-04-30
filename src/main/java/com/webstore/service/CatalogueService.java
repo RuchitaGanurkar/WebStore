@@ -12,5 +12,5 @@ public interface CatalogueService {
     CatalogueResponseDto updateCatalogue(Integer id, CatalogueRequestDto dto);
     void deleteCatalogue(Integer id);
     List<CatalogueResponseDto> searchByName(String name);
-    List<CatalogueResponseDto> searchByDescription(String description);
+//    List<CatalogueResponseDto> searchByDescription(String description);
 }

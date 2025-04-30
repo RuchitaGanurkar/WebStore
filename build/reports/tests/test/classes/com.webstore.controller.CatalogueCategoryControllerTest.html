@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.573s</div>
+<div class="counter">0.070s</div>
 <p>duration</p>
 </div>
 </td>
@@ -66,9 +66,6 @@
 <li>
 <a href="#tab1">Standard output</a>
 </li>
-<li>
-<a href="#tab2">Standard error</a>
-</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -82,22 +79,22 @@
 </thead>
 <tr>
 <td class="success">testCreateMappingAlreadyExists()</td>
-<td class="success">0.005s</td>
+<td class="success">0.010s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testCreateMappingSuccess()</td>
-<td class="success">0.316s</td>
+<td class="success">0.020s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testGetAllMappingsEmptyList()</td>
-<td class="success">0.161s</td>
+<td class="success">0.029s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testGetAllMappingsWithData()</td>
-<td class="success">0.091s</td>
+<td class="success">0.011s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -105,8 +102,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>16:38:07.941 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.webstore.controller.CatalogueCategoryControllerTest]: CatalogueCategoryControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-16:38:08.199 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.webstore.WebStoreSpringBootApp for test class com.webstore.controller.CatalogueCategoryControllerTest
+<pre>18:19:23.540 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.webstore.controller.CatalogueCategoryControllerTest]: CatalogueCategoryControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:19:23.682 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.webstore.WebStoreSpringBootApp for test class com.webstore.controller.CatalogueCategoryControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -117,30 +114,19 @@
 
  :: Spring Boot ::                (v3.4.4)
 
-2025-04-28T16:38:08.697+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.c.CatalogueCategoryControllerTest    : Starting CatalogueCategoryControllerTest using Java 21.0.6 with PID 10408 (started by PriyanshuRaj(G10XIND in C:\code\New folder\WebStore)
-2025-04-28T16:38:08.698+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.c.CatalogueCategoryControllerTest    : The following 1 profile is active: &quot;local&quot;
-2025-04-28T16:38:11.601+05:30  WARN 10408 --- [V1-local] [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+2025-04-30T18:19:24.010+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.c.CatalogueCategoryControllerTest    : Starting CatalogueCategoryControllerTest using Java 21.0.6 with PID 8660 (started by PriyanshuRaj(G10XIND in C:\code\New folder\WebStore)
+2025-04-30T18:19:24.012+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.c.CatalogueCategoryControllerTest    : The following 1 profile is active: &quot;local&quot;
+2025-04-30T18:19:24.836+05:30  WARN 8660 --- [V1-local] [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: ca128678-ef23-4796-9a9e-abf8268b5d94
+Using generated security password: ca02eb58-a8f8-4298-9953-3bc0d6bbcdd9
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2025-04-28T16:38:11.646+05:30  INFO 10408 --- [V1-local] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2025-04-28T16:38:12.034+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2025-04-28T16:38:12.034+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-04-28T16:38:12.036+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
-2025-04-28T16:38:12.119+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.c.CatalogueCategoryControllerTest    : Started CatalogueCategoryControllerTest in 3.839 seconds (process running for 5.312)
-</pre>
-</span>
-</div>
-<div id="tab2" class="tab">
-<h2>Standard error</h2>
-<span class="code">
-<pre>Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
-WARNING: A Java agent has been loaded dynamically (C:\Users\PriyanshuRaj(G10XIND\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.15.11\a38b16385e867f59a641330f0362ebe742788ed8\byte-buddy-agent-1.15.11.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2025-04-30T18:19:24.874+05:30  INFO 8660 --- [V1-local] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-04-30T18:19:25.047+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2025-04-30T18:19:25.047+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-30T18:19:25.048+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-30T18:19:25.081+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.c.CatalogueCategoryControllerTest    : Started CatalogueCategoryControllerTest in 1.327 seconds (process running for 4.259)
 </pre>
 </span>
 </div>
@@ -152,7 +138,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 28, 2025, 4:38:14 PM</p>
+<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 30, 2025, 6:19:26 PM</p>
 </div>
 </div>
 </body>

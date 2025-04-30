@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.122s</div>
+<div class="counter">0.089s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,27 +79,27 @@
 </thead>
 <tr>
 <td class="success">testCreateProductPrice()</td>
-<td class="success">0.021s</td>
+<td class="success">0.014s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testDeleteProductPrice()</td>
-<td class="success">0.049s</td>
+<td class="success">0.036s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testGetProductPriceById()</td>
-<td class="success">0.011s</td>
+<td class="success">0.010s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testUpdateProductPrice()</td>
-<td class="success">0.027s</td>
+<td class="success">0.022s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testUpdateProductPriceWithNullValue()</td>
-<td class="success">0.014s</td>
+<td class="success">0.007s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -107,26 +107,26 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2025-04-28T16:38:13.715+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
-2025-04-28T16:38:13.715+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-04-28T16:38:13.715+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2025-04-28T16:38:13.717+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Deleting product price with id=1
-2025-04-28T16:38:13.732+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
-2025-04-28T16:38:13.733+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-04-28T16:38:13.733+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2025-04-28T16:38:13.735+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Updating product price with id=1 to new amount=2000
-2025-04-28T16:38:13.761+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
-2025-04-28T16:38:13.762+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-04-28T16:38:13.762+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2025-04-28T16:38:13.763+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Fetching product price with id=1
-2025-04-28T16:38:13.773+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
-2025-04-28T16:38:13.773+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-04-28T16:38:13.774+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2025-04-28T16:38:13.782+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Received request to create product price for productId=1, currencyId=1
-2025-04-28T16:38:13.794+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
-2025-04-28T16:38:13.794+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-04-28T16:38:13.794+05:30  INFO 10408 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2025-04-28T16:38:13.799+05:30  WARN 10408 --- [V1-local] [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity&lt;com.webstore.dto.response.ProductPriceResponseDto&gt; com.webstore.controller.ProductPriceController.updateProductPrice(java.lang.Integer,java.lang.Long)]
+<pre>2025-04-30T18:19:25.840+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-30T18:19:25.841+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-30T18:19:25.841+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-30T18:19:25.842+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Deleting product price with id=1
+2025-04-30T18:19:25.849+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-30T18:19:25.850+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-30T18:19:25.850+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-30T18:19:25.852+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Updating product price with id=1 to new amount=2000
+2025-04-30T18:19:25.872+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-30T18:19:25.873+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-30T18:19:25.873+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-30T18:19:25.873+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Fetching product price with id=1
+2025-04-30T18:19:25.881+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-30T18:19:25.881+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-30T18:19:25.881+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-30T18:19:25.888+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.controller.ProductPriceController    : Received request to create product price for productId=1, currencyId=1
+2025-04-30T18:19:25.897+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-04-30T18:19:25.897+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-04-30T18:19:25.897+05:30  INFO 8660 --- [V1-local] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-04-30T18:19:25.899+05:30  WARN 8660 --- [V1-local] [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity&lt;com.webstore.dto.response.ProductPriceResponseDto&gt; com.webstore.controller.ProductPriceController.updateProductPrice(java.lang.Integer,java.lang.Long)]
 </pre>
 </span>
 </div>
@@ -138,7 +138,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 28, 2025, 4:38:14 PM</p>
+<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 30, 2025, 6:19:26 PM</p>
 </div>
 </div>
 </body>

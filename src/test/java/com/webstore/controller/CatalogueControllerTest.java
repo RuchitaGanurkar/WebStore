@@ -5,17 +5,18 @@ import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.service.CatalogueService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CatalogueControllerTest {
 
     @Mock
@@ -29,8 +30,6 @@ class CatalogueControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         requestDto = new CatalogueRequestDto();
         requestDto.setCatalogueName("Electronics");
         requestDto.setCatalogueDescription("Gadgets & Devices");
@@ -42,47 +41,59 @@ class CatalogueControllerTest {
     }
 
     @Test
-    void testCreateCatalogue() {
+    void givenValidRequest_whenCreateCatalogue_thenReturnsCreatedCatalogue() {
         when(catalogueService.createCatalogue(requestDto)).thenReturn(responseDto);
+
         ResponseEntity<CatalogueResponseDto> response = catalogueController.createCatalogue(requestDto);
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(responseDto, response.getBody());
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(responseDto);
+
+        verify(catalogueService).createCatalogue(requestDto);
     }
 
     @Test
-    void testGetAllCatalogues() {
-        when(catalogueService.getAllCatalogues()).thenReturn(Arrays.asList(responseDto));
+    void whenGetAllCatalogues_thenReturnsCatalogueList() {
+        when(catalogueService.getAllCatalogues()).thenReturn(List.of(responseDto));
+
         ResponseEntity<List<CatalogueResponseDto>> response = catalogueController.getAllCatalogues();
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().size());
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).hasSize(1);
+
+        verify(catalogueService).getAllCatalogues();
     }
 
     @Test
-    void testGetCatalogueById() {
+    void givenValidId_whenGetCatalogueById_thenReturnsCatalogue() {
         when(catalogueService.getCatalogueById(1)).thenReturn(responseDto);
+
         ResponseEntity<CatalogueResponseDto> response = catalogueController.getCatalogueById(1);
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(responseDto, response.getBody());
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(responseDto);
+
+        verify(catalogueService).getCatalogueById(1);
     }
 
     @Test
-    void testUpdateCatalogue() {
+    void givenValidIdAndRequest_whenUpdateCatalogue_thenReturnsUpdatedCatalogue() {
         when(catalogueService.updateCatalogue(1, requestDto)).thenReturn(responseDto);
+
         ResponseEntity<CatalogueResponseDto> response = catalogueController.updateCatalogue(1, requestDto);
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(responseDto, response.getBody());
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(responseDto);
+
+        verify(catalogueService).updateCatalogue(1, requestDto);
     }
 
     @Test
-    void testDeleteCatalogue() {
-        doNothing().when(catalogueService).deleteCatalogue(1);
+    void givenValidId_whenDeleteCatalogue_thenReturnsNoContent() {
         ResponseEntity<Void> response = catalogueController.deleteCatalogue(1);
 
-        assertEquals(204, response.getStatusCodeValue());
-        verify(catalogueService, times(1)).deleteCatalogue(1);
+        assertThat(response.getStatusCodeValue()).isEqualTo(204);
+
+        verify(catalogueService).deleteCatalogue(1);
     }
 }

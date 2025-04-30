@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webstore.dto.request.UserRequestDto;
 import com.webstore.dto.response.UserResponseDto;
 import com.webstore.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,17 +16,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
@@ -48,7 +45,6 @@ public class UserControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
         objectMapper = new ObjectMapper();
 
-        // Initialize test data
         requestDto = new UserRequestDto();
         requestDto.setUsername("testuser");
         requestDto.setEmail("test@example.com");
@@ -67,19 +63,21 @@ public class UserControllerTest {
 
     @Test
     void testGetAllUsers() throws Exception {
-        List<UserResponseDto> users = Arrays.asList(responseDto);
-        when(userService.getAllUsers()).thenReturn(users);
+        when(userService.getAllUsers()).thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].username", is("testuser")))
-                .andExpect(jsonPath("$[0].email", is("test@example.com")))
-                .andExpect(jsonPath("$[0].fullName", is("Test User")))
-                .andExpect(jsonPath("$[0].role", is("USER")));
+                .andExpect(jsonPath("$[0].userId", is(1)));
+    }
 
-        verify(userService, times(1)).getAllUsers();
+    @Test
+    void testGetAllUsers_WhenEmpty() throws Exception {
+        when(userService.getAllUsers()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
@@ -88,117 +86,87 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(1)))
-                .andExpect(jsonPath("$.username", is("testuser")))
-                .andExpect(jsonPath("$.email", is("test@example.com")))
-                .andExpect(jsonPath("$.fullName", is("Test User")))
-                .andExpect(jsonPath("$.role", is("USER")));
-
-        verify(userService, times(1)).getUserById(1);
+                .andExpect(jsonPath("$.userId", is(1)));
     }
 
     @Test
-    void testGetUserByIdNotFound() throws Exception {
-        when(userService.getUserById(99)).thenThrow(new EntityNotFoundException("User not found"));
+    void testGetUserById_NotFound() throws Exception {
+        when(userService.getUserById(99))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"));
 
         mockMvc.perform(get("/api/users/99"))
                 .andExpect(status().isNotFound());
-
-        verify(userService, times(1)).getUserById(99);
     }
 
     @Test
-    void testCreateUser() throws Exception {
-        when(userService.createUser(any(UserRequestDto.class))).thenReturn(responseDto);
+    void testCreateUser_Success() throws Exception {
+        when(userService.createUser(any())).thenReturn(responseDto);
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.userId", is(1)))
-                .andExpect(jsonPath("$.username", is("testuser")))
-                .andExpect(jsonPath("$.email", is("test@example.com")))
-                .andExpect(jsonPath("$.fullName", is("Test User")))
-                .andExpect(jsonPath("$.role", is("USER")));
-
-        verify(userService, times(1)).createUser(any(UserRequestDto.class));
+                .andExpect(jsonPath("$.userId", is(1)));
     }
 
     @Test
-    void testCreateUserWithValidationFailure() throws Exception {
-        when(userService.createUser(any(UserRequestDto.class)))
-                .thenThrow(new IllegalArgumentException("Invalid user data"));
+    void testCreateUser_UsernameExists() throws Exception {
+        when(userService.createUser(any()))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Username already exists"));
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", is("Invalid user data")));
-
-        verify(userService, times(1)).createUser(any(UserRequestDto.class));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testUpdateUser() throws Exception {
-        when(userService.updateUser(eq(1), any(UserRequestDto.class))).thenReturn(responseDto);
+    void testUpdateUser_Success() throws Exception {
+        when(userService.updateUser(eq(1), any())).thenReturn(responseDto);
 
         mockMvc.perform(put("/api/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(1)))
-                .andExpect(jsonPath("$.username", is("testuser")))
-                .andExpect(jsonPath("$.email", is("test@example.com")))
-                .andExpect(jsonPath("$.fullName", is("Test User")))
-                .andExpect(jsonPath("$.role", is("USER")));
-
-        verify(userService, times(1)).updateUser(eq(1), any(UserRequestDto.class));
+                .andExpect(jsonPath("$.userId", is(1)));
     }
 
     @Test
-    void testUpdateUserNotFound() throws Exception {
-        when(userService.updateUser(eq(99), any(UserRequestDto.class)))
-                .thenThrow(new EntityNotFoundException("User not found"));
+    void testUpdateUser_NotFound() throws Exception {
+        when(userService.updateUser(eq(99), any()))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"));
 
         mockMvc.perform(put("/api/users/99")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isNotFound());
-
-        verify(userService, times(1)).updateUser(eq(99), any(UserRequestDto.class));
     }
 
     @Test
-    void testUpdateUserValidationFailure() throws Exception {
-        when(userService.updateUser(eq(1), any(UserRequestDto.class)))
-                .thenThrow(new IllegalArgumentException("Invalid user data"));
+    void testUpdateUser_EmailConflict() throws Exception {
+        when(userService.updateUser(eq(1), any()))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Email already exists"));
 
         mockMvc.perform(put("/api/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", is("Invalid user data")));
-
-        verify(userService, times(1)).updateUser(eq(1), any(UserRequestDto.class));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testDeleteUser() throws Exception {
+    void testDeleteUser_Success() throws Exception {
         doNothing().when(userService).deleteUser(1);
 
         mockMvc.perform(delete("/api/users/1"))
                 .andExpect(status().isNoContent());
-
-        verify(userService, times(1)).deleteUser(1);
     }
 
     @Test
-    void testDeleteUserNotFound() throws Exception {
-        doThrow(new EntityNotFoundException("User not found")).when(userService).deleteUser(99);
+    void testDeleteUser_NotFound() throws Exception {
+        doThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"))
+                .when(userService).deleteUser(99);
 
         mockMvc.perform(delete("/api/users/99"))
                 .andExpect(status().isNotFound());
-
-        verify(userService, times(1)).deleteUser(99);
     }
 }

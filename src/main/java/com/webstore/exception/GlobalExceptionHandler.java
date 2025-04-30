@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -32,5 +33,12 @@ public class GlobalExceptionHandler {
         LOGGER.error("Webstore: Unexpected exception occurred: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Webstore: Something went wrong. Please try again later.");
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
+        LOGGER.error("Webstore: ResponseStatusException occurred: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(ex.getStatusCode())
+                .body("Webstore: " + ex.getReason());
     }
 }

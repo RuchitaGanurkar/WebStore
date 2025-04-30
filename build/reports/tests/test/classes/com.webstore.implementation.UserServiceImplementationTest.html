@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.090s</div>
+<div class="counter">0.058s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">createUser_WhenEmailExists_ShouldThrowException()</td>
-<td class="success">0.003s</td>
+<td class="success">0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -94,17 +94,17 @@
 </tr>
 <tr>
 <td class="success">deleteUser_WhenUserDoesNotExist_ShouldThrowException()</td>
-<td class="success">0.053s</td>
+<td class="success">0.035s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">deleteUser_WhenUserExists_ShouldDeleteUser()</td>
-<td class="success">0.004s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">getAllUsers_ShouldReturnListOfUsers()</td>
-<td class="success">0.003s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -114,12 +114,12 @@
 </tr>
 <tr>
 <td class="success">getUserById_WhenUserExists_ShouldReturnUser()</td>
-<td class="success">0.003s</td>
+<td class="success">0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">updateUser_WhenNewEmailExists_ShouldThrowException()</td>
-<td class="success">0.008s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -129,7 +129,7 @@
 </tr>
 <tr>
 <td class="success">updateUser_WhenUserDoesNotExist_ShouldThrowException()</td>
-<td class="success">0.002s</td>
+<td class="success">0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -147,23 +147,23 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2025-04-28T16:38:14.826+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 99
-2025-04-28T16:38:14.838+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.844+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 1
-2025-04-28T16:38:14.845+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleted user with ID: 1
-2025-04-28T16:38:14.848+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.851+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
-2025-04-28T16:38:14.851+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Created user with ID: 1
-2025-04-28T16:38:14.853+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 1
-2025-04-28T16:38:14.856+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.856+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
-2025-04-28T16:38:14.859+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 99
-2025-04-28T16:38:14.861+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.861+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
-2025-04-28T16:38:14.863+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
-2025-04-28T16:38:14.866+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
-2025-04-28T16:38:14.868+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching all users
-2025-04-28T16:38:14.873+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 99
+<pre>2025-04-30T18:19:26.395+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 99
+2025-04-30T18:19:26.397+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.400+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 1
+2025-04-30T18:19:26.400+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleted user with ID: 1
+2025-04-30T18:19:26.403+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.406+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.406+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Created user with ID: 1
+2025-04-30T18:19:26.407+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 1
+2025-04-30T18:19:26.409+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.409+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
+2025-04-30T18:19:26.411+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 99
+2025-04-30T18:19:26.412+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.412+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
+2025-04-30T18:19:26.413+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.415+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.416+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching all users
+2025-04-30T18:19:26.421+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 99
 </pre>
 </span>
 </div>
@@ -175,7 +175,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 28, 2025, 4:38:14 PM</p>
+<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 30, 2025, 6:19:26 PM</p>
 </div>
 </div>
 </body>

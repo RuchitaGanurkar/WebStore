@@ -6,6 +6,7 @@ import com.webstore.entity.Catalogue;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.service.CatalogueService;
 import com.webstore.util.AuthUtils;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,9 +49,10 @@ public class CatalogueServiceImplementation implements CatalogueService {
     @Override
     public CatalogueResponseDto getCatalogueById(Integer id) {
         Catalogue catalogue = catalogueRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Catalogue not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Catalogue with id " + id + " not found"));
         return convertToDto(catalogue);
     }
+
 
     @Override
     public CatalogueResponseDto updateCatalogue(Integer id, CatalogueRequestDto dto) {
@@ -79,13 +81,13 @@ public class CatalogueServiceImplementation implements CatalogueService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<CatalogueResponseDto> searchByDescription(String description) {
-        return catalogueRepository.findByCatalogueDescriptionContainingIgnoreCase(description)
-                .stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<CatalogueResponseDto> searchByDescription(String description) {
+//        return catalogueRepository.findByCatalogueDescriptionContainingIgnoreCase(description)
+//                .stream()
+//                .map(this::convertToDto)
+//                .collect(Collectors.toList());
+//    }
 
     private CatalogueResponseDto convertToDto(Catalogue catalogue) {
         CatalogueResponseDto dto = new CatalogueResponseDto();

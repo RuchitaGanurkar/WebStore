@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.webstore.implementation.UserServiceImplementationTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2025-04-28T11:08:14" hostname="LAPTOP-AVARR59S" time="0.094">
+<testsuite name="com.webstore.implementation.UserServiceImplementationTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2025-04-30T12:49:26" hostname="LAPTOP-AVARR59S" time="0.062">
   <properties/>
-  <testcase name="deleteUser_WhenUserDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.053"/>
-  <testcase name="updateUser_WhenNewEmailExists_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.008"/>
-  <testcase name="deleteUser_WhenUserExists_ShouldDeleteUser()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.004"/>
+  <testcase name="deleteUser_WhenUserDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.035"/>
+  <testcase name="updateUser_WhenNewEmailExists_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
+  <testcase name="deleteUser_WhenUserExists_ShouldDeleteUser()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
   <testcase name="updateUser_WhenNewUsernameExists_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.004"/>
   <testcase name="createUser_WhenUsernameAndEmailDoNotExist_ShouldCreateUser()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
-  <testcase name="getUserById_WhenUserExists_ShouldReturnUser()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.003"/>
+  <testcase name="getUserById_WhenUserExists_ShouldReturnUser()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.001"/>
   <testcase name="updateUser_WhenUserExistsWithNewUsername_ShouldCheckUsernameUniqueness()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
-  <testcase name="updateUser_WhenUserDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
+  <testcase name="updateUser_WhenUserDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.001"/>
   <testcase name="updateUser_WhenUserExistsAndNoConflicts_ShouldUpdateUser()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.001"/>
-  <testcase name="createUser_WhenEmailExists_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.003"/>
+  <testcase name="createUser_WhenEmailExists_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.001"/>
   <testcase name="createUser_WhenUsernameExists_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
-  <testcase name="getAllUsers_ShouldReturnListOfUsers()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.003"/>
+  <testcase name="getAllUsers_ShouldReturnListOfUsers()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.002"/>
   <testcase name="getUserById_WhenUserDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.UserServiceImplementationTest" time="0.003"/>
-  <system-out><![CDATA[2025-04-28T16:38:14.826+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 99
-2025-04-28T16:38:14.838+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.844+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 1
-2025-04-28T16:38:14.845+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleted user with ID: 1
-2025-04-28T16:38:14.848+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.851+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
-2025-04-28T16:38:14.851+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Created user with ID: 1
-2025-04-28T16:38:14.853+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 1
-2025-04-28T16:38:14.856+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.856+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
-2025-04-28T16:38:14.859+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 99
-2025-04-28T16:38:14.861+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
-2025-04-28T16:38:14.861+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
-2025-04-28T16:38:14.863+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
-2025-04-28T16:38:14.866+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
-2025-04-28T16:38:14.868+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching all users
-2025-04-28T16:38:14.873+05:30  INFO 10408 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 99
+  <system-out><![CDATA[2025-04-30T18:19:26.395+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 99
+2025-04-30T18:19:26.397+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.400+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 1
+2025-04-30T18:19:26.400+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleted user with ID: 1
+2025-04-30T18:19:26.403+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.406+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.406+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Created user with ID: 1
+2025-04-30T18:19:26.407+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 1
+2025-04-30T18:19:26.409+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.409+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
+2025-04-30T18:19:26.411+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 99
+2025-04-30T18:19:26.412+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.412+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
+2025-04-30T18:19:26.413+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.415+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.416+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching all users
+2025-04-30T18:19:26.421+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 99
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

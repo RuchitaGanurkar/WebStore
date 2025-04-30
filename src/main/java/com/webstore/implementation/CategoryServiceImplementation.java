@@ -11,7 +11,6 @@ import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +19,9 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryServiceImplementation implements CategoryService {
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     public CategoryServiceImplementation(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
@@ -30,7 +29,7 @@ public class CategoryServiceImplementation implements CategoryService {
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto dto) {
         if (categoryRepository.existsByCategoryName(dto.getCategoryName())) {
-            throw new EntityExistsException("Category name already exists");
+            throw new EntityExistsException("Category with name already exists.");
         }
 
         Category category = new Category();
@@ -46,9 +45,7 @@ public class CategoryServiceImplementation implements CategoryService {
 
     @Override
     public List<CategoryResponseDto> getAllCategories(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Category> categoryPage = categoryRepository.findAll(pageable);
-
+        Page<Category> categoryPage = categoryRepository.findAll(PageRequest.of(page, size));
         return categoryPage.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -68,7 +65,7 @@ public class CategoryServiceImplementation implements CategoryService {
 
         if (!category.getCategoryName().equals(dto.getCategoryName()) &&
                 categoryRepository.existsByCategoryName(dto.getCategoryName())) {
-            throw new EntityExistsException("Category with name " + dto.getCategoryName() + " already exists");
+            throw new EntityExistsException("Category name already exists.");
         }
 
         category.setCategoryName(dto.getCategoryName());
@@ -95,7 +92,6 @@ public class CategoryServiceImplementation implements CategoryService {
         dto.setCreatedBy(category.getCreatedBy());
         dto.setUpdatedAt(category.getUpdatedAt());
         dto.setUpdatedBy(category.getUpdatedBy());
-
         return dto;
     }
 }

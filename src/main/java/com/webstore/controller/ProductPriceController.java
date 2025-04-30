@@ -31,7 +31,7 @@ public class ProductPriceController {
                 request.getProductId(), request.getCurrencyId());
 
         ProductPriceResponseDto response = productPriceService.createProductPrice(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
