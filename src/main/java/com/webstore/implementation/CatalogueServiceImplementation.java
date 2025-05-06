@@ -2,15 +2,19 @@ package com.webstore.implementation;
 
 import com.webstore.dto.request.CatalogueRequestDto;
 import com.webstore.dto.response.CatalogueResponseDto;
+import com.webstore.dto.response.CategoryResponseDto;
 import com.webstore.entity.Catalogue;
+import com.webstore.repository.CatalogueCategoryRepository;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.service.CatalogueService;
+import com.webstore.service.CategoryService;
 import com.webstore.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +23,18 @@ public class CatalogueServiceImplementation implements CatalogueService {
 
     @Autowired
     private final CatalogueRepository catalogueRepository;
+    @Autowired
+    private final CatalogueCategoryRepository catalogueCategoryRepository;
+    @Autowired
+    private final CategoryService categoryService;
 
-    public CatalogueServiceImplementation(CatalogueRepository catalogueRepository) {
+
+    public CatalogueServiceImplementation(CatalogueRepository catalogueRepository,
+                                          CatalogueCategoryRepository catalogueCategoryRepository,
+                                          CategoryService categoryService) {
         this.catalogueRepository = catalogueRepository;
+        this.catalogueCategoryRepository = catalogueCategoryRepository;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -85,6 +98,30 @@ public class CatalogueServiceImplementation implements CatalogueService {
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<CategoryResponseDto> getCategoriesByCatalogueId(Integer catalogueId) {
+        // Find the catalogue
+        Catalogue catalogue = catalogueRepository.findById(catalogueId)
+                .orElseThrow(() -> new RuntimeException("Catalogue not found with ID: " + catalogueId));
+
+        // Get category IDs from catalogue_category mappings
+        List<Integer> categoryIds = catalogue.getCatalogueCategories().stream()
+                .map(cc -> cc.getCategory().getCategoryId())
+                .collect(Collectors.toList());
+
+        // Get detailed category info for each ID
+        List<CategoryResponseDto> categories = new ArrayList<>();
+        for (Integer categoryId : categoryIds) {
+            try {
+                CategoryResponseDto category = categoryService.getCategoryById(categoryId);
+                categories.add(category);
+            } catch (Exception e) {
+                // Skip categories that can't be found
+            }
+        }
+
+        return categories;
     }
 
     private CatalogueResponseDto convertToDto(Catalogue catalogue) {
