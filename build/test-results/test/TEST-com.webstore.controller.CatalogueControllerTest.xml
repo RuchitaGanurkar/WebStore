@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.controller.CatalogueControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-04-30T12:49:25" hostname="LAPTOP-AVARR59S" time="0.086">
+  <properties/>
+  <testcase name="givenValidIdAndRequest_whenUpdateCatalogue_thenReturnsUpdatedCatalogue()" classname="com.webstore.controller.CatalogueControllerTest" time="0.066"/>
+  <testcase name="whenGetAllCatalogues_thenReturnsCatalogueList()" classname="com.webstore.controller.CatalogueControllerTest" time="0.012"/>
+  <testcase name="givenValidId_whenGetCatalogueById_thenReturnsCatalogue()" classname="com.webstore.controller.CatalogueControllerTest" time="0.002"/>
+  <testcase name="givenValidRequest_whenCreateCatalogue_thenReturnsCreatedCatalogue()" classname="com.webstore.controller.CatalogueControllerTest" time="0.003"/>
+  <testcase name="givenValidId_whenDeleteCatalogue_thenReturnsNoContent()" classname="com.webstore.controller.CatalogueControllerTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

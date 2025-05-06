@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ProductPriceServiceImplementationTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ProductPriceServiceImplementationTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.webstore.implementation.html">com.webstore.implementation</a> &gt; ProductPriceServiceImplementationTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">9</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.113s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">createProductPrice_ShouldCreateProductPrice()</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">createProductPrice_WhenCurrencyNotFound_ShouldThrowException()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">createProductPrice_WhenProductNotFound_ShouldThrowException()</td>
+<td class="success">0.093s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteProductPrice_WhenProductPriceDoesNotExist_ShouldThrowException()</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteProductPrice_WhenProductPriceExists_ShouldDeleteProductPrice()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getProductPriceById_WhenProductPriceDoesNotExist_ShouldThrowException()</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getProductPriceById_WhenProductPriceExists_ShouldReturnProductPrice()</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateProductPrice_WhenProductPriceDoesNotExist_ShouldThrowException()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateProductPrice_WhenProductPriceExists_ShouldUpdateProductPrice()</td>
+<td class="success">0.005s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2025-04-30T18:19:26.317+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Creating product price for productId=1 and currencyId=1
+2025-04-30T18:19:26.321+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Updating product price with id=1 to new amount=2000
+2025-04-30T18:19:26.322+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Updated price for productPriceId=1 successfully
+2025-04-30T18:19:26.322+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Formatted price for display: $20
+2025-04-30T18:19:26.329+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Fetching product price with id=1
+2025-04-30T18:19:26.329+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Formatted price for display: $10
+2025-04-30T18:19:26.332+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Product price with id=1 has been deleted
+2025-04-30T18:19:26.333+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Creating product price for productId=1 and currencyId=1
+2025-04-30T18:19:26.335+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Updating product price with id=99 to new amount=2000
+2025-04-30T18:19:26.338+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Fetching product price with id=99
+2025-04-30T18:19:26.341+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Creating product price for productId=1 and currencyId=1
+2025-04-30T18:19:26.341+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Product price created with id=1
+2025-04-30T18:19:26.341+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Formatted price for display: $10
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 30, 2025, 6:19:26 PM</p>
+</div>
+</div>
+</body>
+</html>

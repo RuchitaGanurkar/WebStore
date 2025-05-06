@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.implementation.CatalogueCategoryServiceImplementationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-04-30T12:49:25" hostname="LAPTOP-AVARR59S" time="0.191">
+  <properties/>
+  <testcase name="testCreateCatalogueCategory_AlreadyExists()" classname="com.webstore.implementation.CatalogueCategoryServiceImplementationTest" time="0.185"/>
+  <testcase name="testCreateCatalogueCategory_Success()" classname="com.webstore.implementation.CatalogueCategoryServiceImplementationTest" time="0.004"/>
+  <testcase name="testGetAllCatalogueCategories()" classname="com.webstore.implementation.CatalogueCategoryServiceImplementationTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

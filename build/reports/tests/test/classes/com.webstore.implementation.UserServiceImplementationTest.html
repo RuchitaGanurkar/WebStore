@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - UserServiceImplementationTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>UserServiceImplementationTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.webstore.implementation.html">com.webstore.implementation</a> &gt; UserServiceImplementationTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">13</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.058s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">createUser_WhenEmailExists_ShouldThrowException()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">createUser_WhenUsernameAndEmailDoNotExist_ShouldCreateUser()</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">createUser_WhenUsernameExists_ShouldThrowException()</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteUser_WhenUserDoesNotExist_ShouldThrowException()</td>
+<td class="success">0.035s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteUser_WhenUserExists_ShouldDeleteUser()</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getAllUsers_ShouldReturnListOfUsers()</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getUserById_WhenUserDoesNotExist_ShouldThrowException()</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getUserById_WhenUserExists_ShouldReturnUser()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser_WhenNewEmailExists_ShouldThrowException()</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser_WhenNewUsernameExists_ShouldThrowException()</td>
+<td class="success">0.004s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser_WhenUserDoesNotExist_ShouldThrowException()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser_WhenUserExistsAndNoConflicts_ShouldUpdateUser()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser_WhenUserExistsWithNewUsername_ShouldCheckUsernameUniqueness()</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2025-04-30T18:19:26.395+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 99
+2025-04-30T18:19:26.397+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.400+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleting user with ID: 1
+2025-04-30T18:19:26.400+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Deleted user with ID: 1
+2025-04-30T18:19:26.403+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.406+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.406+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Created user with ID: 1
+2025-04-30T18:19:26.407+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 1
+2025-04-30T18:19:26.409+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.409+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
+2025-04-30T18:19:26.411+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 99
+2025-04-30T18:19:26.412+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updating user with ID: 1
+2025-04-30T18:19:26.412+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Updated user with ID: 1
+2025-04-30T18:19:26.413+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.415+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Creating user with username: testuser
+2025-04-30T18:19:26.416+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching all users
+2025-04-30T18:19:26.421+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.UserServiceImplementation          : Fetching user with ID: 99
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.12</a> at Apr 30, 2025, 6:19:26 PM</p>
+</div>
+</div>
+</body>
+</html>

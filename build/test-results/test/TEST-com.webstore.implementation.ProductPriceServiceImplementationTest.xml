@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.webstore.implementation.ProductPriceServiceImplementationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-04-30T12:49:26" hostname="LAPTOP-AVARR59S" time="0.115">
+  <properties/>
+  <testcase name="createProductPrice_WhenProductNotFound_ShouldThrowException()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.093"/>
+  <testcase name="updateProductPrice_WhenProductPriceExists_ShouldUpdateProductPrice()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.005"/>
+  <testcase name="deleteProductPrice_WhenProductPriceDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.003"/>
+  <testcase name="getProductPriceById_WhenProductPriceExists_ShouldReturnProductPrice()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.003"/>
+  <testcase name="deleteProductPrice_WhenProductPriceExists_ShouldDeleteProductPrice()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.001"/>
+  <testcase name="createProductPrice_WhenCurrencyNotFound_ShouldThrowException()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.001"/>
+  <testcase name="updateProductPrice_WhenProductPriceDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.001"/>
+  <testcase name="getProductPriceById_WhenProductPriceDoesNotExist_ShouldThrowException()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.003"/>
+  <testcase name="createProductPrice_ShouldCreateProductPrice()" classname="com.webstore.implementation.ProductPriceServiceImplementationTest" time="0.003"/>
+  <system-out><![CDATA[2025-04-30T18:19:26.317+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Creating product price for productId=1 and currencyId=1
+2025-04-30T18:19:26.321+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Updating product price with id=1 to new amount=2000
+2025-04-30T18:19:26.322+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Updated price for productPriceId=1 successfully
+2025-04-30T18:19:26.322+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Formatted price for display: $20
+2025-04-30T18:19:26.329+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Fetching product price with id=1
+2025-04-30T18:19:26.329+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Formatted price for display: $10
+2025-04-30T18:19:26.332+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Product price with id=1 has been deleted
+2025-04-30T18:19:26.333+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Creating product price for productId=1 and currencyId=1
+2025-04-30T18:19:26.335+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Updating product price with id=99 to new amount=2000
+2025-04-30T18:19:26.338+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Fetching product price with id=99
+2025-04-30T18:19:26.341+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Creating product price for productId=1 and currencyId=1
+2025-04-30T18:19:26.341+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Product price created with id=1
+2025-04-30T18:19:26.341+05:30  INFO 8660 --- [V1-local] [    Test worker] c.w.i.ProductPriceServiceImplementation  : Formatted price for display: $10
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
