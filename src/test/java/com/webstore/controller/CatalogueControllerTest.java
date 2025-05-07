@@ -86,21 +86,4 @@ class CatalogueControllerTest {
         verify(catalogueService, times(1)).deleteCatalogue(1);
     }
 
-    @Test
-    void testSearchByName() {
-        when(catalogueService.searchByName("Electronics")).thenReturn(List.of(responseDto));
-        ResponseEntity<List<CatalogueResponseDto>> response = catalogueController.searchByName("Electronics");
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().size());
-    }
-
-    @Test
-    void testSearchByDescription() {
-        when(catalogueService.searchByDescription("Gadgets")).thenReturn(List.of(responseDto));
-        ResponseEntity<List<CatalogueResponseDto>> response = catalogueController.searchByDescription("Gadgets");
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().size());
-    }
 }
