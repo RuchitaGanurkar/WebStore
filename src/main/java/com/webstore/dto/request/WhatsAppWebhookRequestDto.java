@@ -1,86 +1,115 @@
 package com.webstore.dto.request;
 
 import java.util.List;
-import lombok.Data;
 
-/**
- * DTO for incoming webhook requests from the WhatsApp Business API
- */
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class WhatsAppWebhookRequestDto {
-    private String object;
+
+    @JsonProperty("entry")
     private List<Entry> entry;
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Entry {
+        @JsonProperty("id")
         private String id;
+
+        @JsonProperty("changes")
         private List<Change> changes;
+    }
 
-        @Data
-        public static class Change {
-            private Value value;
-            private String field;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Change {
+        @JsonProperty("value")
+        private Value value;
 
-            @Data
-            public static class Value {
-                private String messagingProduct;
-                private Metadata metadata;
-                private List<Contact> contacts;
-                private List<Message> messages;
+        @JsonProperty("field")
+        private String field;
+    }
 
-                @Data
-                public static class Metadata {
-                    private String displayPhoneNumber;
-                    private String phoneNumberId;
-                }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Value {
+        @JsonProperty("messaging_product")
+        private String messagingProduct;
 
-                @Data
-                public static class Contact {
-                    private String waId;
-                    private String phoneNumber;
-                    private Profile profile;
+        @JsonProperty("metadata")
+        private Metadata metadata;
 
-                    @Data
-                    public static class Profile {
-                        private String name;
-                    }
-                }
+        @JsonProperty("messages")
+        private List<Message> messages;
 
-                @Data
-                public static class Message {
-                    private String from;
-                    private String id;
-                    private String timestamp;
-                    private String type;
-                    private Text text;
-                    private Interactive interactive;
+        @JsonProperty("contacts")
+        private List<Contact> contacts;
+    }
 
-                    @Data
-                    public static class Text {
-                        private String body;
-                    }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Metadata {
+        @JsonProperty("display_phone_number")
+        private String displayPhoneNumber;
 
-                    @Data
-                    public static class Interactive {
-                        private String type;
-                        private ButtonReply buttonReply;
-                        private ListReply listReply;
+        @JsonProperty("phone_number_id")
+        private String phoneNumberId;
+    }
 
-                        @Data
-                        public static class ButtonReply {
-                            private String id;
-                            private String title;
-                        }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Message {
+        @JsonProperty("from")
+        private String from;
 
-                        @Data
-                        public static class ListReply {
-                            private String id;
-                            private String title;
-                            private String description;
-                        }
-                    }
-                }
-            }
-        }
+        @JsonProperty("id")
+        private String id;
+
+        @JsonProperty("timestamp")
+        private String timestamp;
+
+        @JsonProperty("type")
+        private String type;
+
+        @JsonProperty("text")
+        private Text text;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Text {
+        @JsonProperty("body")
+        private String body;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Contact {
+        @JsonProperty("profile")
+        private Profile profile;
+
+        @JsonProperty("wa_id")
+        private String waId;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Profile {
+        @JsonProperty("name")
+        private String name;
     }
 }

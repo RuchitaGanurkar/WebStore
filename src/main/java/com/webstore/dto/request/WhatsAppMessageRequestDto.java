@@ -1,79 +1,40 @@
 package com.webstore.dto.request;
 
-import java.util.List;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-/**
- * DTO for sending messages to the WhatsApp Business API
- */
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class WhatsAppMessageRequestDto {
-    private String messagingProduct = "whatsapp";
-    private String recipientType = "individual";
+
+    private String messaging_product = "whatsapp";
     private String to;
-    private String type;
-    private TextMessage text;
-    private Interactive interactive;
+    private TextBody text;
+    private Context context;
+    private String status;
+    private String message_id;
 
     @Data
-    public static class TextMessage {
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TextBody {
         private String body;
     }
 
     @Data
-    public static class Interactive {
-        private String type;
-        private Header header;
-        private Body body;
-        private Footer footer;
-        private Action action;
-        private List<Button> buttons;
-
-        @Data
-        public static class Header {
-            private String type;
-            private String text;
-        }
-
-        @Data
-        public static class Body {
-            private String text;
-        }
-
-        @Data
-        public static class Footer {
-            private String text;
-        }
-
-        @Data
-        public static class Action {
-            private String button;
-            private List<Section> sections;
-
-            @Data
-            public static class Section {
-                private String title;
-                private List<Row> rows;
-
-                @Data
-                public static class Row {
-                    private String id;
-                    private String title;
-                    private String description;
-                }
-            }
-        }
-
-        @Data
-        public static class Button {
-            private String type;
-            private Reply reply;
-
-            @Data
-            public static class Reply {
-                private String id;
-                private String title;
-            }
-        }
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Context {
+        private String message_id;
     }
 }
