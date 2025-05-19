@@ -26,6 +26,7 @@ public class WhatsAppConfiguration {
         private String version;
         private String baseUrl;
         private String phoneNumberId;
+        private String graphUrl;
     }
 
     @Bean

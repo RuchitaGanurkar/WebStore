@@ -1,14 +1,11 @@
 package com.webstore.controller;
 
+import com.webstore.dto.request.WhatsAppTemplateMessageRequestDto;
 import com.webstore.dto.request.WhatsAppWebhookRequestDto;
 import com.webstore.service.WhatsAppService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -51,4 +48,31 @@ public class WhatsAppController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    /**
+     * Endpoint to send a welcome template message to a WhatsApp user
+     * Follows the Facebook Graph API pattern with version and phoneNumberId as path variables
+     */
+    @PostMapping("/{version}/{phoneNumberId}/send-welcome-template")
+    public ResponseEntity<String> sendWelcomeMessage(
+            @PathVariable("version") String version,
+            @PathVariable("phoneNumberId") String phoneNumberId,
+            @RequestBody WhatsAppTemplateMessageRequestDto requestBody) {
+
+        String recipientPhoneNumber = requestBody.getTo();
+        whatsAppService.sendWelcomeMessageTemplate(version, phoneNumberId, recipientPhoneNumber);
+        return ResponseEntity.ok("Welcome template message sent successfully");
+    }
+
+
+    @PostMapping("/{version}/{phoneNumberId}/send-category-template/messages")
+    public ResponseEntity<String> sendCategoryTemplateMessage(
+            @PathVariable("version") String version,
+            @PathVariable("phoneNumberId") String phoneNumberId,
+            @RequestParam String phone) {
+
+        whatsAppService.sendCategoryTemplateMessage(version, phoneNumberId, phone);
+        return ResponseEntity.ok("Category template message sent successfully");
+    }
+
 }

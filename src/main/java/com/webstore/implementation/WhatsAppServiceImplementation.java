@@ -4,12 +4,14 @@ import com.webstore.configuration.WhatsAppConfiguration;
 import com.webstore.dto.request.WhatsAppMessageRequestDto;
 import com.webstore.dto.request.WhatsAppTemplateMessageRequestDto;
 import com.webstore.dto.request.WhatsAppWebhookRequestDto;
+import com.webstore.repository.CategoryRepository;
 import com.webstore.service.WhatsAppService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,10 +27,13 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
 
     private final WhatsAppConfiguration whatsAppConfig;
     private final RestTemplate restTemplate;
+    private final CategoryRepository categoryRepository;
 
-    public WhatsAppServiceImplementation(WhatsAppConfiguration whatsAppConfig, RestTemplate restTemplate) {
+
+    public WhatsAppServiceImplementation(WhatsAppConfiguration whatsAppConfig, RestTemplate restTemplate, CategoryRepository categoryRepository) {
         this.whatsAppConfig = whatsAppConfig;
         this.restTemplate = restTemplate;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -105,6 +110,49 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
     }
 
     @Override
+    public void sendWelcomeMessageTemplate(String version, String phoneNumberId, String recipientPhoneNumber) {
+        // Construct the URL using the version and phoneNumberId parameters
+        String url = String.format("%s/%s/%s/messages",
+                whatsAppConfig.getApi().getGraphUrl(),
+                version,
+                phoneNumberId);
+
+        System.out.println("Sending template message to URL: " + url); // Debugging log
+
+        // Set up the HTTP headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + whatsAppConfig.getApi().getAccessToken());
+
+        // Build the message request matching the required JSON structure
+        WhatsAppTemplateMessageRequestDto requestBody = WhatsAppTemplateMessageRequestDto.builder()
+                .to(recipientPhoneNumber)
+                .template(
+                        WhatsAppTemplateMessageRequestDto.Template.builder()
+                                .name("first_welcome_template")
+                                .language(
+                                        WhatsAppTemplateMessageRequestDto.Language.builder()
+                                                .code("en")
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
+
+        // Note: We don't need to set messaging_product and type as they have default values in the DTO
+
+        HttpEntity<WhatsAppTemplateMessageRequestDto> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+            logger.info("Template message sent successfully to {}: {}", recipientPhoneNumber, response.getBody());
+        } catch (Exception e) {
+            logger.error("Error sending template message: {}", e.getMessage(), e);
+        }
+    }
+
+
+    @Override
     public String verifyWebhook(String mode, String token, String challenge) {
         if ("subscribe".equals(mode) && whatsAppConfig.getWebhook().getVerifyToken().equals(token)) {
             logger.info("Webhook verified successfully!");
@@ -112,6 +160,57 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
         } else {
             logger.warn("Webhook verification failed. Mode: {}, Token: {}", mode, token);
             return null;
+        }
+    }
+
+    @Override
+    public void sendCategoryTemplateMessage(String version, String phoneNumberId, String recipientPhoneNumber) {
+        String url = String.format("%s/%s/%s/messages",
+                whatsAppConfig.getApi().getGraphUrl(),
+                version,
+                phoneNumberId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + whatsAppConfig.getApi().getAccessToken());
+
+        List<String> categories = categoryRepository.findTop3CategoryNames();
+
+        // Ensure 3 categories max to match template
+        while (categories.size() < 3) {
+            categories.add("-");
+        }
+
+        logger.info("Fetched categories from DB: {}", categories);
+
+        WhatsAppTemplateMessageRequestDto requestBody = WhatsAppTemplateMessageRequestDto.builder()
+                .messaging_product("whatsapp")
+                .to(recipientPhoneNumber)
+                .template(
+                        WhatsAppTemplateMessageRequestDto.Template.builder()
+                                .name("list_all_categories_template")
+                                .language(WhatsAppTemplateMessageRequestDto.Language.builder().code("en").build())
+                                .components(List.of(
+                                        WhatsAppTemplateMessageRequestDto.Component.builder()
+                                                .type("button")
+                                                .parameters(List.of(
+                                                        new WhatsAppTemplateMessageRequestDto.Parameter("button", categories.get(0)),
+                                                        new WhatsAppTemplateMessageRequestDto.Parameter("button", categories.get(1)),
+                                                        new WhatsAppTemplateMessageRequestDto.Parameter("button", categories.get(2))
+                                                ))
+                                                .build()
+                                ))
+                                .build()
+                )
+                .build();
+
+        HttpEntity<WhatsAppTemplateMessageRequestDto> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+            logger.info("Category template message sent to {}: {}", recipientPhoneNumber, response.getBody());
+        } catch (Exception e) {
+            logger.error("Failed to send category template message: {}", e.getMessage(), e);
         }
     }
 
