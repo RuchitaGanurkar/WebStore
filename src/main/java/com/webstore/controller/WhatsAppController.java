@@ -27,6 +27,7 @@ public class WhatsAppController {
         whatsAppService.processIncomingMessage(webhookData);
         return ResponseEntity.ok().build();
     }
+
     /**
      * Handles webhook verification for WhatsApp API
      * @param mode the hub mode
@@ -51,9 +52,8 @@ public class WhatsAppController {
 
     /**
      * Endpoint to send a welcome template message to a WhatsApp user
-     * Follows the Facebook Graph API pattern with version and phoneNumberId as path variables
      */
-    @PostMapping("/{version}/{phoneNumberId}/send-welcome-template")
+    @PostMapping("/{version}/{phoneNumberId}/send-welcome-template/messages")
     public ResponseEntity<String> sendWelcomeMessage(
             @PathVariable("version") String version,
             @PathVariable("phoneNumberId") String phoneNumberId,
@@ -64,7 +64,9 @@ public class WhatsAppController {
         return ResponseEntity.ok("Welcome template message sent successfully");
     }
 
-
+    /**
+     * Endpoint to send a category template message to a WhatsApp user
+     */
     @PostMapping("/{version}/{phoneNumberId}/send-category-template/messages")
     public ResponseEntity<String> sendCategoryTemplateMessage(
             @PathVariable("version") String version,
@@ -75,4 +77,30 @@ public class WhatsAppController {
         return ResponseEntity.ok("Category template message sent successfully");
     }
 
+    /**
+     * Endpoint to send interactive category buttons to a WhatsApp user
+     */
+    @PostMapping("/{version}/{phoneNumberId}/send-category-interactive/messages")
+    public ResponseEntity<String> sendCategoryInteractiveMessage(
+            @PathVariable("version") String version,
+            @PathVariable("phoneNumberId") String phoneNumberId,
+            @RequestParam String phone) {
+
+        whatsAppService.sendCategoryInteractiveMessage(version, phoneNumberId, phone);
+        return ResponseEntity.ok("Interactive category message sent successfully");
+    }
+
+    /**
+     * Endpoint to send a manual text message to a WhatsApp user
+     */
+    @PostMapping("/{version}/{phoneNumberId}/send-text/messages")
+    public ResponseEntity<String> sendTextMessage(
+            @PathVariable("version") String version,
+            @PathVariable("phoneNumberId") String phoneNumberId,
+            @RequestParam String phone,
+            @RequestParam String message) {
+
+        whatsAppService.sendTextMessage(phoneNumberId, phone, message, null);
+        return ResponseEntity.ok("Text message sent successfully");
+    }
 }

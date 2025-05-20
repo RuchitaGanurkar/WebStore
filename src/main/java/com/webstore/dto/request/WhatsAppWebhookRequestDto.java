@@ -1,29 +1,26 @@
 package com.webstore.dto.request;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WhatsAppWebhookRequestDto {
-
-    @JsonProperty("entry")
+    private String object;
     private List<Entry> entry;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Entry {
-        @JsonProperty("id")
         private String id;
-
-        @JsonProperty("changes")
         private List<Change> changes;
     }
 
@@ -31,10 +28,7 @@ public class WhatsAppWebhookRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Change {
-        @JsonProperty("value")
         private Value value;
-
-        @JsonProperty("field")
         private String field;
     }
 
@@ -44,15 +38,9 @@ public class WhatsAppWebhookRequestDto {
     public static class Value {
         @JsonProperty("messaging_product")
         private String messagingProduct;
-
-        @JsonProperty("metadata")
         private Metadata metadata;
-
-        @JsonProperty("messages")
-        private List<Message> messages;
-
-        @JsonProperty("contacts")
         private List<Contact> contacts;
+        private List<Message> messages;
     }
 
     @Data
@@ -61,7 +49,6 @@ public class WhatsAppWebhookRequestDto {
     public static class Metadata {
         @JsonProperty("display_phone_number")
         private String displayPhoneNumber;
-
         @JsonProperty("phone_number_id")
         private String phoneNumberId;
     }
@@ -69,38 +56,8 @@ public class WhatsAppWebhookRequestDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Message {
-        @JsonProperty("from")
-        private String from;
-
-        @JsonProperty("id")
-        private String id;
-
-        @JsonProperty("timestamp")
-        private String timestamp;
-
-        @JsonProperty("type")
-        private String type;
-
-        @JsonProperty("text")
-        private Text text;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Text {
-        @JsonProperty("body")
-        private String body;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class Contact {
-        @JsonProperty("profile")
         private Profile profile;
-
         @JsonProperty("wa_id")
         private String waId;
     }
@@ -109,7 +66,53 @@ public class WhatsAppWebhookRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Profile {
-        @JsonProperty("name")
         private String name;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Message {
+        private String from;
+        private String id;
+        private String timestamp;
+        private String type;
+        private Text text;
+        private Interactive interactive;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Text {
+        private String body;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Interactive {
+        private String type;
+        @JsonProperty("button_reply")
+        private ButtonReply buttonReply;
+        @JsonProperty("list_reply")
+        private ListReply listReply;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ButtonReply {
+        private String id;
+        private String title;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ListReply {
+        private String id;
+        private String title;
+        private String description;
     }
 }
