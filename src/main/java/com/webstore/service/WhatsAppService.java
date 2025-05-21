@@ -29,4 +29,14 @@ public interface WhatsAppService {
      * @return the challenge string if verification succeeds, null otherwise
      */
     String verifyWebhook(String mode, String token, String challenge);
+
+    /**
+     *
+     */
+
+    void sendWelcomeMessageTemplate(String version, String phoneNumberId, String recipientPhoneNumber);
+
+    void sendCategoryTemplateMessage(String version, String phoneNumberId, String recipientPhoneNumber);
+
+
 }
