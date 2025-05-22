@@ -59,4 +59,40 @@ public interface WhatsAppService {
      * @param categoryId selected category ID
      */
     void handleCategorySelection(String phoneNumberId, String from, String categoryId);
+
+    /**
+     * Send interactive message with products by category
+     * @param version API version
+     * @param phoneNumberId business phone number ID
+     * @param recipientPhoneNumber recipient's phone number
+     * @param categoryName selected category name
+     */
+    void sendProductInteractiveMessage(String version, String phoneNumberId, String recipientPhoneNumber, String categoryName);
+
+    /**
+     * Send interactive message with single product details
+     * @param version API version
+     * @param phoneNumberId business phone number ID
+     * @param recipientPhoneNumber recipient's phone number
+     * @param productName selected product name
+     */
+    void sendOneProductInteractiveMessage(String version, String phoneNumberId, String recipientPhoneNumber, String productName);
+
+    /**
+     * Show product pricing in INR currency
+     * @param version API version
+     * @param phoneNumberId business phone number ID
+     * @param recipientPhoneNumber recipient's phone number
+     * @param productName selected product name
+     */
+    void showProductPriceInteractiveMessage(String version, String phoneNumberId, String recipientPhoneNumber, String productName);
+
+    /**
+     * Handle user's product selection
+     * @param phoneNumberId business phone number ID
+     * @param from user's phone number
+     * @param productId selected product ID
+     */
+    void handleProductSelection(String phoneNumberId, String from, String productId);
+
 }
