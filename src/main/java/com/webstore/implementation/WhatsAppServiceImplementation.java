@@ -186,7 +186,7 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
     @Override
     public void sendCategoryTemplateMessage(String version, String phoneNumberId, String recipientPhoneNumber) {
         String url = String.format("%s/%s/%s/messages",
-                whatsAppConfig.getApi().getBaseUrl(),
+                whatsAppConfig.getApi().getGraphUrl(),
                 version,
                 phoneNumberId);
 

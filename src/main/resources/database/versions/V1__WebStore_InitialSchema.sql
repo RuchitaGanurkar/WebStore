@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS web_store.users (
 CREATE TABLE IF NOT EXISTS web_store.currency (
     currency_id INT NOT NULL DEFAULT nextval('web_store.seq_currency_id') PRIMARY KEY,
     currency_code VARCHAR(5) NOT NULL,
-    currency_name VARCHAR(10) NOT NULL,
+    currency_name VARCHAR(50) NOT NULL,
     currency_symbol VARCHAR(5) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(50),
@@ -117,53 +117,53 @@ CREATE INDEX idx_catalogue_category_category ON web_store.catalogue_category(cat
 
 
 -- Insert test data for Currency
-INSERT INTO web_store.currency (currency_code, currency_name, currency_symbol, created_by, updated_by)
-VALUES
-    ('USD', 'US Dollar', '$', 'system', 'system'),
-    ('EUR', 'Euro', '€', 'system', 'system'),
-    ('GBP', 'Pound', '£', 'system', 'system');
-
--- Insert test data for User
-INSERT INTO web_store.users (username, email, full_name, role)
-VALUES
-    ('admin', 'admin@webstore.com', 'Admin User', 'ADMIN'),
-    ('user1', 'user1@example.com', 'Test User', 'USER'),
-    ('system', 'system@example.com', 'System User', 'SYSTEM');
-
--- Insert test data for Catalogue
-INSERT INTO web_store.catalogue (catalogue_name, catalogue_description, created_by, updated_by)
-VALUES
-    ('Summer Collection', 'Products for summer season', 'system', 'system'),
-    ('Winter Collection', 'Products for winter season', 'system', 'system');
-
--- Insert test data for Category
-INSERT INTO web_store.category (category_name, category_description, created_by, updated_by)
-VALUES
-    ('Electronics', 'Electronic devices and gadgets', 'system', 'system'),
-    ('Clothing', 'Apparel and accessories', 'system', 'system'),
-    ('Home', 'Home and kitchen items', 'system', 'system');
-
--- Link Categories to Catalogues
-INSERT INTO web_store.catalogue_category (catalogue_id, category_id, created_by, updated_by)
-VALUES
-    (1, 1, 'system', 'system'),
-    (1, 2, 'system', 'system'),
-    (2, 2, 'system', 'system'),
-    (2, 3, 'system', 'system');
-
--- Insert test data for Product
-INSERT INTO web_store.product (product_name, product_description, category_id, created_by, updated_by)
-VALUES
-    ('Smartphone X', 'Latest smartphone model', 1, 'system', 'system'),
-    ('Laptop Pro', 'High-performance laptop', 1, 'system', 'system'),
-    ('T-shirt Basic', 'Cotton t-shirt', 2, 'system', 'system'),
-    ('Coffee Maker', 'Automatic coffee maker', 3, 'system', 'system');
-
--- Insert test data for Product_Price
-INSERT INTO web_store.product_price (product_id, currency_id, price_amount, created_by, updated_by)
-VALUES
-    (1, 1, 99900, 'system', 'system'),  -- Smartphone in USD
-    (1, 2, 89900, 'system', 'system'),  -- Smartphone in EUR
-    (2, 1, 129900, 'system', 'system'), -- Laptop in USD
-    (3, 1, 1999, 'system', 'system'),   -- T-shirt in USD
-    (4, 1, 5999, 'system', 'system');   -- Coffee Maker in USD
+--INSERT INTO web_store.currency (currency_code, currency_name, currency_symbol, created_by, updated_by)
+--VALUES
+--    ('USD', 'US Dollar', '$', 'system', 'system'),
+--    ('EUR', 'Euro', '€', 'system', 'system'),
+--    ('GBP', 'Pound', '£', 'system', 'system');
+--
+---- Insert test data for User
+--INSERT INTO web_store.users (username, email, full_name, role)
+--VALUES
+--    ('admin', 'admin@webstore.com', 'Admin User', 'ADMIN'),
+--    ('user1', 'user1@example.com', 'Test User', 'USER'),
+--    ('system', 'system@example.com', 'System User', 'SYSTEM');
+--
+---- Insert test data for Catalogue
+--INSERT INTO web_store.catalogue (catalogue_name, catalogue_description, created_by, updated_by)
+--VALUES
+--    ('Summer Collection', 'Products for summer season', 'system', 'system'),
+--    ('Winter Collection', 'Products for winter season', 'system', 'system');
+--
+-- --Insert test data for Category
+--INSERT INTO web_store.category (category_name, category_description, created_by, updated_by)
+--VALUES
+--    ('Electronics', 'Electronic devices and gadgets', 'system', 'system'),
+--    ('Clothing', 'Apparel and accessories', 'system', 'system'),
+--    ('Home', 'Home and kitchen items', 'system', 'system');
+--
+-- --Link Categories to Catalogues
+--INSERT INTO web_store.catalogue_category (catalogue_id, category_id, created_by, updated_by)
+--VALUES
+--    (1, 1, 'system', 'system'),
+--    (1, 2, 'system', 'system'),
+--    (2, 2, 'system', 'system'),
+--    (2, 3, 'system', 'system');
+--
+---- Insert test data for Product
+--INSERT INTO web_store.product (product_name, product_description, category_id, created_by, updated_by)
+--VALUES
+--    ('Smartphone X', 'Latest smartphone model', 1, 'system', 'system'),
+--    ('Laptop Pro', 'High-performance laptop', 1, 'system', 'system'),
+--    ('T-shirt Basic', 'Cotton t-shirt', 2, 'system', 'system'),
+--    ('Coffee Maker', 'Automatic coffee maker', 3, 'system', 'system');
+--
+---- Insert test data for Product_Price
+--INSERT INTO web_store.product_price (product_id, currency_id, price_amount, created_by, updated_by)
+--VALUES
+--    (1, 1, 99900, 'system', 'system'),  -- Smartphone in USD
+--    (1, 2, 89900, 'system', 'system'),  -- Smartphone in EUR
+--    (2, 1, 129900, 'system', 'system'), -- Laptop in USD
+--    (3, 1, 1999, 'system', 'system'),   -- T-shirt in USD
+--    (4, 1, 5999, 'system', 'system');   -- Coffee Maker in USD

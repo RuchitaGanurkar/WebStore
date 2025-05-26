@@ -25,7 +25,7 @@ public class Currency extends BasicEntities {
     @Column(name = "currency_code", length = 5, nullable = false, unique = true)
     private String currencyCode;
 
-    @Column(name = "currency_name", length = 10, nullable = false)
+    @Column(name = "currency_name", length = 50, nullable = false)
     private String currencyName;
 
     @Column(name = "currency_symbol", length = 5, nullable = false)
