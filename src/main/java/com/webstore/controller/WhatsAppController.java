@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 public class WhatsAppController {
 
@@ -19,9 +18,6 @@ public class WhatsAppController {
 
     /**
      * Handles incoming webhook messages from WhatsApp
-     *
-     * @param webhookData the webhook payload
-     * @return HTTP 200 OK response
      */
     @PostMapping("/")
     public ResponseEntity<Void> receiveMessage(@RequestBody WhatsAppWebhookRequestDto webhookData) {
@@ -31,11 +27,6 @@ public class WhatsAppController {
 
     /**
      * Handles webhook verification for WhatsApp API
-     *
-     * @param mode      the hub mode
-     * @param token     the verification token
-     * @param challenge the challenge string
-     * @return the challenge string if verification succeeds, or 403 Forbidden if it fails
      */
     @GetMapping("/")
     public ResponseEntity<String> verifyWebhook(
@@ -44,107 +35,74 @@ public class WhatsAppController {
             @RequestParam(name = "hub.challenge", required = false) String challenge) {
 
         String response = whatsAppService.verifyWebhook(mode, token, challenge);
-
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        return response != null ? ResponseEntity.ok(response) : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     /**
-     * Endpoint to send a welcome template message to a WhatsApp user
+     * Send welcome message to start the conversation flow
      */
-    @PostMapping("/{version}/{phoneNumberId}/send-welcome-template/messages")
+    @PostMapping("/{version}/{phoneNumberId}/send-welcome/messages")
     public ResponseEntity<String> sendWelcomeMessage(
             @PathVariable("version") String version,
             @PathVariable("phoneNumberId") String phoneNumberId,
             @RequestBody WhatsAppTemplateMessageRequestDto requestBody) {
-
         String recipientPhoneNumber = requestBody.getTo();
-        whatsAppService.sendWelcomeMessageTemplate(version, phoneNumberId, recipientPhoneNumber);
-        return ResponseEntity.ok("Welcome template message sent successfully");
+        whatsAppService.sendWelcomeMessage(version, phoneNumberId, recipientPhoneNumber);
+        return ResponseEntity.ok("Welcome message sent successfully");
     }
 
     /**
-     * Endpoint to send a category template message to a WhatsApp user
+     * Send category interactive message
      */
-    @PostMapping("/{version}/{phoneNumberId}/send-category-template/messages")
-    public ResponseEntity<String> sendCategoryTemplateMessage(
-            @PathVariable("version") String version,
-            @PathVariable("phoneNumberId") String phoneNumberId,
-            @RequestParam String phone) {
-
-        whatsAppService.sendCategoryTemplateMessage(version, phoneNumberId, phone);
-        return ResponseEntity.ok("Category template message sent successfully");
-    }
-
-    /**
-     * Endpoint to send interactive category buttons to a WhatsApp user
-     */
-    @PostMapping("/{version}/{phoneNumberId}/send-category-interactive/messages")
-    public ResponseEntity<String> sendCategoryInteractiveMessage(
+    @PostMapping("/{version}/{phoneNumberId}/send-categories/messages")
+    public ResponseEntity<String> sendCategoryMessage(
             @PathVariable("version") String version,
             @PathVariable("phoneNumberId") String phoneNumberId,
             @RequestParam String phone) {
 
         whatsAppService.sendCategoryInteractiveMessage(version, phoneNumberId, phone);
-        return ResponseEntity.ok("Interactive category message sent successfully");
+        return ResponseEntity.ok("All categories details sent successfully");
     }
 
     /**
-     * Endpoint to send interactive product buttons by category to a WhatsApp user
+     * Send product list by category
      */
-    @PostMapping("/{version}/{phoneNumberId}/send-product-interactive/messages")
-    public ResponseEntity<String> sendProductInteractiveMessage(
+    @PostMapping("/{version}/{phoneNumberId}/send-products/messages")
+    public ResponseEntity<String> sendProductMessage(
             @PathVariable("version") String version,
             @PathVariable("phoneNumberId") String phoneNumberId,
             @RequestParam String phone,
             @RequestParam String categoryName) {
 
         whatsAppService.sendProductInteractiveMessage(version, phoneNumberId, phone, categoryName);
-        return ResponseEntity.ok("Interactive product message sent successfully");
+        return ResponseEntity.ok("All products details sent successfully");
     }
 
     /**
-     * Endpoint to send interactive single product details to a WhatsApp user
+     * Send single product details
      */
-    @PostMapping("/{version}/{phoneNumberId}/send-one-product-interactive/messages")
-    public ResponseEntity<String> sendOneProductInteractiveMessage(
+    @PostMapping("/{version}/{phoneNumberId}/send-product-details/messages")
+    public ResponseEntity<String> sendProductDetailsMessage(
             @PathVariable("version") String version,
             @PathVariable("phoneNumberId") String phoneNumberId,
             @RequestParam String phone,
             @RequestParam String productName) {
 
         whatsAppService.sendOneProductInteractiveMessage(version, phoneNumberId, phone, productName);
-        return ResponseEntity.ok("Product details message sent successfully");
+        return ResponseEntity.ok("Single product detail sent successfully");
     }
 
     /**
-     * Endpoint to show product pricing in INR currency to a WhatsApp user
+     * Send product pricing
      */
-    @PostMapping("/{version}/{phoneNumberId}/show-product-price-interactive/messages")
-    public ResponseEntity<String> showProductPriceInteractiveMessage(
+    @PostMapping("/{version}/{phoneNumberId}/send-pricing/messages")
+    public ResponseEntity<String> sendPricingMessage(
             @PathVariable("version") String version,
             @PathVariable("phoneNumberId") String phoneNumberId,
             @RequestParam String phone,
             @RequestParam String productName) {
 
         whatsAppService.showProductPriceInteractiveMessage(version, phoneNumberId, phone, productName);
-        return ResponseEntity.ok("Product price message sent successfully");
-    }
-
-    /**
-     * Endpoint to send a manual text message to a WhatsApp user
-     */
-    @PostMapping("/{version}/{phoneNumberId}/send-text/messages")
-    public ResponseEntity<String> sendTextMessage(
-            @PathVariable("version") String version,
-            @PathVariable("phoneNumberId") String phoneNumberId,
-            @RequestParam String phone,
-            @RequestParam String message) {
-
-        whatsAppService.sendTextMessage(phoneNumberId, phone, message, null);
-        return ResponseEntity.ok("Text message sent successfully");
+        return ResponseEntity.ok("Products pricing details sent successfully");
     }
 }
