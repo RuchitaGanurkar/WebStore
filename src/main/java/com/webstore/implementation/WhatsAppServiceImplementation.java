@@ -323,7 +323,7 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
             if (categoryNumber > 0 && categoryNumber <= categories.size()) {
                 String selectedCategory = categories.get(categoryNumber - 1);
                 sendTextMessage(phoneNumberId, from, "You selected: " + selectedCategory);
-                sendProductInteractiveMessage("v18.0", phoneNumberId, from, selectedCategory);
+                sendProductInteractiveMessage("v22.0", phoneNumberId, from, selectedCategory);
             }
         } catch (NumberFormatException e) {
             logger.error("Error parsing category ID: {}", e.getMessage());
@@ -348,7 +348,7 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
                 List<String> products = productRepository.findProductNamesByCategoryId(categoryId);
                 if (productIndex >= 0 && productIndex < products.size()) {
                     String selectedProduct = products.get(productIndex);
-                    sendOneProductInteractiveMessage("v18.0", phoneNumberId, from, selectedProduct);
+                    sendOneProductInteractiveMessage("v22.0", phoneNumberId, from, selectedProduct);
                 }
             } catch (NumberFormatException e) {
                 logger.error("Error parsing product selection: {}", e.getMessage());
@@ -368,7 +368,7 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
 
             if (product != null) {
                 // Call the interactive message method to show Add to Cart/Checkout buttons
-                sendOneProductInteractiveMessage("v18.0", phoneNumberId, from, product.getProductName());
+                sendOneProductInteractiveMessage("v22.0", phoneNumberId, from, product.getProductName());
             } else {
                 sendTextMessage(phoneNumberId, from, "Product not found.");
             }
@@ -394,7 +394,7 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
 
     private void processTextMessage(String phoneNumberId, String from, String messageText) {
         if (messageText.equalsIgnoreCase("categories") || messageText.equalsIgnoreCase("menu") || messageText.equalsIgnoreCase("start")) {
-            sendCategoryInteractiveMessage("v18.0", phoneNumberId, from);
+            sendCategoryInteractiveMessage("v22.0", phoneNumberId, from);
         } else {
             sendTextMessage(phoneNumberId, from, "Echo: " + messageText);
         }
@@ -493,7 +493,7 @@ public class WhatsAppServiceImplementation implements WhatsAppService {
     private void handleWelcomeButtons(String phoneNumberId, String from, String buttonId) {
         if ("welcome_hi".equals(buttonId)) {
             sendTextMessage(phoneNumberId, from, "Hi there! 👋 Welcome to our store!");
-            sendCategoryInteractiveMessage("v18.0", phoneNumberId, from);
+            sendCategoryInteractiveMessage("v22.0", phoneNumberId, from);
         } else if ("welcome_info".equals(buttonId)) {
             String infoMessage = "🏪 *About Our Store*\n\nWe offer a wide variety of products including:\n• Electronics\n• Clothing\n• Home Decor\n• And much more!\n\nLet me show you our categories!";
             sendTextMessage(phoneNumberId, from, infoMessage);
