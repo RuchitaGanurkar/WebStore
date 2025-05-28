@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96a18663-89b4-4466-b834-2890c5ce5ae2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/database/versions/V2__WebStore_UpdateSchema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.12/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.12/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.12/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.12/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.12/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.12/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/webstore/implementation/WhatsAppServiceImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/webstore/implementation/WhatsAppServiceImplementation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/database/versions/V1__WebStore_InitialSchema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database/versions/V1__WebStore_InitialSchema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +92,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHELLCHECK.PATH": "I do mind",
-    "git-widget-placeholder": "Merging whatsapp__business__api",
+    "git-widget-placeholder": "priyanshu/features/whatsapp__business__api__setup__testing",
     "ignore.virus.scanning.warn.message": "true"
   }
 }]]></component>
