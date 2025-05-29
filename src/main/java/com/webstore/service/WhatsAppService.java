@@ -5,7 +5,7 @@ import com.webstore.dto.request.WhatsAppWebhookRequestDto;
 public interface WhatsAppService {
 
     /**
-     * Process incoming webhook message
+     * Process incoming webhook message (handles both button and list interactions)
      * @param webhookData the webhook payload
      */
     void processIncomingMessage(WhatsAppWebhookRequestDto webhookData);
@@ -20,7 +20,7 @@ public interface WhatsAppService {
     String verifyWebhook(String mode, String token, String challenge);
 
     /**
-     * Send welcome message to a user (FIXED: method name to match implementation)
+     * Send welcome message to a user
      * @param version API version
      * @param phoneNumberId business phone number ID
      * @param recipientPhoneNumber recipient's phone number
@@ -28,7 +28,7 @@ public interface WhatsAppService {
     void sendWelcomeMessage(String version, String phoneNumberId, String recipientPhoneNumber);
 
     /**
-     * Send interactive message with category buttons to a user
+     * Send interactive message with categories (smart selection: buttons ≤3, list 4+)
      * @param version API version
      * @param phoneNumberId business phone number ID
      * @param recipientPhoneNumber recipient's phone number
@@ -36,15 +36,7 @@ public interface WhatsAppService {
     void sendCategoryInteractiveMessage(String version, String phoneNumberId, String recipientPhoneNumber);
 
     /**
-     * Handle user's category selection
-     * @param phoneNumberId business phone number ID
-     * @param from user's phone number
-     * @param categoryId selected category ID
-     */
-    void handleCategorySelection(String phoneNumberId, String from, String categoryId);
-
-    /**
-     * Send interactive message with products by category (NOW WITH PRICES)
+     * Send interactive message with products by category (smart selection: buttons ≤3, list 4+)
      * @param version API version
      * @param phoneNumberId business phone number ID
      * @param recipientPhoneNumber recipient's phone number
@@ -71,7 +63,15 @@ public interface WhatsAppService {
     void showProductPriceInteractiveMessage(String version, String phoneNumberId, String recipientPhoneNumber, String productName);
 
     /**
-     * Handle user's product selection
+     * Handle user's category selection from buttons
+     * @param phoneNumberId business phone number ID
+     * @param from user's phone number
+     * @param categoryId selected category ID
+     */
+    void handleCategorySelection(String phoneNumberId, String from, String categoryId);
+
+    /**
+     * Handle user's product selection from buttons
      * @param phoneNumberId business phone number ID
      * @param from user's phone number
      * @param productId selected product ID
