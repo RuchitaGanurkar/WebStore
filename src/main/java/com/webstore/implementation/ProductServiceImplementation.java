@@ -11,7 +11,6 @@ import com.webstore.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,47 +22,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-
+@RequiredArgsConstructor
 public class ProductServiceImplementation implements ProductService {
-
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    @Autowired
-    public ProductServiceImplementation(ProductRepository productRepository, CategoryRepository categoryRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-    }
-
     @Override
     @Transactional
-
-    public void deleteProductById(Integer id) {
-        log.info("Deleting product by ID (deleteProductById): {}", id);
-
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id));
-
-        productRepository.delete(product);
-
-        log.info("Product with ID: {} has been deleted via deleteProductById", id);
-    }
-
     public ProductResponseDto createProduct(ProductRequestDto dto) {
         log.info("Creating product with name: {}", dto.getProductName());
 
         Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with ID: " + dto.getCategoryId()));
 
         Product product = new Product();
         product.setProductName(dto.getProductName());
         product.setProductDescription(dto.getProductDescription());
         product.setCategory(category);
-//        product.setCreatedBy(dto.getCreatedBy());
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
-//        product.setUpdatedBy(dto.getCreatedBy());
 
         Product saved = productRepository.save(product);
         log.info("Product created with ID: {}", saved.getProductId());
@@ -75,33 +53,11 @@ public class ProductServiceImplementation implements ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
         log.info("Fetching all products");
+
         return productRepository.findAll()
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public ProductResponseDto updateProduct(Integer id, ProductRequestDto dto) {
-        log.info("Updating product with ID: {}", id);
-
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
-
-        product.setProductName(dto.getProductName());
-        product.setProductDescription(dto.getProductDescription());
-        product.setCategory(category);
-        product.setUpdatedAt(LocalDateTime.now());
-//        product.setUpdatedBy(dto.getCreatedBy());
-
-        Product updated = productRepository.save(product);
-        log.info("Product with ID: {} updated successfully", id);
-
-        return convertToDto(updated);
     }
 
     @Override
@@ -110,9 +66,31 @@ public class ProductServiceImplementation implements ProductService {
         log.info("Fetching product with ID: {}", id);
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id));
 
         return convertToDto(product);
+    }
+
+    @Override
+    @Transactional
+    public ProductResponseDto updateProduct(Integer id, ProductRequestDto dto) {
+        log.info("Updating product with ID: {}", id);
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id));
+
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with ID: " + dto.getCategoryId()));
+
+        product.setProductName(dto.getProductName());
+        product.setProductDescription(dto.getProductDescription());
+        product.setCategory(category);
+        product.setUpdatedAt(LocalDateTime.now());
+
+        Product updated = productRepository.save(product);
+        log.info("Product with ID: {} updated successfully", id);
+
+        return convertToDto(updated);
     }
 
     @Override
@@ -121,10 +99,9 @@ public class ProductServiceImplementation implements ProductService {
         log.info("Deleting product with ID: {}", id);
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id));
 
         productRepository.delete(product);
-
         log.info("Product with ID: {} has been deleted", id);
     }
 
@@ -144,7 +121,6 @@ public class ProductServiceImplementation implements ProductService {
             categoryDto.setCategoryId(category.getCategoryId());
             categoryDto.setCategoryName(category.getCategoryName());
             categoryDto.setCategoryDescription(category.getCategoryDescription());
-//            categoryDto.setCreatedBy(category.getCreatedBy());
             dto.setCategory(categoryDto);
         }
 

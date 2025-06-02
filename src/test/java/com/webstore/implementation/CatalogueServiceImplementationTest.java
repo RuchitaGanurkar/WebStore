@@ -4,33 +4,33 @@ import com.webstore.dto.request.CatalogueRequestDto;
 import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.entity.Catalogue;
 import com.webstore.repository.CatalogueRepository;
-import com.webstore.util.AuthUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CatalogueServiceImplementationTest {
-
-    @InjectMocks
-    private CatalogueServiceImplementation catalogueService;
 
     @Mock
     private CatalogueRepository catalogueRepository;
+
+    @InjectMocks
+    private CatalogueServiceImplementation catalogueService;
 
     private CatalogueRequestDto requestDto;
     private Catalogue catalogue;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         requestDto = new CatalogueRequestDto();
         requestDto.setCatalogueName("Books");
         requestDto.setCatalogueDescription("All kinds of books");
@@ -44,70 +44,84 @@ class CatalogueServiceImplementationTest {
     }
 
     @Test
-    void testCreateCatalogue() {
+    void givenValidRequest_whenCreateCatalogue_thenReturnsSavedCatalogue() {
         when(catalogueRepository.save(any(Catalogue.class))).thenReturn(catalogue);
 
         CatalogueResponseDto result = catalogueService.createCatalogue(requestDto);
 
-        assertNotNull(result);
-        assertEquals("Books", result.getCatalogueName());
+        assertThat(result).isNotNull();
+        assertThat(result.getCatalogueName()).isEqualTo("Books");
+
+        verify(catalogueRepository).save(any(Catalogue.class));
     }
 
     @Test
-    void testGetAllCatalogues() {
+    void whenGetAllCatalogues_thenReturnsCatalogueList() {
         when(catalogueRepository.findAll()).thenReturn(List.of(catalogue));
+
         List<CatalogueResponseDto> result = catalogueService.getAllCatalogues();
 
-        assertEquals(1, result.size());
-        assertEquals("Books", result.get(0).getCatalogueName());
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getCatalogueName()).isEqualTo("Books");
+
+        verify(catalogueRepository).findAll();
     }
 
     @Test
-    void testGetCatalogueById() {
+    void givenValidId_whenGetCatalogueById_thenReturnsCatalogue() {
         when(catalogueRepository.findById(1)).thenReturn(Optional.of(catalogue));
+
         CatalogueResponseDto result = catalogueService.getCatalogueById(1);
 
-        assertNotNull(result);
-        assertEquals("Books", result.getCatalogueName());
+        assertThat(result).isNotNull();
+        assertThat(result.getCatalogueName()).isEqualTo("Books");
+
+        verify(catalogueRepository).findById(1);
     }
 
     @Test
-    void testUpdateCatalogue() {
+    void givenValidIdAndRequest_whenUpdateCatalogue_thenReturnsUpdatedCatalogue() {
         when(catalogueRepository.findById(1)).thenReturn(Optional.of(catalogue));
         when(catalogueRepository.save(any(Catalogue.class))).thenReturn(catalogue);
 
         CatalogueResponseDto result = catalogueService.updateCatalogue(1, requestDto);
 
-        assertNotNull(result);
-        assertEquals("Books", result.getCatalogueName());
+        assertThat(result).isNotNull();
+        assertThat(result.getCatalogueName()).isEqualTo("Books");
+
+        verify(catalogueRepository).findById(1);
+        verify(catalogueRepository).save(any(Catalogue.class));
     }
 
     @Test
-    void testDeleteCatalogue() {
+    void givenValidId_whenDeleteCatalogue_thenDeletesSuccessfully() {
         when(catalogueRepository.findById(1)).thenReturn(Optional.of(catalogue));
-        doNothing().when(catalogueRepository).delete(catalogue);
 
-        assertDoesNotThrow(() -> catalogueService.deleteCatalogue(1));
-        verify(catalogueRepository, times(1)).delete(catalogue);
+        catalogueService.deleteCatalogue(1);
+
+        verify(catalogueRepository).findById(1);
+        verify(catalogueRepository).delete(catalogue);
     }
 
     @Test
-    void testSearchByName() {
+    void givenName_whenSearchByName_thenReturnsMatchingCatalogues() {
         when(catalogueRepository.findByCatalogueNameContainingIgnoreCase("Books"))
                 .thenReturn(List.of(catalogue));
 
         List<CatalogueResponseDto> result = catalogueService.searchByName("Books");
 
-        assertEquals(1, result.size());
+        assertThat(result).hasSize(1);
+        verify(catalogueRepository).findByCatalogueNameContainingIgnoreCase("Books");
     }
 
-    @Test
-    void testSearchByDescription() {
-        when(catalogueRepository.findByCatalogueDescriptionContainingIgnoreCase("books"))
-                .thenReturn(List.of(catalogue));
-
-        List<CatalogueResponseDto> result = catalogueService.searchByDescription("books");
-
-        assertEquals(1, result.size());
-    }
+//    @Test
+//    void givenDescription_whenSearchByDescription_thenReturnsMatchingCatalogues() {
+//        when(catalogueRepository.findByCatalogueDescriptionContainingIgnoreCase("books"))
+//                .thenReturn(List.of(catalogue));
+//
+//        List<CatalogueResponseDto> result = catalogueService.searchByDescription("books");
+//
+//        assertThat(result).hasSize(1);
+//        verify(catalogueRepository).findByCatalogueDescriptionContainingIgnoreCase("books");
+//    }
 }

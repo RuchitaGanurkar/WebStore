@@ -6,6 +6,7 @@ import com.webstore.service.CurrencyService;
 import jakarta.validation.Valid;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,23 +19,28 @@ import java.util.List;
 public class CurrencyController {
 
     private CurrencyService currencyService;
+
     @Autowired
+    @Qualifier("currencyServiceImplementation") // Specify exact implementation
     public void setCurrencyService(CurrencyService currencyService) {
         this.currencyService = currencyService;
     }
-
 
     @GetMapping
     public ResponseEntity<List<CurrencyResponseDto>> getAllCurrencies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         List<CurrencyResponseDto> currencies = currencyService.getAllCurrencies(page, size);
+        if (currencies.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(currencies);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CurrencyResponseDto> getCurrencyById(@PathVariable Integer id) {
-        return ResponseEntity.ok(currencyService.getCurrencyById(id));
+        CurrencyResponseDto currency = currencyService.getCurrencyById(id);
+        return ResponseEntity.ok(currency);
     }
 
     @PostMapping
@@ -53,8 +59,8 @@ public class CurrencyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCurrency(@PathVariable Integer id) {
-        currencyService.deleteCurrency(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteCurrency(@PathVariable Integer id) {
+        String message = currencyService.deleteCurrency(id);
+        return ResponseEntity.ok(message);
     }
 }

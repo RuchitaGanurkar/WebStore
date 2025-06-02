@@ -3,16 +3,14 @@ package com.webstore.controller;
 import com.webstore.dto.request.CatalogueRequestDto;
 import com.webstore.dto.response.CatalogueResponseDto;
 import com.webstore.service.CatalogueService;
-import com.webstore.service.CategoryService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @Setter
 @RestController
@@ -20,12 +18,12 @@ import java.util.List;
 public class CatalogueController {
 
     private CatalogueService catalogueService;
+
     @Autowired
+    @Qualifier("catalogueServiceImplementation")  // Assuming you have a specific implementation to inject
     public void setCatalogueService(CatalogueService catalogueService) {
         this.catalogueService = catalogueService;
     }
-
-
 
     @PostMapping
     public ResponseEntity<CatalogueResponseDto> createCatalogue(@RequestBody @Valid CatalogueRequestDto dto) {
@@ -34,7 +32,11 @@ public class CatalogueController {
 
     @GetMapping
     public ResponseEntity<List<CatalogueResponseDto>> getAllCatalogues() {
-        return ResponseEntity.ok(catalogueService.getAllCatalogues());
+        List<CatalogueResponseDto> catalogues = catalogueService.getAllCatalogues();
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 204 No Content
+        }
+        return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping("/{id}")

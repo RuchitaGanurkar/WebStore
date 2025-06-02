@@ -2,13 +2,14 @@ package com.webstore.controller;
 
 import com.webstore.dto.request.UserRequestDto;
 import com.webstore.dto.response.UserResponseDto;
+import com.webstore.exception.UserNotFoundException;
+import com.webstore.exception.DuplicateUserException;
 import com.webstore.service.UserService;
 import com.webstore.validation.UserValidation;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,49 +20,48 @@ import java.util.List;
 @Slf4j
 @Setter
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
-
     private UserService userService;
+
     @Autowired
+    @Qualifier("userServiceImplementation")
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        log.info("Processing request to get all users");
+        log.info("Fetching all users");
         List<UserResponseDto> users = userService.getAllUsers();
-        log.info("Retrieved {} users successfully", users.size());
-        return ResponseEntity.ok(users);
+
+        log.info("Found {} users", users.size());
+        return ResponseEntity.ok(users); // Always 200, even if list is empty
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Integer userId) {
-        log.info("Processing request to get user with id: {}", userId);
+        log.info("Fetching user with ID: {}", userId);
         try {
             UserResponseDto user = userService.getUserById(userId);
-            log.info("User with id: {} retrieved successfully", userId);
-            return ResponseEntity.ok(user);
-        } catch (EntityNotFoundException e) {
-            log.error("User with id: {} not found", userId);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(user); // HTTP 200
+        } catch (UserNotFoundException ex) {
+            log.error("User not found with ID: {}", userId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // HTTP 404
         }
     }
 
     @PostMapping
     public ResponseEntity<?> createUser(
             @Validated(UserValidation.class) @RequestBody UserRequestDto userRequestDto) {
-        log.info("Processing request to create a new user");
+        log.info("Creating new user");
         try {
             UserResponseDto createdUser = userService.createUser(userRequestDto);
-            log.info("User created successfully with id: {}", createdUser.getUserId());
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            log.error("Failed to create user: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(createdUser, HttpStatus.CREATED); // HTTP 201
+        } catch (DuplicateUserException ex) {
+            log.error("Duplicate user detected: {}", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()); // HTTP 400
         }
     }
 
@@ -69,30 +69,28 @@ public class UserController {
     public ResponseEntity<?> updateUser(
             @PathVariable Integer userId,
             @Validated(UserValidation.class) @RequestBody UserRequestDto userRequestDto) {
-        log.info("Processing request to update user with id: {}", userId);
+        log.info("Updating user with ID: {}", userId);
         try {
             UserResponseDto updatedUser = userService.updateUser(userId, userRequestDto);
-            log.info("User with id: {} updated successfully", userId);
-            return ResponseEntity.ok(updatedUser);
-        } catch (EntityNotFoundException e) {
-            log.error("User with id: {} not found for update", userId);
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            log.error("Failed to update user: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(updatedUser); // HTTP 200
+        } catch (UserNotFoundException ex) {
+            log.error("User not found with ID: {}", userId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // HTTP 404
+        } catch (DuplicateUserException ex) {
+            log.error("Duplicate user during update: {}", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()); // HTTP 400
         }
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
-        log.info("Processing request to delete user with id: {}", userId);
+        log.info("Deleting user with ID: {}", userId);
         try {
             userService.deleteUser(userId);
-            log.info("User with id: {} deleted successfully", userId);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            log.error("User with id: {} not found for deletion", userId);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build(); // HTTP 204
+        } catch (UserNotFoundException ex) {
+            log.error("User not found with ID: {}", userId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // HTTP 404
         }
     }
 }
