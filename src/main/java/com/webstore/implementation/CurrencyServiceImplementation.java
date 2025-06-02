@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("currencyServiceImplementation") // Qualifier name used in Controller
+@Service
 public class CurrencyServiceImplementation implements CurrencyService {
 
     private final CurrencyRepository currencyRepository;
@@ -67,7 +67,7 @@ public class CurrencyServiceImplementation implements CurrencyService {
         Currency currency = currencyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Currency not found with id: " + id));
 
-        if (!currency.getCurrencyCode().equalsIgnoreCase(currencyDto.getCurrencyCode()) &&
+        if (!currency.getCurrencyCode().equals(currencyDto.getCurrencyCode()) &&
                 currencyRepository.existsByCurrencyCode(currencyDto.getCurrencyCode())) {
             throw new EntityExistsException("Currency with code " + currencyDto.getCurrencyCode() + " already exists");
         }
@@ -81,12 +81,11 @@ public class CurrencyServiceImplementation implements CurrencyService {
     }
 
     @Override
-    public String deleteCurrency(Integer id) {
+    public void deleteCurrency(Integer id) {
         if (!currencyRepository.existsById(id)) {
             throw new EntityNotFoundException("Currency not found with id: " + id);
         }
         currencyRepository.deleteById(id);
-        return "Currency deleted successfully";
     }
 
     @Override
@@ -107,7 +106,7 @@ public class CurrencyServiceImplementation implements CurrencyService {
         responseDto.setCreatedBy(currency.getCreatedBy());
         responseDto.setUpdatedAt(currency.getUpdatedAt());
         responseDto.setUpdatedBy(currency.getUpdatedBy());
+
         return responseDto;
     }
 }
-

@@ -15,6 +15,6 @@ public interface CurrencyService {
 
     CurrencyResponseDto updateCurrency(Integer id, CurrencyRequestDto currencyDto);
 
-    String deleteCurrency(Integer id);
+    void deleteCurrency(Integer id);
 
 }

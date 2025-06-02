@@ -4,26 +4,29 @@ import com.webstore.dto.request.ProductRequestDto;
 import com.webstore.dto.response.ProductResponseDto;
 import com.webstore.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Setter
 @RestController
 @RequestMapping("/api/products")
-@Validated
 public class ProductController {
 
-    private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    private ProductService productService;
+    @Autowired
+    public void setProductService(ProductService productService) {
         this.productService = productService;
     }
 
+
     @PostMapping
-    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto dto) {
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto dto) {
         ProductResponseDto createdProduct = productService.createProduct(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
@@ -34,17 +37,17 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Integer id,
+                                                            @RequestBody @Valid ProductRequestDto dto) {
+        ProductResponseDto updated = productService.updateProduct(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Integer id) {
         ProductResponseDto product = productService.getProductById(id);
         return ResponseEntity.ok(product);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Integer id,
-                                                            @Valid @RequestBody ProductRequestDto dto) {
-        ProductResponseDto updatedProduct = productService.updateProduct(id, dto);
-        return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")

@@ -2,14 +2,12 @@ package com.webstore.dto.request;
 
 import com.webstore.validation.CurrencyValidation;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class CurrencyRequestDto {
+
+    //   Adding Validation Annotation To Requested Data
 
     @NotNull(groups = CurrencyValidation.class, message = "Currency code is required")
     @NotBlank(groups = CurrencyValidation.class, message = "Currency code should not be blank")

@@ -9,7 +9,8 @@ import com.webstore.repository.CatalogueCategoryRepository;
 import com.webstore.repository.CatalogueRepository;
 import com.webstore.repository.CategoryRepository;
 import com.webstore.service.CatalogueCategoryService;
-import com.webstore.util.AuthUtils;
+import com.webstore.util.AuthUtils; // <-- Make sure to import this
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("catalogueCategoryServiceImplementation")
+@Service
 public class CatalogueCategoryServiceImplementation implements CatalogueCategoryService {
 
     private final CatalogueCategoryRepository catalogueCategoryRepository;
@@ -33,6 +34,7 @@ public class CatalogueCategoryServiceImplementation implements CatalogueCategory
 
     @Override
     public ResponseEntity<String> createCatalogueCategory(CatalogueCategoryRequestDto dto) {
+
         if (catalogueCategoryRepository.existsByCatalogueCatalogueIdAndCategoryCategoryId(dto.getCatalogueId(), dto.getCategoryId())) {
             return ResponseEntity.badRequest().body("Catalogue-Category mapping already exists.");
         }
@@ -43,12 +45,12 @@ public class CatalogueCategoryServiceImplementation implements CatalogueCategory
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
 
-        String currentUsername = AuthUtils.getCurrentUsername();
+        String currentUsername = AuthUtils.getCurrentUsername(); // 🔑 Get from token
 
         CatalogueCategory catalogueCategory = new CatalogueCategory();
         catalogueCategory.setCatalogue(catalogue);
         catalogueCategory.setCategory(category);
-        catalogueCategory.setCreatedBy(currentUsername);
+        catalogueCategory.setCreatedBy(currentUsername); // 👈 No longer from DTO
         catalogueCategory.setUpdatedBy(currentUsername);
 
         catalogueCategoryRepository.save(catalogueCategory);
@@ -56,12 +58,10 @@ public class CatalogueCategoryServiceImplementation implements CatalogueCategory
         return ResponseEntity.ok("Catalogue-Category mapping created successfully.");
     }
 
-
     @Override
     public List<CatalogueCategoryResponseDto> getAllCatalogueCategories() {
         return catalogueCategoryRepository.findAll().stream().map(entity -> {
             CatalogueCategoryResponseDto dto = new CatalogueCategoryResponseDto();
-            dto.setCatalogueCategoryId(entity.getCatalogueCategoryId());
             dto.setCatalogueId(entity.getCatalogue().getCatalogueId());
             dto.setCatalogueName(entity.getCatalogue().getCatalogueName());
             dto.setCategoryId(entity.getCategory().getCategoryId());
