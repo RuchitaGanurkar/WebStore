@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS web_store.users (
 CREATE TABLE IF NOT EXISTS web_store.currency (
     currency_id INT NOT NULL DEFAULT nextval('web_store.seq_currency_id') PRIMARY KEY,
     currency_code VARCHAR(5) NOT NULL,
-    currency_name VARCHAR(50) NOT NULL,
+    currency_name VARCHAR(10) NOT NULL,
     currency_symbol VARCHAR(5) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(50),
@@ -116,7 +116,7 @@ CREATE INDEX idx_catalogue_category_catalogue ON web_store.catalogue_category(ca
 CREATE INDEX idx_catalogue_category_category ON web_store.catalogue_category(category_id);
 
 
- --Insert test data for Currency
+-- Insert test data for Currency
 INSERT INTO web_store.currency (currency_code, currency_name, currency_symbol, created_by, updated_by)
 VALUES
     ('USD', 'US Dollar', '$', 'system', 'system'),
@@ -136,14 +136,14 @@ VALUES
     ('Summer Collection', 'Products for summer season', 'system', 'system'),
     ('Winter Collection', 'Products for winter season', 'system', 'system');
 
- --Insert test data for Category
+-- Insert test data for Category
 INSERT INTO web_store.category (category_name, category_description, created_by, updated_by)
 VALUES
     ('Electronics', 'Electronic devices and gadgets', 'system', 'system'),
     ('Clothing', 'Apparel and accessories', 'system', 'system'),
     ('Home', 'Home and kitchen items', 'system', 'system');
 
- --Link Categories to Catalogues
+-- Link Categories to Catalogues
 INSERT INTO web_store.catalogue_category (catalogue_id, category_id, created_by, updated_by)
 VALUES
     (1, 1, 'system', 'system'),
