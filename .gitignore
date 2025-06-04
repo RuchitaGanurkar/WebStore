@@ -1,0 +1,110 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Gradle files
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IntelliJ IDEA files
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# VS Code files
+.vscode/
+
+
+
+# Windows files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux files
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# Spring Boot files
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Application logs
+spring.log
+application.log
+
+# Environment and configuration files
+application-local.properties
+
+# Node modules (if using Node.js for frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage reports
+coverage/
+*.lcov
+
+# SonarQube files
+.sonar/
+
+# Test output
+/test-output/
+
+
+# Application properties with sensitive data
+application-*.yml
+application.properties
+
+# Any local configuration
+local/
+*.local
+
+# JDK and IDE specific
+.metadata
+.recommenders/
+.settings/
+
+# WhatsApp Business API credentials (for your eCommerce integration)
+whatsapp-config.properties
+
+# Database connection files
+jdbc.properties
+
+# Cache files
+*.cache
+
+# Reports and analytics data
+reports/
+analytics/
+
+# Backup files
+*.backup
