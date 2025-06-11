@@ -15,14 +15,14 @@ logs/
 *.rar
 
 # Gradle files
-.gradle/
-build/
+.gradle/                      # Ignore Gradle cache
+build/                        # Ignore build outputs
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
 # IntelliJ IDEA files
-.idea/
+.idea/                        # Ignore IntelliJ project files
 *.iws
 *.iml
 *.ipr
