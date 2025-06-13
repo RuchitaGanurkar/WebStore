@@ -6,7 +6,7 @@ It uses Meta's Cloud API solution, which is the recommended approach for new int
 
 ## 1. Create a Meta Developer Account
 
-1. Visit [Meta for Developers](https://developers.facebook.com/) and sign up or log in
+1. Visit [Meta for Developers](https://developers.facebook.com/) and sign up or log in ![image](Documents/Images/RegisterMetaDeveloper.png)
 2. If you don't have a Meta Business account, you'll be prompted to create one
 
 ## 2. Create a Meta App
