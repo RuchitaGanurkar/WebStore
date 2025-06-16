@@ -6,7 +6,12 @@ It uses Meta's Cloud API solution, which is the recommended approach for new int
 
 ## 1. Create a Meta Developer Account
 
-1. Visit [Meta for Developers](https://developers.facebook.com/) and sign up or log in ![image](Documents/Images/RegisterMetaDeveloper.png)
+1. Visit [Meta for Developers](https://developers.facebook.com/) and sign up or log in 
+
+![image](Images/RegisterMetaDeveloper.png)
+![image](Images/MetaBusinessAccount-1.png)
+![image](Images/MetaBusinessAccount-2.png)
+![image](Images/MetaBusinessAccount-3.png)
 2. If you don't have a Meta Business account, you'll be prompted to create one
 
 ## 2. Create a Meta App
@@ -16,12 +21,28 @@ It uses Meta's Cloud API solution, which is the recommended approach for new int
 3. Select "Business" as the app type
 4. Enter your app name and contact email
 5. Click "Create App"
+![image](Images/AppCreateStep-1.png)
+![image](Images/AppCreateStep-2.png)
+![image](Images/AppCreateStep-3.png)
+![image](Images/AppCreateStep-4.png)
+![image](Images/AppCreateStep-5.png)
+![image](Images/AppCreateStep-6.png)
+![image](Images/AppCreateStep-7.png)
+![image](Images/AppCreateStep-8.png)
 
 ## 3. Add WhatsApp to Your App
 
 1. From your app dashboard, click "Add Products"
 2. Find "WhatsApp" and click "Set Up"
 3. You'll be taken to the WhatsApp configuration page
+![image](Images/WhatsAppConfiguration-1.png)
+![image](Images/WhatsAppConfiguration-2.png)
+![image](Images/WhatsAppConfiguration-3.png)
+![image](Images/WhatsAppConfiguration-4.png)
+![image](Images/WhatsAppConfiguration-5.png)
+![image](Images/WhatsAppConfiguration-6.png)
+![image](Images/WhatsAppConfiguration-7.png)
+![image](Images/WhatsAppConfiguration-8.png)
 
 ## 4. Set Up WhatsApp Business Account
 
@@ -42,6 +63,8 @@ It uses Meta's Cloud API solution, which is the recommended approach for new int
     Example: - messages
 6. Click "Verify and Save"
 
+![image](Images/WebhookConfiguration-1.png)
+
 ## 6. Obtain Access Credentials
 
 1. In your app dashboard, navigate to "WhatsApp" > "Configuration"
@@ -49,6 +72,8 @@ It uses Meta's Cloud API solution, which is the recommended approach for new int
     - **Phone Number ID**: Found under the "From" section
     - **Access Token**: In the "API Setup" section, click "Generate" to create a new token
     - **Business Account ID**: The ID of your connected WhatsApp Business Account
+![image](Images/WhatsAppConfiguration-9.png)
+
 
 ## 7. Update Your Application Properties
 

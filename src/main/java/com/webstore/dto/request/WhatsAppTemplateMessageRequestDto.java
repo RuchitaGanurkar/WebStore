@@ -17,9 +17,9 @@ import java.util.List;
 @JsonInclude(Include.NON_NULL)
 public class WhatsAppTemplateMessageRequestDto {
 
-    private String messaging_product = "whatsapp";
+    private final String messaging_product = "whatsapp";
     private String to;
-    private String type = "template";
+    private final String type = "template";
     private Template template;
 
     @Data

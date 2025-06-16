@@ -147,6 +147,9 @@ User ← WhatsApp ← "₹99,999.00 + [Add to Cart] [Back]"
 User → WhatsApp → Clicks "Add to Cart"
 User ← WhatsApp ← "✅ Added to Cart! Type 'cart' to view"
 ```
+[Mobile Flow](Videos/WhatsAppFlowMobile.mp4)
+
+[Console Flow](Videos/WhatsAppFlowConsole.mp4)
 
 ## 📈 Performance Considerations
 ### Rate Limiting
