@@ -117,39 +117,41 @@ POST http://localhost:8080/v22.0/123456789012345/send-text/messages?phone=+91987
 Admin → Postman → Send Welcome Message
 User ← WhatsApp ← "Welcome! Choose: [Hi 👋] [Tell me more]"
 ```
+![image](Images/StepWelcomeMessage.jpeg)
 
 #### 2. **Welcome Interaction**
 ```
 User → WhatsApp → Clicks "Hi 👋"
 User ← WhatsApp ← "Welcome message + Category buttons"
 ```
-
+![image](Images/StepShowCategoriesList.jpeg)
 #### 3. **Category Selection**
 ```
 User → WhatsApp → Clicks "Electronics"
 User ← WhatsApp ← "Products: [iPhone] [Samsung] [iPad]"
 ```
-
+![image](Images/StepShowCategoriesFullList.jpeg)
 #### 4. **Product Selection**
 ```
 User → WhatsApp → Clicks "iPhone"
 User ← WhatsApp ← "Product details + [View Price] [Back]"
 ```
+![image](Images/StepShowProducts.jpeg)
 
 #### 5. **Pricing Information**
 ```
 User → WhatsApp → Clicks "View Price"
 User ← WhatsApp ← "₹99,999.00 + [Add to Cart] [Back]"
 ```
+![image](Images/StepShowProductsList.jpeg)
 
 #### 6. **Cart Addition**
 ```
 User → WhatsApp → Clicks "Add to Cart"
 User ← WhatsApp ← "✅ Added to Cart! Type 'cart' to view"
 ```
-[Mobile Flow](Videos/WhatsAppFlowMobile.mp4)
-
-[Console Flow](Videos/WhatsAppFlowConsole.mp4)
+![image](Images/StepAddToCart.jpeg)
+![image](Images/StepShowCart.jpeg)
 
 ## 📈 Performance Considerations
 ### Rate Limiting
@@ -159,7 +161,7 @@ User ← WhatsApp ← "✅ Added to Cart! Type 'cart' to view"
 
 ## 🎯 Future Enhancements
 
-### Planned Features
+### Planned Featuresshared image (5)
 - **Cart Management**: Full shopping cart implementation
 - **Payment Integration**: UPI, Credit Card, COD support
 - **Order Tracking**: Real-time order status updates
