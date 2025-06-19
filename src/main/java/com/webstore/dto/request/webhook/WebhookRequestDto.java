@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WhatsAppWebhookRequestDto {
+public class WebhookRequestDto {
+
     private String object;
     private List<Entry> entry;
 

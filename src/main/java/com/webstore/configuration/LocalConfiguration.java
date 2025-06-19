@@ -3,6 +3,10 @@ package com.webstore.configuration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -12,15 +16,17 @@ import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
 
 @Configuration
-public class SSLTrustConfiguration {
+@Profile("local")
+public class LocalConfiguration {
 
     static {
+        System.setProperty("javax.net.ssl.trustStore", "cacerts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
         disableSslVerification();
     }
 
     private static void disableSslVerification() {
         try {
-            // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         public X509Certificate[] getAcceptedIssuers() { return null; }
@@ -29,7 +35,6 @@ public class SSLTrustConfiguration {
                     }
             };
 
-            // Install the all-trusting trust manager
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -42,5 +47,21 @@ public class SSLTrustConfiguration {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    @Configuration
+    @EnableWebSecurity
+    @Profile("local")
+    public static class LocalSecurityConfiguration {
+
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                    .csrf(csrf -> csrf.disable())
+                    .authorizeHttpRequests(authorize -> authorize
+                            .anyRequest().permitAll()
+                    );
+            return http.build();
+        }
     }
 }
