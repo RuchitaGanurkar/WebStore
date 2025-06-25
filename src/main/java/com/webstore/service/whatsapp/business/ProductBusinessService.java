@@ -5,9 +5,11 @@ import com.webstore.entity.ProductPrice;
 import com.webstore.repository.ProductPriceRepository;
 import com.webstore.repository.ProductRepository;
 import com.webstore.service.ProductService;
+import com.webstore.service.whatsapp.business.CategoryBusinessService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,17 +18,29 @@ public class ProductBusinessService {
     private final ProductRepository productRepository;
     private final ProductPriceRepository productPriceRepository;
     private final ProductService productService;
+    private final CategoryBusinessService categoryBusinessService;
 
     public ProductBusinessService(ProductRepository productRepository,
                                   ProductPriceRepository productPriceRepository,
-                                  ProductService productService) {
+                                  ProductService productService,
+                                  CategoryBusinessService categoryBusinessService) {
         this.productRepository = productRepository;
         this.productPriceRepository = productPriceRepository;
         this.productService = productService;
+        this.categoryBusinessService = categoryBusinessService;
     }
 
+    // ✅ Get product names by category ID
     public List<String> getProductNamesByCategory(Integer categoryId) {
+        if (categoryId == null) return Collections.emptyList();
         return productRepository.findProductNamesByCategoryId(categoryId);
+    }
+
+    // ✅ Get product names by category NAME
+    public List<String> getProductNamesByCategoryName(String categoryName) {
+        Integer categoryId = categoryBusinessService.getCategoryIdByName(categoryName);
+        if (categoryId == null) return Collections.emptyList();
+        return getProductNamesByCategory(categoryId);
     }
 
     public Integer getProductIdByName(String productName) {
@@ -57,6 +71,6 @@ public class ProductBusinessService {
     }
 
     public boolean shouldUseButtonsForProducts(List<String> productNames) {
-        return productNames.size() <= 3;
+        return productNames != null && productNames.size() <= 3;
     }
 }

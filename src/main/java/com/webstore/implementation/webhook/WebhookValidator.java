@@ -2,9 +2,9 @@ package com.webstore.implementation.webhook;
 
 import com.webstore.configuration.WhatsAppConfiguration;
 import com.webstore.dto.request.WebhookRequestDto;
-import com.webstore.service.whatsapp.handler.ButtonInteractionHandler;
-import com.webstore.service.whatsapp.handler.ListInteractionHandler;
-import com.webstore.service.whatsapp.handler.TextMessageHandler;
+import com.webstore.service.whatsapp.handler.impl.ButtonInteractionHandler;
+import com.webstore.service.whatsapp.handler.impl.ListInteractionHandler;
+import com.webstore.service.whatsapp.handler.impl.TextMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
