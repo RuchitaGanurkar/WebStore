@@ -5,6 +5,7 @@ import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
 import com.webstore.service.whatsapp.flow.CategoryFlowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import static com.webstore.constant.WhatsAppConstants.API_VERSION;
 
 @Component
 @RequiredArgsConstructor
@@ -22,14 +23,14 @@ public class WelcomeButtonStrategy implements ButtonActionStrategy {
     public void handle(String phoneNumberId, String from, String buttonId) {
         if ("welcome_hi".equals(buttonId)) {
             messageSender.sendTextMessage(phoneNumberId, from, "Hi there! 👋 Welcome to our store!");
-            categoryFlowService.sendCategorySelection("v22.0", phoneNumberId, from);
+            categoryFlowService.sendCategorySelection(API_VERSION, phoneNumberId, from);
         } else if ("welcome_info".equals(buttonId)) {
             String infoMessage = """
                     🏪 *WebStore is a multi-category e-commerce platform* supporting agricultural products, cooked food, and more.
                     Let me show you our categories!
                     """;
             messageSender.sendTextMessage(phoneNumberId, from, infoMessage);
-            categoryFlowService.sendCategorySelection("v22.0", phoneNumberId, from);
+            categoryFlowService.sendCategorySelection(API_VERSION, phoneNumberId, from);
         }
     }
 

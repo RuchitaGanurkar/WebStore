@@ -1,5 +1,6 @@
-package com.webstore.service.whatsapp.strategy.impl;
+package com.webstore.service.whatsapp.list.impl;
 
+import static com.webstore.constant.WhatsAppConstants.API_VERSION;
 import com.webstore.service.whatsapp.business.CategoryBusinessService;
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
 import com.webstore.service.whatsapp.flow.ProductFlowService;
@@ -18,6 +19,7 @@ public class CategoryListSelectionStrategy implements ListActionStrategy {
     private final CategoryBusinessService categoryService;
     private final ProductFlowService productFlowService;
     private final WhatsAppMessageSender messageSender;
+
 
     @Override
     public boolean supports(String listId) {
@@ -38,10 +40,13 @@ public class CategoryListSelectionStrategy implements ListActionStrategy {
                 if (index >= 0 && index < categories.size()) {
                     String selectedCategory = categories.get(index);
                     messageSender.sendTextMessage(phoneNumberId, from, "✅ Selected: " + selectedCategory);
-                    productFlowService.sendProductSelection("v22.0", phoneNumberId, from, selectedCategory);
+                    productFlowService.sendProductSelection(API_VERSION, phoneNumberId, from, selectedCategory);
                 } else {
                     messageSender.sendTextMessage(phoneNumberId, from, "Invalid selection.");
                 }
+            } else {
+                // 👇 Ensure malformed IDs are caught
+                throw new IllegalArgumentException("Invalid listId format: " + listId);
             }
         } catch (Exception e) {
             log.error("Error processing category listId: {}", listId, e);

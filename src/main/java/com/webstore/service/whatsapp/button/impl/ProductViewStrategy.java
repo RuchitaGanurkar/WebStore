@@ -5,6 +5,7 @@ import com.webstore.service.whatsapp.button.ButtonActionStrategy;
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
 import com.webstore.service.whatsapp.flow.ProductFlowService;
 import org.springframework.stereotype.Service;
+import static com.webstore.constant.WhatsAppConstants.API_VERSION;
 
 @Service
 public class ProductViewStrategy implements ButtonActionStrategy {
@@ -32,7 +33,7 @@ public class ProductViewStrategy implements ButtonActionStrategy {
             Integer productId = Integer.parseInt(buttonId.replace("view_product_", ""));
             var product = productService.getProductById(productId);
             if (product != null) {
-                productFlowService.sendProductDetails("v22.0", phoneNumberId, from, product.getProductName());
+                productFlowService.sendProductDetails(API_VERSION, phoneNumberId, from, product.getProductName());
             } else {
                 messageSender.sendTextMessage(phoneNumberId, from, "Product not found.");
             }

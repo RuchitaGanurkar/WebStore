@@ -5,12 +5,13 @@ import com.webstore.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import static com.webstore.constant.WhatsAppConstants.API_VERSION;
 
 @Service
 public class NavigationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NavigationService.class);
-    private static final String DEFAULT_VERSION = "v22.0";
+
 
     private final CategoryFlowService categoryFlowService;
     private final ProductFlowService productFlowService;
@@ -32,7 +33,7 @@ public class NavigationService {
             String pageStr = listId.replaceAll("(next_cat_page_|prev_cat_page_)", "");
             int pageNumber = Integer.parseInt(pageStr);
 
-            categoryFlowService.sendCategoryList(DEFAULT_VERSION, phoneNumberId, from, pageNumber);
+            categoryFlowService.sendCategoryList(API_VERSION, phoneNumberId, from, pageNumber);
         } catch (Exception e) {
             logger.error("Error handling category page navigation: {}", e.getMessage(), e);
             messageSender.sendTextMessage(phoneNumberId, from, "⚠️ Unable to navigate categories.");
@@ -48,7 +49,7 @@ public class NavigationService {
                 String encodedCategory = parts[3].substring(1); // e.g. "cXYZ" -> "XYZ"
                 String categoryName = paginationUtil.decodeFromBase64(encodedCategory);
 
-                productFlowService.sendPaginatedProductList(DEFAULT_VERSION, phoneNumberId, from, categoryName, pageNumber);
+                productFlowService.sendPaginatedProductList(API_VERSION, phoneNumberId, from, categoryName, pageNumber);
             } else {
                 throw new IllegalArgumentException("Invalid product navigation ID format");
             }

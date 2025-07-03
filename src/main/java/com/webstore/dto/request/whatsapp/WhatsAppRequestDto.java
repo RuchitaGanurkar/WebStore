@@ -1,4 +1,4 @@
-package com.webstore.dto.request;
+package com.webstore.dto.request.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

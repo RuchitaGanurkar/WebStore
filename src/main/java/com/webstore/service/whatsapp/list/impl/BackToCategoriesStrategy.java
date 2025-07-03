@@ -4,6 +4,7 @@ import com.webstore.service.whatsapp.flow.CategoryFlowService;
 import com.webstore.service.whatsapp.list.ListActionStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import static com.webstore.constant.WhatsAppConstants.API_VERSION;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +19,6 @@ public class BackToCategoriesStrategy implements ListActionStrategy {
 
     @Override
     public void handle(String phoneNumberId, String from, String listId) {
-        categoryFlowService.sendCategorySelection("v22.0", phoneNumberId, from);
+        categoryFlowService.sendCategorySelection(API_VERSION, phoneNumberId, from);
     }
 }

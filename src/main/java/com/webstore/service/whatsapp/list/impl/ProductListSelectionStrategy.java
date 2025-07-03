@@ -1,4 +1,4 @@
-package com.webstore.service.whatsapp.strategy.impl;
+package com.webstore.service.whatsapp.list.impl;
 
 import com.webstore.dto.response.ProductResponseDto;
 import com.webstore.service.whatsapp.business.ProductBusinessService;

@@ -1,6 +1,6 @@
 package com.webstore.service.whatsapp.builder;
 
-import com.webstore.dto.request.WhatsAppRequestDto;
+import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
 import com.webstore.util.MessageFormatter;
 import org.springframework.stereotype.Service;
 

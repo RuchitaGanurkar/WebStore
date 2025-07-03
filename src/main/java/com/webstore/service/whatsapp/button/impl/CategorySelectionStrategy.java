@@ -6,6 +6,7 @@ import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
 import com.webstore.service.whatsapp.flow.CategoryFlowService;
 import com.webstore.service.whatsapp.flow.ProductFlowService;
 import org.springframework.stereotype.Service;
+import static com.webstore.constant.WhatsAppConstants.API_VERSION;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class CategorySelectionStrategy implements ButtonActionStrategy {
         String categoryIdStr = buttonId.replace("cat_", "");
 
         if ("see_all".equals(categoryIdStr)) {
-            categoryFlowService.sendCategoryList("v22.0", phoneNumberId, from, 1);
+            categoryFlowService.sendCategoryList(API_VERSION, phoneNumberId, from, 1);
             return;
         }
 

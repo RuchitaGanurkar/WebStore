@@ -13,6 +13,9 @@ public class WhatsAppConstants {
     // Webhook
     public static final String MODE_SUBSCRIBE = "subscribe";
 
+    // API Version
+    public static final String API_VERSION = "v22.0";
+
     private WhatsAppConstants() {
         // prevent instantiation
     }

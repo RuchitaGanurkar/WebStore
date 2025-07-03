@@ -1,7 +1,7 @@
 package com.webstore.service.whatsapp.flow;
 
 
-import com.webstore.dto.request.WhatsAppRequestDto;
+import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
 
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
 import com.webstore.service.whatsapp.builder.MessageBuilderService;
