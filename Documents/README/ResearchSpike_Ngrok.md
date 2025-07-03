@@ -29,7 +29,7 @@ The architecture consists of:
 
 - Java 17 or later
 - Maven or Gradle
-- Ngrok account (sign up at [ngrok.com](https://ngrok.com))
+- Ngrok account (sign up at [ngrok.c••••••••••om](https://ngrok.com))
 - PostgreSQL database (or any database of your choice)
 
 ## Installation
@@ -157,7 +157,7 @@ Region                        United States (us)
 Web Interface                 http://127.0.0.1:4040
 Forwarding                    https://abc123.ngrok.io -> http://localhost:8080
 ```
-
+![images](Images/NgrokTerminalView.png)
 ### 3. Access Your APIs
 
 You can now access your APIs through the Ngrok URL:

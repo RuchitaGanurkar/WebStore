@@ -28,17 +28,25 @@ public class GlobalExceptionHandler {
                 .body("Webstore: Invalid input provided. Please check your request.");
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        LOGGER.error("Webstore: Unexpected exception occurred: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Webstore: Something went wrong. Please try again later.");
-    }
-
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
         LOGGER.error("Webstore: ResponseStatusException occurred: {}", ex.getMessage(), ex);
         return ResponseEntity.status(ex.getStatusCode())
                 .body("Webstore: " + ex.getReason());
+    }
+
+    // ✅ Custom WhatsApp flow-related exceptions
+    @ExceptionHandler(WhatsAppFlowException.class)
+    public ResponseEntity<String> handleWhatsAppFlowException(WhatsAppFlowException ex) {
+        LOGGER.warn("Webstore: WhatsApp flow exception: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Webstore: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        LOGGER.error("Webstore: Unexpected exception occurred: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Webstore: Something went wrong. Please try again later.");
     }
 }
