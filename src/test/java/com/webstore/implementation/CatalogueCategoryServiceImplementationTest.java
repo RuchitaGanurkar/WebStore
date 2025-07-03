@@ -1,14 +1,14 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.CatalogueCategoryRequestDto;
-import com.webstore.dto.response.CatalogueCategoryResponseDto;
-import com.webstore.entity.Catalogue;
-import com.webstore.entity.Category;
-import com.webstore.entity.CatalogueCategory;
-import com.webstore.repository.CatalogueCategoryRepository;
-import com.webstore.repository.CatalogueRepository;
-import com.webstore.repository.CategoryRepository;
-import com.webstore.util.AuthUtils;
+import com.webstore.dto.request.product.CatalogueCategoryRequestDto;
+import com.webstore.dto.response.product.CatalogueCategoryResponseDto;
+import com.webstore.entity.product.Catalogue;
+import com.webstore.entity.product.Category;
+import com.webstore.entity.product.CatalogueCategory;
+import com.webstore.implementation.product.CatalogueCategoryServiceImplementation;
+import com.webstore.repository.product.CatalogueCategoryRepository;
+import com.webstore.repository.product.CatalogueRepository;
+import com.webstore.repository.product.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

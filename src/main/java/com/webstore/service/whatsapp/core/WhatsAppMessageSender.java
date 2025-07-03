@@ -1,7 +1,7 @@
 package com.webstore.service.whatsapp.core;
 
 import com.webstore.configuration.WhatsAppConfiguration;
-import com.webstore.dto.request.WhatsAppRequestDto;
+import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;

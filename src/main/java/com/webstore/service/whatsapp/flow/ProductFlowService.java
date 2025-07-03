@@ -1,9 +1,9 @@
 package com.webstore.service.whatsapp.flow;
 
-import com.webstore.entity.ProductPrice;
-import com.webstore.dto.response.ProductResponseDto;
-import com.webstore.exception.CategoryNotFoundException;
-import com.webstore.exception.ProductNotFoundException;
+import com.webstore.entity.product.ProductPrice;
+import com.webstore.dto.response.product.ProductResponseDto;
+import com.webstore.exception.product.CategoryNotFoundException;
+import com.webstore.exception.product.ProductNotFoundException;
 import com.webstore.service.whatsapp.business.CategoryBusinessService;
 import com.webstore.service.whatsapp.business.ProductBusinessService;
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
@@ -11,7 +11,7 @@ import com.webstore.service.whatsapp.strategy.ProductDisplayStrategy;
 import com.webstore.service.whatsapp.strategy.impl.ProductListDisplayStrategy;
 import com.webstore.util.MessageFormatter;
 import com.webstore.util.PaginationUtil;
-import com.webstore.dto.request.WhatsAppRequestDto;
+import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
 import com.webstore.service.whatsapp.builder.MessageBuilderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,9 +3,10 @@ package com.webstore.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webstore.dto.request.CategoryRequestDto;
-import com.webstore.dto.response.CategoryResponseDto;
-import com.webstore.service.CategoryService;
+import com.webstore.controller.product.CategoryController;
+import com.webstore.dto.request.product.CategoryRequestDto;
+import com.webstore.dto.response.product.CategoryResponseDto;
+import com.webstore.service.product.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

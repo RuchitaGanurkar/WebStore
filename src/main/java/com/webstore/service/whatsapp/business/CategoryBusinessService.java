@@ -1,6 +1,6 @@
 package com.webstore.service.whatsapp.business;
 
-import com.webstore.repository.CategoryRepository;
+import com.webstore.repository.product.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

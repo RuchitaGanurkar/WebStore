@@ -1,9 +1,10 @@
 package com.webstore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webstore.dto.request.UserRequestDto;
-import com.webstore.dto.response.UserResponseDto;
-import com.webstore.service.UserService;
+import com.webstore.controller.product.UserController;
+import com.webstore.dto.request.product.UserRequestDto;
+import com.webstore.dto.response.product.UserResponseDto;
+import com.webstore.service.product.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

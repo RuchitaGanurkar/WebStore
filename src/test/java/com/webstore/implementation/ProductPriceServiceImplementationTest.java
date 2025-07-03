@@ -1,14 +1,14 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.ProductPriceRequestDto;
-import com.webstore.dto.response.ProductPriceResponseDto;
-import com.webstore.entity.Currency;
-import com.webstore.entity.Product;
-import com.webstore.entity.ProductPrice;
-import com.webstore.repository.CurrencyRepository;
-import com.webstore.repository.ProductPriceRepository;
-import com.webstore.repository.ProductRepository;
-import com.webstore.service.ProductPriceService;
+import com.webstore.dto.request.product.ProductPriceRequestDto;
+import com.webstore.dto.response.product.ProductPriceResponseDto;
+import com.webstore.entity.product.Currency;
+import com.webstore.entity.product.Product;
+import com.webstore.entity.product.ProductPrice;
+import com.webstore.implementation.product.ProductPriceServiceImplementation;
+import com.webstore.repository.product.CurrencyRepository;
+import com.webstore.repository.product.ProductPriceRepository;
+import com.webstore.repository.product.ProductRepository;
 import com.webstore.util.AuthUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

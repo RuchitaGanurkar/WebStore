@@ -1,9 +1,10 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.UserRequestDto;
-import com.webstore.dto.response.UserResponseDto;
-import com.webstore.entity.User;
-import com.webstore.repository.UserRepository;
+import com.webstore.dto.request.product.UserRequestDto;
+import com.webstore.dto.response.product.UserResponseDto;
+import com.webstore.entity.product.User;
+import com.webstore.implementation.product.UserServiceImplementation;
+import com.webstore.repository.product.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

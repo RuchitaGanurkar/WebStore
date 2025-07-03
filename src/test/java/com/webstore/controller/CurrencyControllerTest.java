@@ -1,9 +1,10 @@
 package com.webstore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webstore.dto.request.CurrencyRequestDto;
-import com.webstore.dto.response.CurrencyResponseDto;
-import com.webstore.service.CurrencyService;
+import com.webstore.controller.product.CurrencyController;
+import com.webstore.dto.request.product.CurrencyRequestDto;
+import com.webstore.dto.response.product.CurrencyResponseDto;
+import com.webstore.service.product.CurrencyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

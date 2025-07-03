@@ -1,9 +1,10 @@
 package com.webstore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webstore.dto.request.CatalogueCategoryRequestDto;
-import com.webstore.dto.response.CatalogueCategoryResponseDto;
-import com.webstore.service.CatalogueCategoryService;
+import com.webstore.controller.product.CatalogueCategoryController;
+import com.webstore.dto.request.product.CatalogueCategoryRequestDto;
+import com.webstore.dto.response.product.CatalogueCategoryResponseDto;
+import com.webstore.service.product.CatalogueCategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

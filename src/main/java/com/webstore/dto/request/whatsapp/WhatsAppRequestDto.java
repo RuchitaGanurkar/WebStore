@@ -1,4 +1,4 @@
-package com.webstore.dto.request;
+package com.webstore.dto.request.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -15,26 +15,20 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WhatsAppRequestDto {
 
-    // Common fields for all message types
     private final String messaging_product = "whatsapp";
     private String to;
-    private String type; // "text", "interactive", "template"
+    private String type;
 
-    // Text message fields
     private TextBody text;
 
-    // Interactive message fields
     private Interactive interactive;
 
-    // Template message fields
     private Template template;
 
-    // Context and status fields
     private Context context;
     private String status;
     private String message_id;
 
-    // ========== INNER CLASSES ==========
 
     @Data
     @Builder
@@ -52,7 +46,6 @@ public class WhatsAppRequestDto {
         private String message_id;
     }
 
-    // Interactive message structures
     @Data
     @Builder
     @NoArgsConstructor
@@ -95,21 +88,19 @@ public class WhatsAppRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Action {
-        // For Button Messages
+
         private List<Button> buttons;
 
-        // For List Messages
-        private String button; // Button text that opens the list
+        private String button;
         private List<Section> sections;
     }
 
-    // Button message structures
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Button {
-        private String type; // "reply"
+        private String type;
         private Reply reply;
     }
 
@@ -122,7 +113,6 @@ public class WhatsAppRequestDto {
         private String title;
     }
 
-    // List message structures
     @Data
     @Builder
     @NoArgsConstructor
@@ -142,7 +132,6 @@ public class WhatsAppRequestDto {
         private String description;
     }
 
-    // Template message structures
     @Data
     @Builder
     @NoArgsConstructor
@@ -178,8 +167,6 @@ public class WhatsAppRequestDto {
         private String type;
         private String text;
     }
-
-    // ========== FACTORY METHODS ==========
 
     public static WhatsAppRequestDto createTextMessage(String to, String messageText) {
         return WhatsAppRequestDto.builder()

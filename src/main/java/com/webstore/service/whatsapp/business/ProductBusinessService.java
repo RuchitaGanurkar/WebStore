@@ -1,11 +1,10 @@
 package com.webstore.service.whatsapp.business;
 
-import com.webstore.dto.response.ProductResponseDto;
-import com.webstore.entity.ProductPrice;
-import com.webstore.repository.ProductPriceRepository;
-import com.webstore.repository.ProductRepository;
-import com.webstore.service.ProductService;
-import com.webstore.service.whatsapp.business.CategoryBusinessService;
+import com.webstore.dto.response.product.ProductResponseDto;
+import com.webstore.entity.product.ProductPrice;
+import com.webstore.repository.product.ProductPriceRepository;
+import com.webstore.repository.product.ProductRepository;
+import com.webstore.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

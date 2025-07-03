@@ -1,9 +1,10 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.CategoryRequestDto;
-import com.webstore.dto.response.CategoryResponseDto;
-import com.webstore.entity.Category;
-import com.webstore.repository.CategoryRepository;
+import com.webstore.dto.request.product.CategoryRequestDto;
+import com.webstore.dto.response.product.CategoryResponseDto;
+import com.webstore.entity.product.Category;
+import com.webstore.implementation.product.CategoryServiceImplementation;
+import com.webstore.repository.product.CategoryRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

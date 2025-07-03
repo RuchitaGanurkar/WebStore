@@ -1,9 +1,10 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.CurrencyRequestDto;
-import com.webstore.dto.response.CurrencyResponseDto;
-import com.webstore.entity.Currency;
-import com.webstore.repository.CurrencyRepository;
+import com.webstore.dto.request.product.CurrencyRequestDto;
+import com.webstore.dto.response.product.CurrencyResponseDto;
+import com.webstore.entity.product.Currency;
+import com.webstore.implementation.product.CurrencyServiceImplementation;
+import com.webstore.repository.product.CurrencyRepository;
 import com.webstore.util.AuthUtils;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;

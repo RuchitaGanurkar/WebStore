@@ -1,6 +1,6 @@
 package com.webstore.service.whatsapp.strategy.impl;
 
-import com.webstore.dto.request.WhatsAppRequestDto;
+import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
 import com.webstore.service.whatsapp.business.ProductBusinessService;
 import com.webstore.service.whatsapp.builder.MessageBuilderService;
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;

@@ -1,11 +1,12 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.ProductRequestDto;
-import com.webstore.dto.response.ProductResponseDto;
-import com.webstore.entity.Category;
-import com.webstore.entity.Product;
-import com.webstore.repository.CategoryRepository;
-import com.webstore.repository.ProductRepository;
+import com.webstore.dto.request.product.ProductRequestDto;
+import com.webstore.dto.response.product.ProductResponseDto;
+import com.webstore.entity.product.Category;
+import com.webstore.entity.product.Product;
+import com.webstore.implementation.product.ProductServiceImplementation;
+import com.webstore.repository.product.CategoryRepository;
+import com.webstore.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

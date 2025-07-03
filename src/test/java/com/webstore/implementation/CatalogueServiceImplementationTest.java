@@ -1,9 +1,10 @@
 package com.webstore.implementation;
 
-import com.webstore.dto.request.CatalogueRequestDto;
-import com.webstore.dto.response.CatalogueResponseDto;
-import com.webstore.entity.Catalogue;
-import com.webstore.repository.CatalogueRepository;
+import com.webstore.dto.request.product.CatalogueRequestDto;
+import com.webstore.dto.response.product.CatalogueResponseDto;
+import com.webstore.entity.product.Catalogue;
+import com.webstore.implementation.product.CatalogueServiceImplementation;
+import com.webstore.repository.product.CatalogueRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

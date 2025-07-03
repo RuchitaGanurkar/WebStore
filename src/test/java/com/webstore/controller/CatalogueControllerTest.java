@@ -1,8 +1,9 @@
 package com.webstore.controller;
 
-import com.webstore.dto.request.CatalogueRequestDto;
-import com.webstore.dto.response.CatalogueResponseDto;
-import com.webstore.service.CatalogueService;
+import com.webstore.controller.product.CatalogueController;
+import com.webstore.dto.request.product.CatalogueRequestDto;
+import com.webstore.dto.response.product.CatalogueResponseDto;
+import com.webstore.service.product.CatalogueService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

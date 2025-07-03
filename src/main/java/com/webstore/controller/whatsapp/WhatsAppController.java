@@ -1,8 +1,8 @@
 package com.webstore.controller.whatsapp;
 
-import com.webstore.dto.request.WhatsAppRequestDto;
+import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
 import com.webstore.dto.request.WebhookRequestDto;
-import com.webstore.service.WhatsAppService;
+import com.webstore.service.whatsapp.WhatsAppService;
 import com.webstore.implementation.webhook.WebhookValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
