@@ -1,5 +1,6 @@
 package com.webstore.exception;
 
+import com.webstore.exception.product.WhatsAppFlowException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

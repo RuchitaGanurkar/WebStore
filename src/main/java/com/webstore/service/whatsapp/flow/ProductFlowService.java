@@ -1,9 +1,9 @@
 package com.webstore.service.whatsapp.flow;
 
-import com.webstore.entity.ProductPrice;
-import com.webstore.dto.response.ProductResponseDto;
-import com.webstore.exception.CategoryNotFoundException;
-import com.webstore.exception.ProductNotFoundException;
+import com.webstore.entity.product.ProductPrice;
+import com.webstore.dto.response.product.ProductResponseDto;
+import com.webstore.exception.product.CategoryNotFoundException;
+import com.webstore.exception.product.ProductNotFoundException;
 import com.webstore.service.whatsapp.business.CategoryBusinessService;
 import com.webstore.service.whatsapp.business.ProductBusinessService;
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;

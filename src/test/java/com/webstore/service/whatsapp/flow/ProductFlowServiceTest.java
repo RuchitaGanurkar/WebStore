@@ -1,17 +1,15 @@
 package com.webstore.service.whatsapp.flow;
 
-import com.webstore.dto.request.CategoryRequestDto;
+import com.webstore.dto.request.product.CategoryRequestDto;
 import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
-import com.webstore.dto.response.ProductPriceResponseDto;
-import com.webstore.dto.response.ProductResponseDto;
-import com.webstore.exception.ProductNotFoundException;
+import com.webstore.dto.response.product.ProductResponseDto;
+import com.webstore.exception.product.ProductNotFoundException;
 import com.webstore.service.whatsapp.business.CategoryBusinessService;
 import com.webstore.service.whatsapp.business.ProductBusinessService;
 import com.webstore.service.whatsapp.core.WhatsAppMessageSender;
 import com.webstore.service.whatsapp.builder.MessageBuilderService;
 import com.webstore.util.MessageFormatter;
 import com.webstore.util.PaginationUtil;
-import com.webstore.service.whatsapp.strategy.ProductDisplayStrategy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

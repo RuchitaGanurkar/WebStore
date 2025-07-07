@@ -1,6 +1,6 @@
 package com.webstore.service.whatsapp.business;
 
-import com.webstore.repository.CategoryRepository;
+import com.webstore.repository.product.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

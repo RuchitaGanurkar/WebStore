@@ -1,15 +1,14 @@
 package com.webstore.service.whatsapp.business;
 
-import com.webstore.dto.response.ProductResponseDto;
-import com.webstore.entity.Currency;
-import com.webstore.entity.ProductPrice;
-import com.webstore.repository.ProductPriceRepository;
-import com.webstore.repository.ProductRepository;
-import com.webstore.service.ProductService;
+import com.webstore.dto.response.product.ProductResponseDto;
+import com.webstore.entity.product.Currency;
+import com.webstore.entity.product.ProductPrice;
+import com.webstore.repository.product.ProductPriceRepository;
+import com.webstore.repository.product.ProductRepository;
+import com.webstore.service.product.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
