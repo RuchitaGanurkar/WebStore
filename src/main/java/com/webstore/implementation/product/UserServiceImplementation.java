@@ -21,7 +21,7 @@ public class UserServiceImplementation implements UserService {
 
     private UserRepository userRepository;
 
-    @Autowired // Add this annotation to make the dependency injection explicit
+    @Autowired
     public UserServiceImplementation(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

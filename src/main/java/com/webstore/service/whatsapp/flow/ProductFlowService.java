@@ -118,7 +118,6 @@ public class ProductFlowService {
             return;
         }
 
-        // Only list strategy can handle this — fallback if needed
         productDisplayStrategies.stream()
                 .filter(strategy -> strategy.supports(allProducts.size()))
                 .filter(strategy -> strategy instanceof ProductListDisplayStrategy) // optional

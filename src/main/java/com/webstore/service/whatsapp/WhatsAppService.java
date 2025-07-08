@@ -1,7 +1,6 @@
-package com.webstore.service;
+package com.webstore.service.whatsapp;
 
 public interface WhatsAppService {
-
     String verifyWebhook(String mode, String token, String challenge);
     void sendWelcomeMessage(String version, String phoneNumberId, String recipientPhoneNumber);
     void sendCategoryInteractiveMessage(String version, String phoneNumberId, String recipientPhoneNumber);

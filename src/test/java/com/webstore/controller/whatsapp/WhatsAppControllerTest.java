@@ -1,15 +1,13 @@
 package com.webstore.controller.whatsapp;
 
-import com.webstore.dto.request.WebhookRequestDto;
-import com.webstore.dto.request.whatsapp.WhatsAppRequestDto;
+import com.webstore.dto.request.webhook.WebhookRequestDto;
 import com.webstore.implementation.webhook.WebhookValidator;
-import com.webstore.service.WhatsAppService;
+import com.webstore.service.whatsapp.WhatsAppService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 

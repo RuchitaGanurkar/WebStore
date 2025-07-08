@@ -66,7 +66,6 @@ public class CategoryFlowService {
 
         List<WhatsAppRequestDto.Row> rows = new ArrayList<>();
 
-        // Add category items
         for (int i = 0; i < paginationResult.getItems().size(); i++) {
             String categoryName = paginationResult.getItems().get(i);
             Integer categoryId = categoryService.getCategoryIdByName(categoryName);
@@ -86,7 +85,6 @@ public class CategoryFlowService {
             ));
         }
 
-        // Add navigation options
         addNavigationRows(rows, paginationResult, "cat");
 
         WhatsAppRequestDto.Section section = messageBuilder.createSection("🏪 Categories", rows);

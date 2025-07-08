@@ -1,4 +1,4 @@
-package com.webstore.dto.request;
+package com.webstore.dto.request.webhook;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -26,7 +26,7 @@ public class WelcomeButtonStrategy implements ButtonActionStrategy {
             categoryFlowService.sendCategorySelection(API_VERSION, phoneNumberId, from);
         } else if ("welcome_info".equals(buttonId)) {
             String infoMessage = """
-                    🏪 *WebStore is a multi-category e-commerce platform* supporting agricultural products, cooked food, and more.
+                    🏪 *WebStore* is a multi-category e-commerce platform* supporting agricultural products, cooked food, and more.
                     Let me show you our categories!
                     """;
             messageSender.sendTextMessage(phoneNumberId, from, infoMessage);

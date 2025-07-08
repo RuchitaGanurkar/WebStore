@@ -51,7 +51,6 @@ public class TextMessageHandler implements InteractionHandler<String> {
         String welcomeText = """
                 👋 *Welcome to WebStore*
                 Thanks for joining us! What would you like to do next?
-
                 Type *categories* to see product categories.
                 """;
 

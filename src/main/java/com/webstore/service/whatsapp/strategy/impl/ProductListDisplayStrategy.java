@@ -44,11 +44,11 @@ public class ProductListDisplayStrategy implements ProductDisplayStrategy {
 
     @Override
     public void display(String version, String phoneNumberId, String recipientPhoneNumber, String categoryName) {
-        // Default to page 1 if no page provided
+
         display(version, phoneNumberId, recipientPhoneNumber, categoryName, 1);
     }
 
-    // ✅ Overloaded method for paginated display
+
     public void display(String version, String phoneNumberId, String recipientPhoneNumber,
                         String categoryName, int pageNumber) {
 
@@ -58,7 +58,7 @@ public class ProductListDisplayStrategy implements ProductDisplayStrategy {
         PaginationUtil.PaginationResult<String> paginated = paginationUtil.paginate(products, pageNumber);
         List<WhatsAppRequestDto.Row> rows = new ArrayList<>();
 
-        // Add product rows
+
         for (String productName : paginated.getItems()) {
             Integer productId = productService.getProductIdByName(productName);
             String priceDisplay = productService.getProductPriceDisplay(productId);
@@ -66,7 +66,7 @@ public class ProductListDisplayStrategy implements ProductDisplayStrategy {
             rows.add(messageBuilder.createRow(rowId, productName, "💰 " + priceDisplay + " • Tap to add to cart"));
         }
 
-        // Navigation rows
+
         if (paginated.hasPrevious()) {
             String prevId = String.format("prev_prod_p%d_c%s", pageNumber - 1, paginationUtil.encodeToBase64(categoryName));
             rows.add(messageBuilder.createRow(prevId, "⬅️ Previous Page", String.format("Go to page %d", pageNumber - 1)));
@@ -77,7 +77,7 @@ public class ProductListDisplayStrategy implements ProductDisplayStrategy {
             rows.add(messageBuilder.createRow(nextId, "➡️ Next Page", String.format("Go to page %d", pageNumber + 1)));
         }
 
-        // Back to categories
+
         rows.add(messageBuilder.createRow("back_to_categories", "⬅️ Back to Categories", "Browse other categories"));
 
         WhatsAppRequestDto.Section section = messageBuilder.createSection("🛒 " + categoryName, rows);

@@ -45,7 +45,6 @@ public class CategoryListSelectionStrategy implements ListActionStrategy {
                     messageSender.sendTextMessage(phoneNumberId, from, "Invalid selection.");
                 }
             } else {
-                // 👇 Ensure malformed IDs are caught
                 throw new IllegalArgumentException("Invalid listId format: " + listId);
             }
         } catch (Exception e) {

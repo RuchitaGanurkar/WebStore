@@ -14,9 +14,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     boolean existsByCategoryName(String categoryName);
 
     @Query(value = "SELECT c.category_name FROM web_store.category c ORDER BY c.category_id ASC", nativeQuery = true)
-    List<String> findTop3CategoryNames(); // Fetch first 3 names
+    List<String> findTop3CategoryNames();
 
-    // Find category ID by name
     @Query("SELECT c.categoryId FROM Category c WHERE c.categoryName = :categoryName")
     Integer findCategoryIdByCategoryName(@Param("categoryName") String categoryName);
 

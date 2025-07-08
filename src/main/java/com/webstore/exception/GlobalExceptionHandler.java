@@ -36,7 +36,6 @@ public class GlobalExceptionHandler {
                 .body("Webstore: " + ex.getReason());
     }
 
-    // ✅ Custom WhatsApp flow-related exceptions
     @ExceptionHandler(WhatsAppFlowException.class)
     public ResponseEntity<String> handleWhatsAppFlowException(WhatsAppFlowException ex) {
         LOGGER.warn("Webstore: WhatsApp flow exception: {}", ex.getMessage());
