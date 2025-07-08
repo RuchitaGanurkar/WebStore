@@ -17,6 +17,4 @@ public interface ProductService {
 
     void deleteProduct(Integer id);
 
-//    @Transactional
-//    void deleteProductById(Integer id);
 }

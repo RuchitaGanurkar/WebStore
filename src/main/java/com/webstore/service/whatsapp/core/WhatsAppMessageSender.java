@@ -27,7 +27,6 @@ public class WhatsAppMessageSender {
     public void sendMessage(String phoneNumberId, WhatsAppRequestDto requestBody, String messageType) {
         String url = buildUrl(phoneNumberId);
 
-        // ✅ ADDED: Debug logging to see the actual request
         logger.info("Sending {} to URL: {}", messageType, url);
         logger.info("Request body: {}", requestBody);
 
@@ -38,14 +37,12 @@ public class WhatsAppMessageSender {
         } catch (Exception e) {
             logger.error("Failed to send {}: {}", messageType, e.getMessage());
 
-            // ✅ IMPROVED: Better error logging
             if (e.getMessage().contains("400")) {
                 logger.error("400 Bad Request - Check phone number ID and request body format");
                 logger.error("URL used: {}", url);
                 logger.error("Phone Number ID: {}", phoneNumberId);
             }
 
-            // Fallback for list messages
             if (messageType.contains("list")) {
                 String fallbackMessage = "🔧 **Technical Issue**\n\nSorry, there was a problem displaying the list. Please type 'categories' to try again or contact support.";
                 WhatsAppRequestDto fallbackRequest = WhatsAppRequestDto.createTextMessage(requestBody.getTo(), fallbackMessage);
@@ -59,7 +56,6 @@ public class WhatsAppMessageSender {
         sendMessage(phoneNumberId, requestBody, "Text message");
     }
 
-    // ✅ FIXED: Correct URL format with phone number ID in path
     private String buildUrl(String phoneNumberId) {
         String url = String.format("%s/%s/%s/messages",
                 whatsAppConfig.getApi().getGraphUrl(),    // https://graph.facebook.com

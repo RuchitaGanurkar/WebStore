@@ -1,7 +1,7 @@
 package com.webstore.implementation.whatsapp;
 
 import com.webstore.implementation.webhook.WebhookValidator;
-import com.webstore.service.WhatsAppService;
+import com.webstore.service.whatsapp.WhatsAppService;
 import com.webstore.service.whatsapp.flow.ProductFlowService;
 import com.webstore.service.whatsapp.flow.WelcomeFlowService;
 import com.webstore.service.whatsapp.flow.CategoryFlowService;

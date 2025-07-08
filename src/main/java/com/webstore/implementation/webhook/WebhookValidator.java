@@ -1,7 +1,7 @@
 package com.webstore.implementation.webhook;
 
 import com.webstore.configuration.WhatsAppConfiguration;
-import com.webstore.dto.request.WebhookRequestDto;
+import com.webstore.dto.request.webhook.WebhookRequestDto;
 import com.webstore.service.whatsapp.handler.impl.ButtonInteractionHandler;
 import com.webstore.service.whatsapp.handler.impl.ListInteractionHandler;
 import com.webstore.service.whatsapp.handler.impl.TextMessageHandler;
@@ -19,7 +19,8 @@ public class WebhookValidator {
     private final ListInteractionHandler listHandler;
     private final TextMessageHandler textHandler;
 
-    public WebhookValidator(WhatsAppConfiguration whatsAppConfig,                              ButtonInteractionHandler buttonHandler,
+    public WebhookValidator(WhatsAppConfiguration whatsAppConfig,
+                            ButtonInteractionHandler buttonHandler,
                             ListInteractionHandler listHandler,
                             TextMessageHandler textHandler) {
         this.whatsAppConfig = whatsAppConfig;

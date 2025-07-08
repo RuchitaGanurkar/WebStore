@@ -94,32 +94,22 @@ public class CatalogueServiceImplementation implements CatalogueService {
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<CatalogueResponseDto> searchByDescription(String description) {
-//        return catalogueRepository.findByCatalogueDescriptionContainingIgnoreCase(description)
-//                .stream()
-//                .map(this::convertToDto)
-//                .collect(Collectors.toList());
-//    }
 
     public List<CategoryResponseDto> getCategoriesByCatalogueId(Integer catalogueId) {
-        // Find the catalogue
-        Catalogue catalogue = catalogueRepository.findById(catalogueId)
+       Catalogue catalogue = catalogueRepository.findById(catalogueId)
                 .orElseThrow(() -> new RuntimeException("Catalogue not found with ID: " + catalogueId));
 
-        // Get category IDs from catalogue_category mappings
         List<Integer> categoryIds = catalogue.getCatalogueCategories().stream()
                 .map(cc -> cc.getCategory().getCategoryId())
                 .collect(Collectors.toList());
 
-        // Get detailed category info for each ID
         List<CategoryResponseDto> categories = new ArrayList<>();
         for (Integer categoryId : categoryIds) {
             try {
                 CategoryResponseDto category = categoryService.getCategoryById(categoryId);
                 categories.add(category);
             } catch (Exception e) {
-                // Skip categories that can't be found
+
             }
         }
 

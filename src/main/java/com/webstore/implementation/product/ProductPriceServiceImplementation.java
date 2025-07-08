@@ -136,7 +136,6 @@ public class ProductPriceServiceImplementation implements ProductPriceService {
         return responseDto;
     }
 
-    // Utility method for formatting paise to rupees string
     private String formatPrice(BigInteger amountInPaise, String currencySymbol) {
         BigDecimal amountInRupees = new BigDecimal(amountInPaise).divide(BigDecimal.valueOf(100));
         return currencySymbol + amountInRupees.toPlainString();
