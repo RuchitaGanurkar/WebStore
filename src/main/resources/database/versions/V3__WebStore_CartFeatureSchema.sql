@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS web_store.cart_product (
     cart_product_id BIGINT NOT NULL DEFAULT nextval('web_store.seq_cart_product_id') PRIMARY KEY,
     cart_id BIGINT NOT NULL,
     status_id INT NOT NULL,
-    added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_cart_product_cart
         FOREIGN KEY (cart_id) REFERENCES web_store.cart (cart_id) ON DELETE CASCADE,

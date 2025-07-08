@@ -1,15 +1,11 @@
 package com.webstore.dto.request.product;
 
-
 import com.webstore.validation.product.UserValidation;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class UserRequestDto {
-
-
-    //  Adding Validation Annotation To Requested Data
 
     @NotNull(groups = UserValidation.class, message = "Username is required")
     @NotBlank(groups = UserValidation.class, message = "Username should not be blank")
@@ -31,4 +27,10 @@ public class UserRequestDto {
     @NotNull(groups = UserValidation.class, message = "Role is required")
     @NotBlank(groups = UserValidation.class, message = "Role should not be blank")
     private String role;
+
+    @NotNull(groups = UserValidation.class, message = "Phone number is required")
+    @Digits(integer = 15, fraction = 0, groups = UserValidation.class, message = "Phone number must be a valid number")
+    @Min(value = 1000000000L, groups = UserValidation.class, message = "Phone number must be at least 10 digits")
+    @Max(value = 999999999999999L, groups = UserValidation.class, message = "Phone number must not exceed 15 digits")
+    private Long phoneNumber;
 }
