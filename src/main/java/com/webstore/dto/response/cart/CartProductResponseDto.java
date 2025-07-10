@@ -9,6 +9,6 @@ public class CartProductResponseDto {
     private Long cartProductId;
     private Long cartId;
     private Integer statusId;
-    private LocalDateTime addedAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

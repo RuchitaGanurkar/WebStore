@@ -1,18 +1,15 @@
 package com.webstore.dto.request.cart;
 
+import com.webstore.validation.cart.CartHistoryValidation;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
 public class CartHistoryRequestDto {
 
-    @NotNull(message = "Cart ID is required")
+    @NotNull(groups = CartHistoryValidation.class, message = "Cart ID is required")
+    @Positive(groups = CartHistoryValidation.class, message = "Cart ID must be positive")
     private Long cartId;
-
-    @Size(max = 50, message = "Created by must not exceed 50 characters")
-    private String createdBy;
-
-    @Size(max = 50, message = "Updated by must not exceed 50 characters")
-    private String updatedBy;
 }

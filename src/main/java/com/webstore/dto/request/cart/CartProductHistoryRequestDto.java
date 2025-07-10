@@ -1,30 +1,29 @@
 package com.webstore.dto.request.cart;
 
+import com.webstore.validation.cart.CartProductHistoryValidation;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class CartProductHistoryRequestDto {
 
-    @NotNull(message = "Cart product ID is required")
+    @NotNull(groups = CartProductHistoryValidation.class, message = "Cart product ID is required")
+    @Positive(groups = CartProductHistoryValidation.class, message = "Cart product ID must be positive")
     private Long cartProductId;
 
-    @NotNull(message = "Product ID is required")
+    @NotNull(groups = CartProductHistoryValidation.class, message = "Product ID is required")
+    @Positive(groups = CartProductHistoryValidation.class, message = "Product ID must be positive")
     private Integer productId;
 
-    @NotNull(message = "Old quantity is required")
-    @Min(value = 1, message = "Old quantity must be at least 1")
+    @NotNull(groups = CartProductHistoryValidation.class, message = "Old quantity is required")
+    @Min(value = 0, groups = CartProductHistoryValidation.class, message = "Old quantity must be non-negative")
     private Integer oldQuantity;
 
-    @NotNull(message = "New quantity is required")
-    @Min(value = 1, message = "New quantity must be at least 1")
+    @NotNull(groups = CartProductHistoryValidation.class, message = "New quantity is required")
+    @Min(value = 0, groups = CartProductHistoryValidation.class, message = "New quantity must be non-negative")
     private Integer newQuantity;
 
-    @Size(max = 50, message = "Created by must not exceed 50 characters")
-    private String createdBy;
-
-    @Size(max = 50, message = "Updated by must not exceed 50 characters")
-    private String updatedBy;
 }

@@ -1,14 +1,18 @@
 package com.webstore.dto.request.cart;
 
+import com.webstore.validation.cart.CartProductValidation;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
 public class CartProductRequestDto {
 
-    @NotNull(message = "Cart ID is required")
+    @NotNull(groups = CartProductValidation.class, message = "Cart ID is required")
+    @Positive(groups = CartProductValidation.class, message = "Cart ID must be positive")
     private Long cartId;
 
-    @NotNull(message = "Cart product status ID is required")
+    @NotNull(groups = CartProductValidation.class, message = "Cart product status ID is required")
+    @Positive(groups = CartProductValidation.class, message = "Status ID must be positive")
     private Integer statusId;
 }
