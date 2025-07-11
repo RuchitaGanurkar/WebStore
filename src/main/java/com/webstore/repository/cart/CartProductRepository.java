@@ -5,13 +5,14 @@ import com.webstore.entity.cart.CartProductStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CartProductRepository extends JpaRepository<CartProduct, Long> {
 
-    List<CartProduct> findByCartCartId(Long cartId);
+
+@Repository
+public interface CartProductRepository extends JpaRepository<CartProduct, Long> {
 
     List<CartProduct> findByStatus(CartProductStatus status);
 

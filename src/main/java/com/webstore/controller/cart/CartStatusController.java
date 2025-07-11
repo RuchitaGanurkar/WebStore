@@ -1,10 +1,7 @@
 package com.webstore.controller.cart;
 
-import com.webstore.dto.request.cart.CartProductStatusRequestDto;
 import com.webstore.dto.request.cart.CartStatusRequestDto;
-import com.webstore.dto.response.cart.CartProductStatusResponseDto;
 import com.webstore.dto.response.cart.CartStatusResponseDto;
-import com.webstore.service.cart.CartProductStatusService;
 import com.webstore.service.cart.CartStatusService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
