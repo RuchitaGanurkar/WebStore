@@ -1,4 +1,4 @@
-package com.webstore.exception;
+package com.webstore.exception.whatsapp;
 
 import com.webstore.exception.product.WhatsAppFlowException;
 import jakarta.persistence.EntityNotFoundException;
