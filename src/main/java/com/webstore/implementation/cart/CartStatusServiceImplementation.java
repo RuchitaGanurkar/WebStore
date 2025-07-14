@@ -69,9 +69,9 @@ public class CartStatusServiceImplementation implements CartStatusService {
 
     @Override
     public CartStatusResponseDto createCartStatus(CartStatusRequestDto requestDto) {
-        log.debug("Creating new cart status with name: {}", requestDto.getStatusName());
-
         validateCartStatusRequest(requestDto);
+
+        log.debug("Creating new cart status with name: {}", requestDto.getStatusName());
 
         try {
              CartStatusType statusType;
