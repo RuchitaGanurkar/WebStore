@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class CartGlobalExceptionHandler {
 
+//    Cart Status Exception Started
+
     @ExceptionHandler(CartStatusNotFoundException.class)
     public ResponseEntity<String> handleCartStatusNotFoundException(
             CartStatusNotFoundException ex, HttpServletRequest request) {
@@ -94,6 +96,86 @@ public class CartGlobalExceptionHandler {
 
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+//    Cart Product Status Exception Started
+
+    @ExceptionHandler(CartProductStatusNotFoundException.class)
+    public ResponseEntity<String> handleCartProductStatusNotFoundException(
+            CartProductStatusNotFoundException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Product Status Not Found - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidCartProductStatusException.class)
+    public ResponseEntity<String> handleInvalidCartProductStatusException(
+            InvalidCartProductStatusException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CartProductStatusAlreadyExistsException.class)
+    public ResponseEntity<String> handleCartProductStatusAlreadyExistsException(
+            CartProductStatusAlreadyExistsException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Status Already Exists - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CartProductStatusInUseException.class)
+    public ResponseEntity<String> handleCartProductStatusInUseException(
+            CartProductStatusInUseException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Status In Use - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CartProductStatusValidationException.class)
+    public ResponseEntity<String> handleCartProductStatusValidationException(
+            CartProductStatusValidationException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Status Validation Error - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        String errorMessage = ex.getMessage();
+        if (ex.getValidationErrors() != null && !ex.getValidationErrors().isEmpty()) {
+            errorMessage += ": " + String.join(", ", ex.getValidationErrors());
+        }
+
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CartProductStatusDatabaseException.class)
+    public ResponseEntity<String> handleCartProductStatusDatabaseException(
+            CartProductStatusDatabaseException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Status Database Error - Request ID: {} - Error: {}", requestId, ex.getMessage(), ex);
+
+        return new ResponseEntity<>("An error occurred while processing cart status data", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CartProductStatusException.class)
+    public ResponseEntity<String> handleCartProductStatusException(
+            CartProductStatusException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Status Error - Request ID: {} - Error: {}", requestId, ex.getMessage(), ex);
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+//    General Exceptions Written Here
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

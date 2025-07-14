@@ -111,17 +111,17 @@ class CartStatusServiceImplementationTest {
     void getAllCartStatuses_Success() {
 
         List<CartStatus> statuses = Arrays.asList(
-                createTestCartStatus(1, CartStatusType.ACTIVE),
-                createTestCartStatus(2, CartStatusType.CHECKED_OUT),
-                createTestCartStatus(3, CartStatusType.PAID),
-                createTestCartStatus(4, CartStatusType.ARCHIVED)
+                createTestCartStatus(0, CartStatusType.ACTIVE),
+                createTestCartStatus(1, CartStatusType.CHECKED_OUT),
+                createTestCartStatus(2, CartStatusType.PAID),
+                createTestCartStatus(3, CartStatusType.ARCHIVED)
 
                 );
         when(cartStatusRepository.findAll()).thenReturn(statuses);
 
         List<CartStatusResponseDto> result = cartStatusService.getAllCartStatuses();
 
-        assertThat(result).hasSize(3);
+        assertThat(result).hasSize(4);
         assertThat(result.get(0).getStatusName()).isEqualTo("ACTIVE");
         assertThat(result.get(1).getStatusName()).isEqualTo("CHECKED_OUT");
         assertThat(result.get(2).getStatusName()).isEqualTo("PAID");
