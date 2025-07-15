@@ -2,6 +2,7 @@ package com.webstore.repository.cart;
 
 import com.webstore.entity.cart.Cart;
 import com.webstore.entity.cart.CartStatus;
+import com.webstore.enums.cart.CartStatusType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,5 +31,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("SELECT COUNT(c) FROM Cart c WHERE c.phoneNumber = :phoneNumber")
     Long countCartsByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
-    List<Cart> findByStatusStatusName(CartStatus statusName);
+    List<Cart> findByStatusStatusName(CartStatusType statusName);
 }
