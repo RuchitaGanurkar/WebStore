@@ -50,6 +50,9 @@ public class UserServiceImplementation implements UserService {
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         log.info("Creating user with username: {}", userRequestDto.getUsername());
 
+        if(userRepository.findByPhoneNumber(String.valueOf(userRequestDto.getPhoneNumber()))){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User phone number already exist" + userRequestDto.getPhoneNumber());
+        }
         if (userRepository.existsByUsername(userRequestDto.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists: " + userRequestDto.getUsername());
         }
@@ -111,6 +114,7 @@ public class UserServiceImplementation implements UserService {
         dto.setEmail(user.getEmail());
         dto.setFullName(user.getFullName());
         dto.setRole(user.getRole());
+        dto.setPhoneNumber(Long.valueOf(user.getPhoneNumber()));
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         return dto;
@@ -120,6 +124,7 @@ public class UserServiceImplementation implements UserService {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setFullName(dto.getFullName());
+        user.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
         user.setRole(dto.getRole());
     }
 }

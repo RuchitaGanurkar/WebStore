@@ -1,4 +1,127 @@
 package com.webstore.implementation.cart;
 
-public class CartProductHistoryServiceImplementation {
+import com.webstore.dto.request.cart.CartProductHistoryRequestDto;
+import com.webstore.dto.response.cart.CartProductHistoryResponseDto;
+import com.webstore.entity.cart.CartProduct;
+import com.webstore.entity.cart.CartProductHistory;
+import com.webstore.repository.cart.CartProductHistoryRepository;
+import com.webstore.repository.cart.CartProductRepository;
+import com.webstore.service.cart.CartProductHistoryService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class CartProductHistoryServiceImplementation implements CartProductHistoryService {
+    private final CartProductHistoryRepository cartProductHistoryRepository;
+    private final CartProductRepository cartProductRepository;
+
+    @Override
+    @Transactional
+    public CartProductHistoryResponseDto createCartProductHistory(CartProductHistoryRequestDto dto) {
+        log.info("Creating cart product history for cart product ID: {}", dto.getCartProductId());
+
+        CartProduct cartProduct = cartProductRepository.findById(dto.getCartProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cart product not found with ID: " + dto.getCartProductId()));
+
+        CartProductHistory history = new CartProductHistory();
+        history.setCartProduct(cartProduct);
+        history.setProductId(dto.getProductId());
+        history.setOldQuantity(dto.getOldQuantity());
+        history.setNewQuantity(dto.getNewQuantity());
+        history.setCreatedAt(LocalDateTime.now());
+        history.setUpdatedAt(LocalDateTime.now());
+
+        CartProductHistory saved = cartProductHistoryRepository.save(history);
+        log.info("Cart product history created with ID: {}", saved.getCartProductHistoryId());
+
+        return convertToDto(saved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CartProductHistoryResponseDto> getAllCartProductHistory() {
+        log.info("Fetching all cart product history records");
+
+        return cartProductHistoryRepository.findAll()
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CartProductHistoryResponseDto getCartProductHistoryById(Long id) {
+        log.info("Fetching cart product history with ID: {}", id);
+
+        CartProductHistory history = cartProductHistoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cart product history not found with ID: " + id));
+
+        return convertToDto(history);
+    }
+
+    @Override
+    @Transactional
+    public CartProductHistoryResponseDto updateCartProductHistory(Long id, CartProductHistoryRequestDto dto) {
+        log.info("Updating cart product history with ID: {}", id);
+
+        CartProductHistory history = cartProductHistoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cart product history not found with ID: " + id));
+
+        CartProduct cartProduct = cartProductRepository.findById(dto.getCartProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cart product not found with ID: " + dto.getCartProductId()));
+
+        history.setCartProduct(cartProduct);
+        history.setProductId(dto.getProductId());
+        history.setOldQuantity(dto.getOldQuantity());
+        history.setNewQuantity(dto.getNewQuantity());
+        history.setUpdatedAt(LocalDateTime.now());
+
+        CartProductHistory updated = cartProductHistoryRepository.save(history);
+        log.info("Cart product history with ID: {} updated successfully", id);
+
+        return convertToDto(updated);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCartProductHistory(Long id) {
+        log.info("Deleting cart product history with ID: {}", id);
+
+        CartProductHistory history = cartProductHistoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cart product history not found with ID: " + id));
+
+        cartProductHistoryRepository.delete(history);
+        log.info("Cart product history with ID: {} has been deleted", id);
+    }
+
+
+    private CartProductHistoryResponseDto convertToDto(CartProductHistory history) {
+        CartProductHistoryResponseDto dto = new CartProductHistoryResponseDto();
+        dto.setCartProductHistoryId(history.getCartProductHistoryId());
+        dto.setCartProductId(history.getCartProduct().getCartProductId());
+        dto.setProductId(history.getProductId());
+        dto.setOldQuantity(history.getOldQuantity());
+        dto.setNewQuantity(history.getNewQuantity());
+        dto.setCreatedAt(history.getCreatedAt());
+        dto.setCreatedBy(history.getCreatedBy());
+        dto.setUpdatedAt(history.getUpdatedAt());
+        dto.setUpdatedBy(history.getUpdatedBy());
+        return dto;
+    }
 }
