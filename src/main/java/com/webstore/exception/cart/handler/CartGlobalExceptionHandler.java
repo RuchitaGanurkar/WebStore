@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -174,6 +175,139 @@ public class CartGlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+//    Cart Product History Exception Started
+
+    @ExceptionHandler(CartProductHistoryNotFoundException.class)
+    public ResponseEntity<String> handleCartProductHistoryNotFound(
+            CartProductHistoryNotFoundException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidCartProductHistoryRequestException.class)
+    public ResponseEntity <String> handleInvalidRequest(
+            InvalidCartProductHistoryRequestException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidQuantityException.class)
+    public ResponseEntity <String> handleInvalidQuantity(
+            InvalidQuantityException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateCartProductHistoryException.class)
+    public ResponseEntity <String> handleDuplicateHistory(
+            DuplicateCartProductHistoryException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidDateRangeException.class)
+    public ResponseEntity <String> handleInvalidDateRange(
+            InvalidDateRangeException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(CartProductHistoryLimitExceededException.class)
+    public ResponseEntity <String> handleLimitExceeded(
+            CartProductHistoryLimitExceededException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return  new ResponseEntity<>(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+
+    @ExceptionHandler(CartProductHistoryValidationException.class)
+    public ResponseEntity <String> handleValidationError(
+            CartProductHistoryValidationException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CartProductHistoryDataIntegrityException.class)
+    public ResponseEntity <String> handleDataIntegrity(
+            CartProductHistoryDataIntegrityException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CartProductHistoryConcurrentModificationException.class)
+    public ResponseEntity <String> handleConcurrentModification(
+            CartProductHistoryConcurrentModificationException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CartProductHistoryServiceUnavailableException.class)
+    public ResponseEntity <String> handleServiceUnavailable(
+            CartProductHistoryServiceUnavailableException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(CartProductHistoryOperationNotAllowedException.class)
+    public ResponseEntity <String> handleOperationNotAllowed(
+            CartProductHistoryOperationNotAllowedException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(EmptyCartProductHistoryException.class)
+    public ResponseEntity <String> handleEmptyHistory(
+            EmptyCartProductHistoryException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(CartProductHistoryDatabaseException.class)
+    public ResponseEntity <String> handleDatabaseError(
+            CartProductHistoryDatabaseException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Invalid Cart Status - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 //    General Exceptions Written Here
 
