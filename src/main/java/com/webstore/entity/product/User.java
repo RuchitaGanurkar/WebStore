@@ -38,7 +38,7 @@ public class User {
     @Column(name = "role", length = 20, nullable = false)
     private String role;
 
-    @Column(name = "phone_number", length = 15, nullable = false)
+    @Column(name = "phone_number", length = 15, nullable = false, unique = true)
     private String phoneNumber;
 
     @CreationTimestamp
