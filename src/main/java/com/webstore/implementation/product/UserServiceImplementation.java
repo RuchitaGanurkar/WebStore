@@ -114,7 +114,11 @@ public class UserServiceImplementation implements UserService {
         dto.setEmail(user.getEmail());
         dto.setFullName(user.getFullName());
         dto.setRole(user.getRole());
-        dto.setPhoneNumber(Long.valueOf(user.getPhoneNumber()));
+        dto.setPhoneNumber(
+                user.getPhoneNumber() != null && !user.getPhoneNumber().isBlank()
+                        ? Long.valueOf(user.getPhoneNumber())
+                        : null
+        );
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         return dto;

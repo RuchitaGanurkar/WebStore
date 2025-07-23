@@ -3,6 +3,8 @@ package com.webstore.controller.product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webstore.dto.request.product.UserRequestDto;
 import com.webstore.dto.response.product.UserResponseDto;
+import com.webstore.exception.product.DuplicateUserException;
+import com.webstore.exception.product.UserNotFoundException;
 import com.webstore.service.product.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Mock
     private UserService userService;
@@ -50,6 +51,7 @@ public class UserControllerTest {
         requestDto.setEmail("test@example.com");
         requestDto.setFullName("Test User");
         requestDto.setRole("USER");
+        requestDto.setPhoneNumber(1234567890L); // Required field
 
         responseDto = new UserResponseDto();
         responseDto.setUserId(1);
@@ -57,6 +59,7 @@ public class UserControllerTest {
         responseDto.setEmail("test@example.com");
         responseDto.setFullName("Test User");
         responseDto.setRole("USER");
+        responseDto.setPhoneNumber(1234567890L);
         responseDto.setCreatedAt(LocalDateTime.now());
         responseDto.setUpdatedAt(LocalDateTime.now());
     }
@@ -68,7 +71,8 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)));
+                .andExpect(jsonPath("$[0].userId", is(1)))
+                .andExpect(jsonPath("$[0].username", is("testuser")));
     }
 
     @Test
@@ -86,13 +90,13 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(1)));
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.username", is("testuser")));
     }
 
     @Test
     void testGetUserById_NotFound() throws Exception {
-        when(userService.getUserById(99))
-                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"));
+        when(userService.getUserById(99)).thenThrow(new UserNotFoundException("User not found with ID: 99"));
 
         mockMvc.perform(get("/api/users/99"))
                 .andExpect(status().isNotFound());
@@ -106,18 +110,20 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.userId", is(1)));
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.email", is("test@example.com")));
     }
 
     @Test
     void testCreateUser_UsernameExists() throws Exception {
         when(userService.createUser(any()))
-                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Username already exists"));
+                .thenThrow(new DuplicateUserException("Username already exists"));
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Username already exists"));
     }
 
     @Test
@@ -128,13 +134,14 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(1)));
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.username", is("testuser")));
     }
 
     @Test
     void testUpdateUser_NotFound() throws Exception {
         when(userService.updateUser(eq(99), any()))
-                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"));
+                .thenThrow(new UserNotFoundException("User not found with ID: 99"));
 
         mockMvc.perform(put("/api/users/99")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -145,12 +152,13 @@ public class UserControllerTest {
     @Test
     void testUpdateUser_EmailConflict() throws Exception {
         when(userService.updateUser(eq(1), any()))
-                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Email already exists"));
+                .thenThrow(new DuplicateUserException("Email already exists"));
 
         mockMvc.perform(put("/api/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Email already exists"));
     }
 
     @Test
@@ -163,7 +171,7 @@ public class UserControllerTest {
 
     @Test
     void testDeleteUser_NotFound() throws Exception {
-        doThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"))
+        doThrow(new UserNotFoundException("User not found with ID: 99"))
                 .when(userService).deleteUser(99);
 
         mockMvc.perform(delete("/api/users/99"))

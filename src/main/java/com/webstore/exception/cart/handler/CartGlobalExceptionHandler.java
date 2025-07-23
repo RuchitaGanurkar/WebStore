@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -171,6 +172,16 @@ public class CartGlobalExceptionHandler {
 
         String requestId = UUID.randomUUID().toString();
         log.error("Cart Status Error - Request ID: {} - Error: {}", requestId, ex.getMessage(), ex);
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CartProductException.class)
+    public ResponseEntity<String> handleCartProductException(
+            CartProductException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Product Error - Request ID: {} - Error: {}", requestId, ex.getMessage(), ex);
 
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -359,4 +370,64 @@ public class CartGlobalExceptionHandler {
 
         return new ResponseEntity<>("An unexpected error occurred. Please contact support if the problem persists.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    //    Cart History Exceptions Started
+
+    @ExceptionHandler(CartHistoryNotFoundException.class)
+    public ResponseEntity<String> handleCartHistoryNotFoundException(
+            CartHistoryNotFoundException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart History Not Found - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartHistoryValidationException.class)
+    public ResponseEntity<String> handleCartHistoryValidationException(
+            CartHistoryValidationException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart History Validation Error - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmptyCartHistoryException.class)
+    public ResponseEntity<String> handleEmptyCartHistoryException(
+            EmptyCartHistoryException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Empty Cart History - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(CartHistoryDatabaseException.class)
+    public ResponseEntity<String> handleCartHistoryDatabaseException(
+            CartHistoryDatabaseException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart History Database Error - Request ID: {} - Error: {}", requestId, ex.getMessage(), ex);
+
+        return new ResponseEntity<>("An error occurred while processing cart history data", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CartHistoryException.class)
+    public ResponseEntity<String> handleCartHistoryException(
+            CartHistoryException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart History Error - Request ID: {} - Error: {}", requestId, ex.getMessage(), ex);
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
+
+
+
+
+
 }

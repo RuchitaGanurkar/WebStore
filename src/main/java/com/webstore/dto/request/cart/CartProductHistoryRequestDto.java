@@ -14,8 +14,8 @@ public class CartProductHistoryRequestDto {
     @Positive(groups = CartProductHistoryValidation.class, message = "Cart product ID must be positive")
     private Long cartProductId;
 
-    @NotNull(groups = CartProductHistoryValidation.class, message = "Product ID is required")
-    @Positive(groups = CartProductHistoryValidation.class, message = "Product ID must be positive")
+    @NotNull(message = "Product ID is required", groups = CartProductHistoryValidation.class)
+    @Positive(message = "Product ID must be positive", groups = CartProductHistoryValidation.class)
     private Integer productId;
 
     @NotNull(groups = CartProductHistoryValidation.class, message = "Old quantity is required")

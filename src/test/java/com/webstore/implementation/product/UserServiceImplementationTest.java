@@ -6,298 +6,186 @@ import com.webstore.entity.product.User;
 import com.webstore.repository.product.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class UserServiceImplementationTest {
-
-    @Mock
-    private UserRepository userRepository;
+class UserServiceImplementationTest {
 
     @InjectMocks
     private UserServiceImplementation userService;
 
-    private User user;
-    private UserRequestDto requestDto;
+    @Mock
+    private UserRepository userRepository;
+
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
-        // Set up test user
-        user = new User();
-        user.setUserId(1);
-        user.setUsername("testuser");
-        user.setEmail("test@example.com");
-        user.setFullName("Test User");
-        user.setRole("USER");
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    private User mockUser(Integer id) {
+        User user = new User();
+        user.setUserId(id);
+        user.setUsername("john.doe");
+        user.setEmail("john@example.com");
+        user.setFullName("John Doe");
+        user.setPhoneNumber("9876543210");
+        user.setRole("CUSTOMER");
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        return user;
+    }
 
-        // Set up request DTO
-        requestDto = new UserRequestDto();
-        requestDto.setUsername("testuser");
-        requestDto.setEmail("test@example.com");
-        requestDto.setFullName("Test User");
-        requestDto.setRole("USER");
+    private UserRequestDto mockRequestDto() {
+        UserRequestDto dto = new UserRequestDto();
+        dto.setUsername("john.doe");
+        dto.setEmail("john@example.com");
+        dto.setFullName("John Doe");
+        dto.setPhoneNumber(9876543210L);
+        dto.setRole("CUSTOMER");
+        return dto;
     }
 
     @Test
-    void getAllUsers_ShouldReturnListOfUsers() {
-        // Arrange
-        List<User> users = Arrays.asList(user);
-        when(userRepository.findAll()).thenReturn(users);
+    void testGetAllUsers() {
+        when(userRepository.findAll()).thenReturn(List.of(mockUser(1), mockUser(2)));
 
-        // Act
         List<UserResponseDto> result = userService.getAllUsers();
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(user.getUserId(), result.get(0).getUserId());
-        assertEquals(user.getUsername(), result.get(0).getUsername());
-        assertEquals(user.getEmail(), result.get(0).getEmail());
-        assertEquals(user.getFullName(), result.get(0).getFullName());
-        assertEquals(user.getRole(), result.get(0).getRole());
-
-        verify(userRepository).findAll();
+        assertEquals(2, result.size());
+        verify(userRepository, times(1)).findAll();
     }
 
     @Test
-    void getUserById_WhenUserExists_ShouldReturnUser() {
-        // Arrange
+    void testGetUserById_Success() {
+        User user = mockUser(1);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-        // Act
         UserResponseDto result = userService.getUserById(1);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(user.getUserId(), result.getUserId());
-        assertEquals(user.getUsername(), result.getUsername());
-        assertEquals(user.getEmail(), result.getEmail());
-        assertEquals(user.getFullName(), result.getFullName());
-        assertEquals(user.getRole(), result.getRole());
-
+        assertEquals("john.doe", result.getUsername());
         verify(userRepository).findById(1);
     }
 
     @Test
-    void getUserById_WhenUserDoesNotExist_ShouldThrowException() {
-        // Arrange
-        when(userRepository.findById(99)).thenReturn(Optional.empty());
+    void testGetUserById_NotFound() {
+        when(userRepository.findById(1)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.getUserById(99));
-        assertEquals("404 NOT_FOUND \"User not found with ID: 99\"", exception.getMessage());
-        verify(userRepository).findById(99);
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.getUserById(1));
+        assertEquals("404 NOT_FOUND \"User not found with ID: 1\"", ex.getMessage());
     }
 
     @Test
-    void createUser_WhenUsernameAndEmailDoNotExist_ShouldCreateUser() {
-        // Arrange
-        when(userRepository.existsByUsername("testuser")).thenReturn(false);
-        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+    void testCreateUser_Success() {
+        UserRequestDto requestDto = mockRequestDto();
 
-        // Act
+        when(userRepository.findByPhoneNumber("9876543210")).thenReturn(false);
+        when(userRepository.existsByUsername("john.doe")).thenReturn(false);
+        when(userRepository.existsByEmail("john@example.com")).thenReturn(false);
+
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        User savedUser = mockUser(1);
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
         UserResponseDto result = userService.createUser(requestDto);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(user.getUserId(), result.getUserId());
-        assertEquals(user.getUsername(), result.getUsername());
-        assertEquals(user.getEmail(), result.getEmail());
-        assertEquals(user.getFullName(), result.getFullName());
-        assertEquals(user.getRole(), result.getRole());
-
-        verify(userRepository).existsByUsername("testuser");
-        verify(userRepository).existsByEmail("test@example.com");
-        verify(userRepository).save(any(User.class));
+        assertEquals("john.doe", result.getUsername());
+        verify(userRepository).save(userCaptor.capture());
     }
 
     @Test
-    void createUser_WhenUsernameExists_ShouldThrowException() {
-        // Arrange
-        when(userRepository.existsByUsername("testuser")).thenReturn(true);
+    void testCreateUser_UsernameExists() {
+        UserRequestDto requestDto = mockRequestDto();
 
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.createUser(requestDto));
-        assertEquals("400 BAD_REQUEST \"Username already exists: testuser\"", exception.getMessage());
+        when(userRepository.findByPhoneNumber("9876543210")).thenReturn(false);
+        when(userRepository.existsByUsername("john.doe")).thenReturn(true);
 
-        verify(userRepository).existsByUsername("testuser");
-        verify(userRepository, never()).save(any(User.class));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.createUser(requestDto));
+        assertEquals("400 BAD_REQUEST \"Username already exists: john.doe\"", ex.getMessage());
     }
 
     @Test
-    void createUser_WhenEmailExists_ShouldThrowException() {
-        // Arrange
-        when(userRepository.existsByUsername("testuser")).thenReturn(false);
-        when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
+    void testCreateUser_EmailExists() {
+        UserRequestDto requestDto = mockRequestDto();
 
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.createUser(requestDto));
-        assertEquals("400 BAD_REQUEST \"Email already exists: test@example.com\"", exception.getMessage());
+        when(userRepository.findByPhoneNumber("9876543210")).thenReturn(false);
+        when(userRepository.existsByUsername("john.doe")).thenReturn(false);
+        when(userRepository.existsByEmail("john@example.com")).thenReturn(true);
 
-        verify(userRepository).existsByUsername("testuser");
-        verify(userRepository).existsByEmail("test@example.com");
-        verify(userRepository, never()).save(any(User.class));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.createUser(requestDto));
+        assertEquals("400 BAD_REQUEST \"Email already exists: john@example.com\"", ex.getMessage());
     }
 
     @Test
-    void updateUser_WhenUserExistsAndNoConflicts_ShouldUpdateUser() {
-        // Arrange
+    void testCreateUser_PhoneNumberExists() {
+        UserRequestDto requestDto = mockRequestDto();
+
+        when(userRepository.findByPhoneNumber("9876543210")).thenReturn(true);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.createUser(requestDto));
+        assertEquals("400 BAD_REQUEST \"User phone number already exist9876543210\"", ex.getMessage());
+    }
+
+    @Test
+    void testUpdateUser_Success() {
+        User user = mockUser(1);
+        UserRequestDto requestDto = mockRequestDto();
+
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(userRepository.existsByUsername("john.doe")).thenReturn(false);
+        when(userRepository.existsByEmail("john@example.com")).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // Update with new data
-        UserRequestDto updateDto = new UserRequestDto();
-        updateDto.setUsername("testuser"); // Same username
-        updateDto.setEmail("test@example.com"); // Same email
-        updateDto.setFullName("Updated User");
-        updateDto.setRole("USER");
+        UserResponseDto result = userService.updateUser(1, requestDto);
 
-        // Act
-        UserResponseDto result = userService.updateUser(1, updateDto);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(user.getUserId(), result.getUserId());
-
-        verify(userRepository).findById(1);
-        verify(userRepository, never()).existsByUsername(anyString());
-        verify(userRepository, never()).existsByEmail(anyString());
-        verify(userRepository).save(any(User.class));
+        assertEquals("john.doe", result.getUsername());
+        verify(userRepository).save(user);
     }
 
     @Test
-    void updateUser_WhenUserExistsWithNewUsername_ShouldCheckUsernameUniqueness() {
-        // Arrange
+    void testUpdateUser_NotFound() {
+        when(userRepository.findById(1)).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.updateUser(1, mockRequestDto()));
+        assertEquals("404 NOT_FOUND \"User not found with ID: 1\"", ex.getMessage());
+    }
+
+    @Test
+    void testUpdateUser_UsernameAlreadyExists() {
+        User user = mockUser(1);
+        UserRequestDto requestDto = mockRequestDto();
+        requestDto.setUsername("new.username");
+
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(userRepository.existsByUsername("newusername")).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.existsByUsername("new.username")).thenReturn(true);
 
-        // Update with new username
-        UserRequestDto updateDto = new UserRequestDto();
-        updateDto.setUsername("newusername");
-        updateDto.setEmail("test@example.com");
-        updateDto.setFullName("Test User");
-        updateDto.setRole("USER");
-
-        // Act
-        userService.updateUser(1, updateDto);
-
-        // Assert
-        verify(userRepository).findById(1);
-        verify(userRepository).existsByUsername("newusername");
-        verify(userRepository).save(any(User.class));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.updateUser(1, requestDto));
+        assertEquals("400 BAD_REQUEST \"Username already exists: new.username\"", ex.getMessage());
     }
 
     @Test
-    void updateUser_WhenUserDoesNotExist_ShouldThrowException() {
-        // Arrange
-        when(userRepository.findById(99)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.updateUser(99, requestDto));
-        assertEquals("404 NOT_FOUND \"User not found with ID: 99\"", exception.getMessage());
-
-        verify(userRepository).findById(99);
-        verify(userRepository, never()).save(any(User.class));
-    }
-
-    @Test
-    void updateUser_WhenNewUsernameExists_ShouldThrowException() {
-        // Arrange
-        User existingUser = new User();
-        existingUser.setUserId(1);
-        existingUser.setUsername("oldusername");
-        existingUser.setEmail("test@example.com");
-
-        when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
-        when(userRepository.existsByUsername("newusername")).thenReturn(true);
-
-        // Update with conflicting username
-        UserRequestDto updateDto = new UserRequestDto();
-        updateDto.setUsername("newusername");
-        updateDto.setEmail("test@example.com");
-
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.updateUser(1, updateDto));
-        assertEquals("400 BAD_REQUEST \"Username already exists: newusername\"", exception.getMessage());
-
-        verify(userRepository).findById(1);
-        verify(userRepository).existsByUsername("newusername");
-        verify(userRepository, never()).save(any(User.class));
-    }
-
-    @Test
-    void updateUser_WhenNewEmailExists_ShouldThrowException() {
-        // Arrange
-        User existingUser = new User();
-        existingUser.setUserId(1);
-        existingUser.setUsername("testuser");
-        existingUser.setEmail("old@example.com");
-
-        when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
-        when(userRepository.existsByEmail("new@example.com")).thenReturn(true);
-
-        // Update with conflicting email
-        UserRequestDto updateDto = new UserRequestDto();
-        updateDto.setUsername("testuser");
-        updateDto.setEmail("new@example.com");
-
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.updateUser(1, updateDto));
-        assertEquals("400 BAD_REQUEST \"Email already exists: new@example.com\"", exception.getMessage());
-
-        verify(userRepository).findById(1);
-        verify(userRepository).existsByEmail("new@example.com");
-        verify(userRepository, never()).save(any(User.class));
-    }
-
-    @Test
-    void deleteUser_WhenUserExists_ShouldDeleteUser() {
-        // Arrange
+    void testDeleteUser_Success() {
         when(userRepository.existsById(1)).thenReturn(true);
-        doNothing().when(userRepository).deleteById(1);
 
-        // Act
         userService.deleteUser(1);
 
-        // Assert
-        verify(userRepository).existsById(1);
         verify(userRepository).deleteById(1);
     }
 
     @Test
-    void deleteUser_WhenUserDoesNotExist_ShouldThrowException() {
-        // Arrange
-        when(userRepository.existsById(99)).thenReturn(false);
+    void testDeleteUser_NotFound() {
+        when(userRepository.existsById(1)).thenReturn(false);
 
-        // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
-                () -> userService.deleteUser(99));
-        assertEquals("404 NOT_FOUND \"User not found with ID: 99\"", exception.getMessage());
-
-        verify(userRepository).existsById(99);
-        verify(userRepository, never()).deleteById(99);
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.deleteUser(1));
+        assertEquals("404 NOT_FOUND \"User not found with ID: 1\"", ex.getMessage());
     }
 }

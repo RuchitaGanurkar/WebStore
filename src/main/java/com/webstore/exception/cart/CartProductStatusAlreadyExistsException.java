@@ -1,6 +1,6 @@
 package com.webstore.exception.cart;
 
-public class CartProductStatusAlreadyExistsException extends RuntimeException {
+public class CartProductStatusAlreadyExistsException extends CartProductException {
     public CartProductStatusAlreadyExistsException(String message) {
         super(message);
     }
