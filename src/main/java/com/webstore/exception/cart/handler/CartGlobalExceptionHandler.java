@@ -98,6 +98,17 @@ public class CartGlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(CartProductNotFoundException.class)
+    public ResponseEntity<String> handleCartProductStatusNotFoundException(
+            CartProductNotFoundException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Product Status Not Found - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
 //    Cart Product Status Exception Started
 
     @ExceptionHandler(CartProductStatusNotFoundException.class)

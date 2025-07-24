@@ -50,13 +50,18 @@ public class UserServiceImplementation implements UserService {
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         log.info("Creating user with username: {}", userRequestDto.getUsername());
 
-        if(userRepository.findByPhoneNumber(String.valueOf(userRequestDto.getPhoneNumber()))){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User phone number already exist" + userRequestDto.getPhoneNumber());
+        // Check if phone number already exists (FIXED)
+        if (userRequestDto.getPhoneNumber() != null &&
+                userRepository.findByPhoneNumber(String.valueOf(userRequestDto.getPhoneNumber())).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User phone number already exists: " + userRequestDto.getPhoneNumber());
         }
+
+        // Check if username already exists
         if (userRepository.existsByUsername(userRequestDto.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists: " + userRequestDto.getUsername());
         }
 
+        // Check if email already exists
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists: " + userRequestDto.getEmail());
         }
@@ -77,11 +82,20 @@ public class UserServiceImplementation implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + userId));
 
+        // Check if phone number is being changed and if new phone number already exists
+        if (userRequestDto.getPhoneNumber() != null &&
+                !user.getPhoneNumber().equals(String.valueOf(userRequestDto.getPhoneNumber())) &&
+                userRepository.findByPhoneNumber(String.valueOf(userRequestDto.getPhoneNumber())).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number already exists: " + userRequestDto.getPhoneNumber());
+        }
+
+        // Check username uniqueness only if it's being changed
         if (!user.getUsername().equals(userRequestDto.getUsername()) &&
                 userRepository.existsByUsername(userRequestDto.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists: " + userRequestDto.getUsername());
         }
 
+        // Check email uniqueness only if it's being changed
         if (!user.getEmail().equals(userRequestDto.getEmail()) &&
                 userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists: " + userRequestDto.getEmail());
@@ -114,7 +128,9 @@ public class UserServiceImplementation implements UserService {
         dto.setEmail(user.getEmail());
         dto.setFullName(user.getFullName());
         dto.setRole(user.getRole());
-        dto.setPhoneNumber(Long.valueOf(user.getPhoneNumber()));
+        if (user.getPhoneNumber() != null) {
+            dto.setPhoneNumber(Long.valueOf(user.getPhoneNumber()));
+        }
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         return dto;
@@ -124,7 +140,9 @@ public class UserServiceImplementation implements UserService {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setFullName(dto.getFullName());
-        user.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
+        if (dto.getPhoneNumber() != null) {
+            user.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
+        }
         user.setRole(dto.getRole());
     }
 }

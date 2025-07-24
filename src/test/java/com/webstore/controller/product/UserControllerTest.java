@@ -50,6 +50,7 @@ public class UserControllerTest {
         requestDto.setEmail("test@example.com");
         requestDto.setFullName("Test User");
         requestDto.setRole("USER");
+        requestDto.setPhoneNumber(1234567890L); // Added required phone number
 
         responseDto = new UserResponseDto();
         responseDto.setUserId(1);
@@ -57,6 +58,7 @@ public class UserControllerTest {
         responseDto.setEmail("test@example.com");
         responseDto.setFullName("Test User");
         responseDto.setRole("USER");
+        responseDto.setPhoneNumber(1234567890L); // Added phone number
         responseDto.setCreatedAt(LocalDateTime.now());
         responseDto.setUpdatedAt(LocalDateTime.now());
     }
@@ -68,7 +70,10 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)));
+                .andExpect(jsonPath("$[0].userId", is(1)))
+                .andExpect(jsonPath("$[0].username", is("testuser")))
+                .andExpect(jsonPath("$[0].email", is("test@example.com")))
+                .andExpect(jsonPath("$[0].phoneNumber", is(1234567890)));
     }
 
     @Test
@@ -86,7 +91,10 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(1)));
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.username", is("testuser")))
+                .andExpect(jsonPath("$.email", is("test@example.com")))
+                .andExpect(jsonPath("$.phoneNumber", is(1234567890)));
     }
 
     @Test
@@ -96,61 +104,130 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/users/99"))
                 .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).getUserById(99);
     }
 
     @Test
     void testCreateUser_Success() throws Exception {
-        when(userService.createUser(any())).thenReturn(responseDto);
+        when(userService.createUser(any(UserRequestDto.class))).thenReturn(responseDto);
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.userId", is(1)));
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.username", is("testuser")))
+                .andExpect(jsonPath("$.email", is("test@example.com")))
+                .andExpect(jsonPath("$.phoneNumber", is(1234567890)));
+
+        verify(userService, times(1)).createUser(any(UserRequestDto.class));
     }
 
     @Test
     void testCreateUser_UsernameExists() throws Exception {
-        when(userService.createUser(any()))
+        when(userService.createUser(any(UserRequestDto.class)))
                 .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Username already exists"));
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, times(1)).createUser(any(UserRequestDto.class));
+    }
+
+    @Test
+    void testCreateUser_EmailExists() throws Exception {
+        when(userService.createUser(any(UserRequestDto.class)))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Email already exists"));
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, times(1)).createUser(any(UserRequestDto.class));
+    }
+
+    @Test
+    void testCreateUser_PhoneNumberExists() throws Exception {
+        when(userService.createUser(any(UserRequestDto.class)))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Phone number already exists"));
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, times(1)).createUser(any(UserRequestDto.class));
     }
 
     @Test
     void testUpdateUser_Success() throws Exception {
-        when(userService.updateUser(eq(1), any())).thenReturn(responseDto);
+        when(userService.updateUser(eq(1), any(UserRequestDto.class))).thenReturn(responseDto);
 
         mockMvc.perform(put("/api/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(1)));
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.username", is("testuser")))
+                .andExpect(jsonPath("$.email", is("test@example.com")));
+
+        verify(userService, times(1)).updateUser(eq(1), any(UserRequestDto.class));
     }
 
     @Test
     void testUpdateUser_NotFound() throws Exception {
-        when(userService.updateUser(eq(99), any()))
+        when(userService.updateUser(eq(99), any(UserRequestDto.class)))
                 .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "User not found with ID: 99"));
 
         mockMvc.perform(put("/api/users/99")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).updateUser(eq(99), any(UserRequestDto.class));
     }
 
     @Test
     void testUpdateUser_EmailConflict() throws Exception {
-        when(userService.updateUser(eq(1), any()))
+        when(userService.updateUser(eq(1), any(UserRequestDto.class)))
                 .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Email already exists"));
 
         mockMvc.perform(put("/api/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, times(1)).updateUser(eq(1), any(UserRequestDto.class));
+    }
+
+    @Test
+    void testUpdateUser_UsernameConflict() throws Exception {
+        when(userService.updateUser(eq(1), any(UserRequestDto.class)))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Username already exists"));
+
+        mockMvc.perform(put("/api/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, times(1)).updateUser(eq(1), any(UserRequestDto.class));
+    }
+
+    @Test
+    void testUpdateUser_PhoneNumberConflict() throws Exception {
+        when(userService.updateUser(eq(1), any(UserRequestDto.class)))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Phone number already exists"));
+
+        mockMvc.perform(put("/api/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, times(1)).updateUser(eq(1), any(UserRequestDto.class));
     }
 
     @Test
@@ -159,6 +236,8 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/api/users/1"))
                 .andExpect(status().isNoContent());
+
+        verify(userService, times(1)).deleteUser(1);
     }
 
     @Test
@@ -168,5 +247,50 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/api/users/99"))
                 .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).deleteUser(99);
+    }
+
+    @Test
+    void testCreateUser_ValidationError() throws Exception {
+        UserRequestDto invalidRequest = new UserRequestDto();
+        // Missing required fields will trigger validation errors
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, never()).createUser(any(UserRequestDto.class));
+    }
+
+    @Test
+    void testUpdateUser_ValidationError() throws Exception {
+        UserRequestDto invalidRequest = new UserRequestDto();
+        // Missing required fields will trigger validation errors
+
+        mockMvc.perform(put("/api/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, never()).updateUser(any(), any(UserRequestDto.class));
+    }
+
+    @Test
+    void testGetUserById_WithInvalidId() throws Exception {
+        mockMvc.perform(get("/api/users/invalid"))
+                .andExpect(status().isBadRequest()); // Spring will return 400 for invalid path variable type
+
+        verify(userService, never()).getUserById(any());
+    }
+
+    @Test
+    void testCreateUser_WithNullBody() throws Exception {
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()); // Missing request body
+
+        verify(userService, never()).createUser(any());
     }
 }

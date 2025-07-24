@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +43,7 @@ public class UserServiceImplementationTest {
         user.setEmail("test@example.com");
         user.setFullName("Test User");
         user.setRole("USER");
+        user.setPhoneNumber("1234567890"); // Added phone number
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
@@ -51,6 +53,7 @@ public class UserServiceImplementationTest {
         requestDto.setEmail("test@example.com");
         requestDto.setFullName("Test User");
         requestDto.setRole("USER");
+        requestDto.setPhoneNumber(1234567890L); // Added phone number
     }
 
     @Test
@@ -70,6 +73,7 @@ public class UserServiceImplementationTest {
         assertEquals(user.getEmail(), result.get(0).getEmail());
         assertEquals(user.getFullName(), result.get(0).getFullName());
         assertEquals(user.getRole(), result.get(0).getRole());
+        assertEquals(Long.valueOf(user.getPhoneNumber()), result.get(0).getPhoneNumber());
 
         verify(userRepository).findAll();
     }
@@ -89,6 +93,7 @@ public class UserServiceImplementationTest {
         assertEquals(user.getEmail(), result.getEmail());
         assertEquals(user.getFullName(), result.getFullName());
         assertEquals(user.getRole(), result.getRole());
+        assertEquals(Long.valueOf(user.getPhoneNumber()), result.getPhoneNumber());
 
         verify(userRepository).findById(1);
     }
@@ -106,8 +111,9 @@ public class UserServiceImplementationTest {
     }
 
     @Test
-    void createUser_WhenUsernameAndEmailDoNotExist_ShouldCreateUser() {
+    void createUser_WhenUsernameAndEmailAndPhoneDoNotExist_ShouldCreateUser() {
         // Arrange
+        when(userRepository.findByPhoneNumber("1234567890")).thenReturn(Optional.empty());
         when(userRepository.existsByUsername("testuser")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -122,15 +128,34 @@ public class UserServiceImplementationTest {
         assertEquals(user.getEmail(), result.getEmail());
         assertEquals(user.getFullName(), result.getFullName());
         assertEquals(user.getRole(), result.getRole());
+        assertEquals(Long.valueOf(user.getPhoneNumber()), result.getPhoneNumber());
 
+        verify(userRepository).findByPhoneNumber("1234567890");
         verify(userRepository).existsByUsername("testuser");
         verify(userRepository).existsByEmail("test@example.com");
         verify(userRepository).save(any(User.class));
     }
 
     @Test
+    void createUser_WhenPhoneNumberExists_ShouldThrowException() {
+        // Arrange
+        User existingUser = new User();
+        existingUser.setPhoneNumber("1234567890");
+        when(userRepository.findByPhoneNumber("1234567890")).thenReturn(Optional.of(existingUser));
+
+        // Act & Assert
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> userService.createUser(requestDto));
+        assertEquals("400 BAD_REQUEST \"User phone number already exists: 1234567890\"", exception.getMessage());
+
+        verify(userRepository).findByPhoneNumber("1234567890");
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
     void createUser_WhenUsernameExists_ShouldThrowException() {
         // Arrange
+        when(userRepository.findByPhoneNumber("1234567890")).thenReturn(Optional.empty());
         when(userRepository.existsByUsername("testuser")).thenReturn(true);
 
         // Act & Assert
@@ -138,6 +163,7 @@ public class UserServiceImplementationTest {
                 () -> userService.createUser(requestDto));
         assertEquals("400 BAD_REQUEST \"Username already exists: testuser\"", exception.getMessage());
 
+        verify(userRepository).findByPhoneNumber("1234567890");
         verify(userRepository).existsByUsername("testuser");
         verify(userRepository, never()).save(any(User.class));
     }
@@ -145,6 +171,7 @@ public class UserServiceImplementationTest {
     @Test
     void createUser_WhenEmailExists_ShouldThrowException() {
         // Arrange
+        when(userRepository.findByPhoneNumber("1234567890")).thenReturn(Optional.empty());
         when(userRepository.existsByUsername("testuser")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
@@ -153,9 +180,29 @@ public class UserServiceImplementationTest {
                 () -> userService.createUser(requestDto));
         assertEquals("400 BAD_REQUEST \"Email already exists: test@example.com\"", exception.getMessage());
 
+        verify(userRepository).findByPhoneNumber("1234567890");
         verify(userRepository).existsByUsername("testuser");
         verify(userRepository).existsByEmail("test@example.com");
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_WhenPhoneNumberIsNull_ShouldSkipPhoneCheck() {
+        // Arrange
+        requestDto.setPhoneNumber(null);
+        when(userRepository.existsByUsername("testuser")).thenReturn(false);
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        UserResponseDto result = userService.createUser(requestDto);
+
+        // Assert
+        assertNotNull(result);
+        verify(userRepository, never()).findByPhoneNumber(anyString());
+        verify(userRepository).existsByUsername("testuser");
+        verify(userRepository).existsByEmail("test@example.com");
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
@@ -164,10 +211,11 @@ public class UserServiceImplementationTest {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // Update with new data
+        // Update with same data (no conflicts)
         UserRequestDto updateDto = new UserRequestDto();
         updateDto.setUsername("testuser"); // Same username
         updateDto.setEmail("test@example.com"); // Same email
+        updateDto.setPhoneNumber(1234567890L); // Same phone
         updateDto.setFullName("Updated User");
         updateDto.setRole("USER");
 
@@ -179,6 +227,7 @@ public class UserServiceImplementationTest {
         assertEquals(user.getUserId(), result.getUserId());
 
         verify(userRepository).findById(1);
+        verify(userRepository, never()).findByPhoneNumber(anyString());
         verify(userRepository, never()).existsByUsername(anyString());
         verify(userRepository, never()).existsByEmail(anyString());
         verify(userRepository).save(any(User.class));
@@ -195,6 +244,7 @@ public class UserServiceImplementationTest {
         UserRequestDto updateDto = new UserRequestDto();
         updateDto.setUsername("newusername");
         updateDto.setEmail("test@example.com");
+        updateDto.setPhoneNumber(1234567890L);
         updateDto.setFullName("Test User");
         updateDto.setRole("USER");
 
@@ -204,6 +254,30 @@ public class UserServiceImplementationTest {
         // Assert
         verify(userRepository).findById(1);
         verify(userRepository).existsByUsername("newusername");
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void updateUser_WhenUserExistsWithNewPhoneNumber_ShouldCheckPhoneUniqueness() {
+        // Arrange
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(userRepository.findByPhoneNumber("9876543210")).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Update with new phone number
+        UserRequestDto updateDto = new UserRequestDto();
+        updateDto.setUsername("testuser");
+        updateDto.setEmail("test@example.com");
+        updateDto.setPhoneNumber(9876543210L); // New phone number
+        updateDto.setFullName("Test User");
+        updateDto.setRole("USER");
+
+        // Act
+        userService.updateUser(1, updateDto);
+
+        // Assert
+        verify(userRepository).findById(1);
+        verify(userRepository).findByPhoneNumber("9876543210");
         verify(userRepository).save(any(User.class));
     }
 
@@ -228,6 +302,7 @@ public class UserServiceImplementationTest {
         existingUser.setUserId(1);
         existingUser.setUsername("oldusername");
         existingUser.setEmail("test@example.com");
+        existingUser.setPhoneNumber("1234567890");
 
         when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
         when(userRepository.existsByUsername("newusername")).thenReturn(true);
@@ -236,6 +311,7 @@ public class UserServiceImplementationTest {
         UserRequestDto updateDto = new UserRequestDto();
         updateDto.setUsername("newusername");
         updateDto.setEmail("test@example.com");
+        updateDto.setPhoneNumber(1234567890L);
 
         // Act & Assert
         ResponseStatusException exception = assertThrows(ResponseStatusException.class,
@@ -254,6 +330,7 @@ public class UserServiceImplementationTest {
         existingUser.setUserId(1);
         existingUser.setUsername("testuser");
         existingUser.setEmail("old@example.com");
+        existingUser.setPhoneNumber("1234567890");
 
         when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
         when(userRepository.existsByEmail("new@example.com")).thenReturn(true);
@@ -262,6 +339,7 @@ public class UserServiceImplementationTest {
         UserRequestDto updateDto = new UserRequestDto();
         updateDto.setUsername("testuser");
         updateDto.setEmail("new@example.com");
+        updateDto.setPhoneNumber(1234567890L);
 
         // Act & Assert
         ResponseStatusException exception = assertThrows(ResponseStatusException.class,
@@ -270,6 +348,38 @@ public class UserServiceImplementationTest {
 
         verify(userRepository).findById(1);
         verify(userRepository).existsByEmail("new@example.com");
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void updateUser_WhenNewPhoneNumberExists_ShouldThrowException() {
+        // Arrange
+        User existingUser = new User();
+        existingUser.setUserId(1);
+        existingUser.setUsername("testuser");
+        existingUser.setEmail("test@example.com");
+        existingUser.setPhoneNumber("1234567890");
+
+        User anotherUser = new User();
+        anotherUser.setUserId(2);
+        anotherUser.setPhoneNumber("9876543210");
+
+        when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByPhoneNumber("9876543210")).thenReturn(Optional.of(anotherUser));
+
+        // Update with conflicting phone number
+        UserRequestDto updateDto = new UserRequestDto();
+        updateDto.setUsername("testuser");
+        updateDto.setEmail("test@example.com");
+        updateDto.setPhoneNumber(9876543210L);
+
+        // Act & Assert
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> userService.updateUser(1, updateDto));
+        assertEquals("400 BAD_REQUEST \"Phone number already exists: 9876543210\"", exception.getMessage());
+
+        verify(userRepository).findById(1);
+        verify(userRepository).findByPhoneNumber("9876543210");
         verify(userRepository, never()).save(any(User.class));
     }
 
