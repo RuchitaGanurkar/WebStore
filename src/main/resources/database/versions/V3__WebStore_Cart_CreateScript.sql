@@ -1,3 +1,7 @@
+-- V3__WebStore_Cart_Schema.sql
+-- This migration creates cart-related tables with catalogue_id instead of catalogue_category_id
+-- Complete replacement for cart functionality
+
 -- Create Sequences for Cart tables
 CREATE SEQUENCE IF NOT EXISTS web_store.seq_cart_status_id START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE IF NOT EXISTS web_store.seq_cart_id START WITH 1 INCREMENT BY 1;
@@ -28,18 +32,18 @@ CREATE TABLE IF NOT EXISTS web_store.cart_status (
     CONSTRAINT uk_cart_status_name UNIQUE (status_name)
 );
 
--- Create Cart Table
+-- Create Cart Table (CHANGED: catalogue_category_id -> catalogue_id)
 CREATE TABLE IF NOT EXISTS web_store.cart (
     cart_id BIGINT NOT NULL DEFAULT nextval('web_store.seq_cart_id') PRIMARY KEY,
     phone_number VARCHAR(15) NOT NULL,
-    catalogue_category_id INT NOT NULL,
+    catalogue_id INT NOT NULL,
     status_id INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_cart_user_phone
         FOREIGN KEY (phone_number) REFERENCES web_store.users (phone_number),
-    CONSTRAINT fk_cart_catalogue_category
-        FOREIGN KEY (catalogue_category_id) REFERENCES web_store.catalogue_category (catalogue_category_id),
+    CONSTRAINT fk_cart_catalogue
+        FOREIGN KEY (catalogue_id) REFERENCES web_store.catalogue (catalogue_id),
     CONSTRAINT fk_cart_status
         FOREIGN KEY (status_id) REFERENCES web_store.cart_status (status_id)
 );
@@ -97,7 +101,7 @@ CREATE TABLE IF NOT EXISTS web_store.cart_product_history (
 
 -- Create indexes for better query performance
 CREATE INDEX idx_cart_phone_number ON web_store.cart(phone_number);
-CREATE INDEX idx_cart_catalogue_category ON web_store.cart(catalogue_category_id);
+CREATE INDEX idx_cart_catalogue ON web_store.cart(catalogue_id);
 CREATE INDEX idx_cart_status ON web_store.cart(status_id);
 CREATE INDEX idx_cart_history_cart ON web_store.cart_history(cart_id);
 CREATE INDEX idx_cart_product_cart ON web_store.cart_product(cart_id);
@@ -117,30 +121,14 @@ INSERT INTO web_store.cart_product_status (status_name) VALUES
     ('ADDED'),
     ('REMOVED');
 
--- Insert sample Cart data based on existing users and catalogue_categories
--- Only insert if catalogue_category records exist
-INSERT INTO web_store.cart (phone_number, catalogue_category_id, status_id)
-SELECT
-    phone_number,
-    catalogue_category_id,
-    status_id
-FROM (
-    SELECT
-        '1234567890' as phone_number,
-        (SELECT catalogue_category_id FROM web_store.catalogue_category ORDER BY catalogue_category_id LIMIT 1) as catalogue_category_id,
-        (SELECT status_id FROM web_store.cart_status WHERE status_name = 'ACTIVE') as status_id
-    UNION ALL
-    SELECT
-        '9876543210',
-        (SELECT catalogue_category_id FROM web_store.catalogue_category ORDER BY catalogue_category_id LIMIT 1 OFFSET 1),
-        (SELECT status_id FROM web_store.cart_status WHERE status_name = 'ACTIVE')
-    UNION ALL
-    SELECT
-        '9876543210',
-        (SELECT catalogue_category_id FROM web_store.catalogue_category ORDER BY catalogue_category_id LIMIT 1 OFFSET 2),
-        (SELECT status_id FROM web_store.cart_status WHERE status_name = 'CHECKED_OUT')
-) cart_data
-WHERE catalogue_category_id IS NOT NULL;
+-- Insert sample Cart data based on existing users and catalogue (CHANGED: using catalogue_id = 1)
+INSERT INTO web_store.cart (phone_number, catalogue_id, status_id)
+VALUES
+    ('1234567890', 1, (SELECT status_id FROM web_store.cart_status WHERE status_name = 'ACTIVE')),
+    ('9876543210', 1, (SELECT status_id FROM web_store.cart_status WHERE status_name = 'ACTIVE')),
+    ('9876543210', 1, (SELECT status_id FROM web_store.cart_status WHERE status_name = 'CHECKED_OUT')),
+    ('5555555555', 1, (SELECT status_id FROM web_store.cart_status WHERE status_name = 'ACTIVE')),
+    ('1234567890', 1, (SELECT status_id FROM web_store.cart_status WHERE status_name = 'PAID'));
 
 -- Insert Cart History for the created carts
 INSERT INTO web_store.cart_history (cart_id, created_by, updated_by)
@@ -157,7 +145,14 @@ VALUES
     (1, 1), -- First cart, ADDED status (second item)
     (2, 1), -- Second cart, ADDED status
     (2, 1), -- Second cart, ADDED status (second item)
-    (3, 2); -- Third cart, REMOVED status
+    (3, 2), -- Third cart, REMOVED status
+    (1, 1), -- First cart, additional items
+    (1, 1),
+    (1, 1),
+    (4, 1), -- Fourth cart (system user), ADDED
+    (4, 1), -- Fourth cart (system user), ADDED
+    (5, 1), -- Fifth cart (admin second cart), ADDED
+    (5, 1); -- Fifth cart (admin second cart), ADDED
 
 -- Insert Cart Product History for the cart products
 -- Adding Fresh Vegetables to cart 1
@@ -177,57 +172,21 @@ INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_qua
 VALUES
     (5, (SELECT product_id FROM web_store.product WHERE product_name = 'Milk' LIMIT 1), 1, 0, 'ADMIN', 'ADMIN');
 
--- Add additional sample cart products for more comprehensive testing
-INSERT INTO web_store.cart_product (cart_id, status_id)
-SELECT
-    1, -- First cart
-    1  -- ADDED status
-FROM generate_series(1, 3); -- Add 3 more items to cart 1
-
--- Get the new cart_product_ids for additional history entries
+-- Additional history entries for cart 1
 INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
 VALUES
     (6, (SELECT product_id FROM web_store.product WHERE product_name = 'Broccoli' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN'),
     (7, (SELECT product_id FROM web_store.product WHERE product_name = 'Tomato' LIMIT 1), 0, 4, 'ADMIN', 'ADMIN'),
     (8, (SELECT product_id FROM web_store.product WHERE product_name = 'Rice' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN');
 
--- Add more sample carts for different users with various products
-INSERT INTO web_store.cart (phone_number, catalogue_category_id, status_id)
-SELECT
-    phone_number,
-    catalogue_category_id,
-    status_id
-FROM (
-    SELECT
-        '5555555555' as phone_number,
-        (SELECT catalogue_category_id FROM web_store.catalogue_category ORDER BY catalogue_category_id LIMIT 1) as catalogue_category_id,
-        (SELECT status_id FROM web_store.cart_status WHERE status_name = 'ACTIVE') as status_id
-    UNION ALL
-    SELECT
-        '1234567890',
-        (SELECT catalogue_category_id FROM web_store.catalogue_category ORDER BY catalogue_category_id LIMIT 1 OFFSET 1),
-        (SELECT status_id FROM web_store.cart_status WHERE status_name = 'PAID')
-) cart_data
-WHERE catalogue_category_id IS NOT NULL;
-
--- Add history for new carts
-INSERT INTO web_store.cart_history (cart_id, created_by, updated_by)
-VALUES
-    (4, 'ADMIN', 'ADMIN'),
-    (5, 'ADMIN', 'ADMIN');
-
--- Add products to the new carts
-INSERT INTO web_store.cart_product (cart_id, status_id)
-VALUES
-    (4, 1), -- system user cart, ADDED
-    (4, 1), -- system user cart, ADDED
-    (5, 1), -- admin second cart, ADDED
-    (5, 1); -- admin second cart, ADDED
-
--- Add history for new cart products
+-- Add history for system user cart (cart 4)
 INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
 VALUES
     (9, (SELECT product_id FROM web_store.product WHERE product_name = 'Chicken Breast' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN'),
-    (10, (SELECT product_id FROM web_store.product WHERE product_name = 'Salmon Fillet' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN'),
+    (10, (SELECT product_id FROM web_store.product WHERE product_name = 'Salmon Fillet' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN');
+
+-- Add history for admin's second cart (cart 5)
+INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
+VALUES
     (11, (SELECT product_id FROM web_store.product WHERE product_name = 'White Bread' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN'),
     (12, (SELECT product_id FROM web_store.product WHERE product_name = 'Coffee' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN');

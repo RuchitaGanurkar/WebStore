@@ -4,11 +4,14 @@ import com.webstore.dto.request.cart.CartRequestDto;
 import com.webstore.dto.response.cart.CartResponseDto;
 import com.webstore.entity.cart.Cart;
 import com.webstore.entity.cart.CartStatus;
+import com.webstore.entity.product.Catalogue;
 import com.webstore.enums.cart.CartStatusType;
 import com.webstore.exception.cart.CartNotFoundException;
+import com.webstore.exception.product.CatalogueNotFoundException;
 import com.webstore.exception.cart.CartStatusNotFoundException;
 import com.webstore.repository.cart.CartRepository;
 import com.webstore.repository.cart.CartStatusRepository;
+import com.webstore.repository.product.CatalogueRepository;
 import com.webstore.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,14 +28,25 @@ public class CartServiceImplementation implements CartService {
 
     private final CartRepository cartRepository;
     private final CartStatusRepository cartStatusRepository;
+    private final CatalogueRepository catalogueRepository;
 
     @Override
     public CartResponseDto createCart(CartRequestDto cartRequestDto) {
         CartStatus status = getStatusById(cartRequestDto.getStatusId());
 
+        // FIXED: Handle Catalogue entity properly
+        Catalogue catalogue;
+        if (cartRequestDto.getCatalogueId() != null) {
+            catalogue = catalogueRepository.findById(cartRequestDto.getCatalogueId())
+                    .orElseThrow(() -> new CatalogueNotFoundException(
+                            "Catalogue not found with ID: " + cartRequestDto.getCatalogueId()));
+        } else {
+            throw new CatalogueNotFoundException("Catalogue ID cannot be null");
+        }
+
         Cart cart = new Cart();
         cart.setPhoneNumber(cartRequestDto.getPhoneNumber().toString());
-        cart.setCatalogueCategoryId(cartRequestDto.getCatalogueCategoryId());
+        cart.setCatalogue(catalogue); // FIXED: Set the actual Catalogue entity
         cart.setStatus(status);
         cart.setCreatedAt(LocalDateTime.now());
         cart.setUpdatedAt(LocalDateTime.now());
@@ -93,6 +107,14 @@ public class CartServiceImplementation implements CartService {
         return String.format("Cart archived successfully, cart_id: %d", cartId);
     }
 
+    // ADDED: New method to get carts by catalogue ID
+    public List<CartResponseDto> getCartsByCatalogueId(Integer catalogueId) {
+        List<Cart> carts = cartRepository.findByCatalogueCatalogueId(catalogueId);
+        return carts.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
     // Helper methods
 
     private CartStatus getStatusById(Integer statusId) {
@@ -112,8 +134,17 @@ public class CartServiceImplementation implements CartService {
         CartResponseDto dto = new CartResponseDto();
         dto.setCartId(cart.getCartId());
         dto.setPhoneNumber(Long.parseLong(cart.getPhoneNumber()));
-        dto.setCatalogueCategoryId(cart.getCatalogueCategoryId());
-        dto.setStatusId(cart.getStatus().getStatusId());
+
+        // FIXED: Properly access catalogueId from the Catalogue entity
+        if (cart.getCatalogue() != null) {
+            dto.setCatalogueId(cart.getCatalogue().getCatalogueId());
+        }
+
+        // FIXED: Properly access statusId from the CartStatus entity
+        if (cart.getStatus() != null) {
+            dto.setStatusId(cart.getStatus().getStatusId());
+        }
+
         dto.setCreatedAt(cart.getCreatedAt());
         dto.setUpdatedAt(cart.getUpdatedAt());
         return dto;

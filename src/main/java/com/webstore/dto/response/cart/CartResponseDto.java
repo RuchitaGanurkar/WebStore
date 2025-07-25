@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class CartResponseDto {
     private Long cartId;
     private Long phoneNumber;
-    private Integer catalogueCategoryId;
+    private Integer catalogueId;
     private Integer statusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

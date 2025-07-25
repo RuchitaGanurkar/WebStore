@@ -1,6 +1,6 @@
 package com.webstore.entity.cart;
 
-
+import com.webstore.entity.product.Catalogue;
 import com.webstore.entity.product.BasicEntities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -20,7 +20,7 @@ import static com.webstore.constant.DatabaseConstants.SCHEMA_NAME;
 @Table(name = "cart", schema = SCHEMA_NAME,
         indexes = {
                 @Index(name = "idx_cart_phone_number", columnList = "phone_number"),
-                @Index(name = "idx_cart_catalogue_category", columnList = "catalogue_category_id"),
+                @Index(name = "idx_cart_catalogue", columnList = "catalogue_id"),
                 @Index(name = "idx_cart_status", columnList = "status_id")
         })
 @Data
@@ -31,8 +31,12 @@ public class Cart extends BasicEntities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_seq")
-    @SequenceGenerator(name = "cart_seq", sequenceName = "web_store.seq_cart_id",
-            schema = "web_store", allocationSize = 1)
+    @SequenceGenerator(
+            name = "cart_seq",
+            sequenceName = "web_store.seq_cart_id",
+            schema = "web_store",
+            allocationSize = 1
+    )
     @Column(name = "cart_id")
     private Long cartId;
 
@@ -42,14 +46,22 @@ public class Cart extends BasicEntities {
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
 
-    @NotNull(message = "Catalogue category ID cannot be null")
-    @Column(name = "catalogue_category_id", nullable = false)
-    private Integer catalogueCategoryId;
+    @NotNull(message = "Catalogue cannot be null")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "catalogue_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_cart_catalogue")
+    )
+    private Catalogue catalogue;
 
     @NotNull(message = "Cart status cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_cart_status"))
+    @JoinColumn(
+            name = "status_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_cart_status")
+    )
     private CartStatus status;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

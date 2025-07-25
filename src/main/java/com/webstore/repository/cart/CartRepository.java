@@ -1,3 +1,4 @@
+// CartRepository.java - Fixed version with correct property names
 package com.webstore.repository.cart;
 
 import com.webstore.entity.cart.Cart;
@@ -17,7 +18,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     List<Cart> findByPhoneNumberAndStatus(String phoneNumber, CartStatus status);
 
-    List<Cart> findByCatalogueCategoryId(Integer catalogueCategoryId);
+    // FIXED: Use catalogueCatalogueId instead of catalogueId
+    List<Cart> findByCatalogueCatalogueId(Integer catalogueId);
 
     Optional<Cart> findByPhoneNumberAndStatusStatusName(String phoneNumber, CartStatus statusName);
 
@@ -26,10 +28,22 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     @Query("SELECT c FROM Cart c WHERE c.createdAt BETWEEN :startDate AND :endDate")
     List<Cart> findCartsByDateRange(@Param("startDate") LocalDateTime startDate,
-                                          @Param("endDate") LocalDateTime endDate);
+                                    @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT COUNT(c) FROM Cart c WHERE c.phoneNumber = :phoneNumber")
     Long countCartsByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
     List<Cart> findByStatusStatusName(CartStatusType statusName);
+
+    // FIXED: Use catalogue.catalogueId instead of catalogue.id
+    @Query("SELECT c FROM Cart c WHERE c.catalogue.catalogueId = :catalogueId AND c.status.statusName = 'ACTIVE'")
+    List<Cart> findActiveCartsByCatalogueId(@Param("catalogueId") Integer catalogueId);
+
+    @Query("SELECT c FROM Cart c WHERE c.phoneNumber = :phoneNumber AND c.catalogue.catalogueId = :catalogueId")
+    List<Cart> findByPhoneNumberAndCatalogueId(@Param("phoneNumber") String phoneNumber,
+                                               @Param("catalogueId") Integer catalogueId);
+
+    @Query("SELECT c FROM Cart c WHERE c.phoneNumber = :phoneNumber AND c.catalogue.catalogueId = :catalogueId AND c.status.statusName = 'ACTIVE'")
+    Optional<Cart> findActiveCartByPhoneNumberAndCatalogueId(@Param("phoneNumber") String phoneNumber,
+                                                             @Param("catalogueId") Integer catalogueId);
 }
