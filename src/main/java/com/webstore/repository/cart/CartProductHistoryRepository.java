@@ -1,5 +1,6 @@
 package com.webstore.repository.cart;
 
+import com.webstore.entity.cart.CartProduct;
 import com.webstore.entity.cart.CartProductHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface CartProductHistoryRepository extends JpaRepository<CartProductHistory, Long> {
 
@@ -31,4 +33,16 @@ public interface CartProductHistoryRepository extends JpaRepository<CartProductH
 
     @Query("SELECT SUM(cph.newQuantity - cph.oldQuantity) FROM CartProductHistory cph WHERE cph.productId = :productId")
     Long getTotalQuantityChangeForProduct(@Param("productId") Integer productId);
+
+    // Find latest history record for a cart product
+    Optional<CartProductHistory> findTopByCartProductOrderByCreatedAtDesc(CartProduct cartProduct);
+
+    // Find all history records for a cart product, ordered by creation date descending
+    List<CartProductHistory> findByCartProductOrderByCreatedAtDesc(CartProduct cartProduct);
+
+    // Find history records by product ID
+    List<CartProductHistory> findByProductIdOrderByCreatedAtDesc(Integer productId);
+
+    // Check if history exists for cart product
+    boolean existsByCartProduct(CartProduct cartProduct);
 }

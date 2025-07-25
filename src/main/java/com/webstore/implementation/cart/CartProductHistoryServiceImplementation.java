@@ -7,6 +7,7 @@ import com.webstore.entity.cart.CartProductHistory;
 import com.webstore.repository.cart.CartProductHistoryRepository;
 import com.webstore.repository.cart.CartProductRepository;
 import com.webstore.service.cart.CartProductHistoryService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,21 @@ public class CartProductHistoryServiceImplementation implements CartProductHisto
                 .orElseThrow(() -> new RuntimeException("Cart product history not found with ID: " + id));
 
         return convertToDto(history);
+    }
+
+    @Override
+    public List<CartProductHistoryResponseDto> getHistoryByCartProductId(Long cartProductId) {
+        return List.of();
+    }
+
+    @Override
+    public CartProductHistoryResponseDto getLatestHistoryByCartProductId(Long cartProductId) {
+        return null;
+    }
+
+    @Override
+    public List<CartProductHistoryResponseDto> getHistoryByProductId(Integer productId) {
+        return List.of();
     }
 
     @Override

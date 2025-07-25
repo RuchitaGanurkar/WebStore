@@ -27,4 +27,14 @@ public interface CartProductRepository extends JpaRepository<CartProduct, Long> 
     @Query("SELECT COUNT(cp) FROM CartProduct cp WHERE cp.cart.cartId = :cartId AND cp.status.statusName = 'ADDED'")
     Long countActiveProductsInCart(@Param("cartId") Long cartId);
 
+    // Find cart products by cart ID
+    List<CartProduct> findByCartCartId(Long cartId);
+
+    // Find cart products by phone number and status
+    List<CartProduct> findByCartPhoneNumberAndStatus(String phoneNumber, CartProductStatus status);
+
+      // Count cart products by cart ID and status
+    Long countByCartCartIdAndStatus(Long cartId, CartProductStatus status);
+
+
 }
