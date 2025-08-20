@@ -3,12 +3,15 @@ package com.webstore.implementation.cart;
 import com.webstore.dto.request.cart.CartRequestDto;
 import com.webstore.dto.response.cart.CartResponseDto;
 import com.webstore.entity.cart.Cart;
+import com.webstore.entity.cart.CartProduct;
 import com.webstore.entity.cart.CartStatus;
 import com.webstore.entity.product.Catalogue;
 import com.webstore.enums.cart.CartStatusType;
+import com.webstore.exception.cart.ResourceNotFoundException;
 import com.webstore.exception.cart.CartNotFoundException;
-import com.webstore.exception.product.CatalogueNotFoundException;
 import com.webstore.exception.cart.CartStatusNotFoundException;
+import com.webstore.exception.product.CatalogueNotFoundException;
+import com.webstore.repository.cart.CartProductRepository;
 import com.webstore.repository.cart.CartRepository;
 import com.webstore.repository.cart.CartStatusRepository;
 import com.webstore.repository.product.CatalogueRepository;
@@ -29,30 +32,24 @@ public class CartServiceImplementation implements CartService {
     private final CartRepository cartRepository;
     private final CartStatusRepository cartStatusRepository;
     private final CatalogueRepository catalogueRepository;
+    private final CartProductRepository cartProductRepository;
 
     @Override
     public CartResponseDto createCart(CartRequestDto cartRequestDto) {
         CartStatus status = getStatusById(cartRequestDto.getStatusId());
 
-        // FIXED: Handle Catalogue entity properly
-        Catalogue catalogue;
-        if (cartRequestDto.getCatalogueId() != null) {
-            catalogue = catalogueRepository.findById(cartRequestDto.getCatalogueId())
-                    .orElseThrow(() -> new CatalogueNotFoundException(
-                            "Catalogue not found with ID: " + cartRequestDto.getCatalogueId()));
-        } else {
-            throw new CatalogueNotFoundException("Catalogue ID cannot be null");
-        }
+        Catalogue catalogue = catalogueRepository.findById(cartRequestDto.getCatalogueId())
+                .orElseThrow(() -> new CatalogueNotFoundException(
+                        "Catalogue not found with ID: " + cartRequestDto.getCatalogueId()));
 
         Cart cart = new Cart();
         cart.setPhoneNumber(cartRequestDto.getPhoneNumber().toString());
-        cart.setCatalogue(catalogue); // FIXED: Set the actual Catalogue entity
+        cart.setCatalogue(catalogue);
         cart.setStatus(status);
         cart.setCreatedAt(LocalDateTime.now());
         cart.setUpdatedAt(LocalDateTime.now());
 
-        Cart savedCart = cartRepository.save(cart);
-        return mapToDto(savedCart);
+        return mapToDto(cartRepository.save(cart));
     }
 
     @Override
@@ -65,17 +62,16 @@ public class CartServiceImplementation implements CartService {
 
     @Override
     public CartResponseDto getCartById(Long cartId) {
-        Cart cart = cartRepository.findById(cartId)
+        return cartRepository.findById(cartId)
+                .map(this::mapToDto)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + cartId));
-        return mapToDto(cart);
     }
 
     @Override
     public List<CartResponseDto> getCartsByStatus(String statusName) {
         CartStatusType statusEnum = parseStatusEnum(statusName);
-
-        List<Cart> carts = cartRepository.findByStatusStatusName(statusEnum);
-        return carts.stream()
+        return cartRepository.findByStatusStatusName(statusEnum)
+                .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
@@ -107,15 +103,37 @@ public class CartServiceImplementation implements CartService {
         return String.format("Cart archived successfully, cart_id: %d", cartId);
     }
 
-    // ADDED: New method to get carts by catalogue ID
+    @Override
     public List<CartResponseDto> getCartsByCatalogueId(Integer catalogueId) {
-        List<Cart> carts = cartRepository.findByCatalogueCatalogueId(catalogueId);
-        return carts.stream()
+        return cartRepository.findByCatalogueCatalogueId(catalogueId)
+                .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    // Helper methods
+    @Override
+    public CartResponseDto removeProductFromCart(Long cartId, Long productId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found with ID: " + cartId));
+
+        CartProduct cartProduct = cartProductRepository
+                .findByCart_CartIdAndProduct_ProductId(cartId, productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found in cart"));
+
+        cartProductRepository.delete(cartProduct);
+
+        return mapToDto(cart);
+    }
+
+    @Override
+    public List<CartResponseDto> getAllCarts() {
+        return cartRepository.findAll()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    // ===== Helper methods =====
 
     private CartStatus getStatusById(Integer statusId) {
         return cartStatusRepository.findById(statusId)
@@ -135,12 +153,10 @@ public class CartServiceImplementation implements CartService {
         dto.setCartId(cart.getCartId());
         dto.setPhoneNumber(Long.parseLong(cart.getPhoneNumber()));
 
-        // FIXED: Properly access catalogueId from the Catalogue entity
         if (cart.getCatalogue() != null) {
             dto.setCatalogueId(cart.getCatalogue().getCatalogueId());
         }
 
-        // FIXED: Properly access statusId from the CartStatus entity
         if (cart.getStatus() != null) {
             dto.setStatusId(cart.getStatus().getStatusId());
         }

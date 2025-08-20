@@ -47,10 +47,8 @@ public class CartController {
         return cartService.getCartById(cartId);
     }
 
-    /**
-     * Get all carts by status name
-     */
-    @GetMapping
+    // Get all carts by status
+    @GetMapping("/status")
     public List<CartResponseDto> getCartsByStatus(@RequestParam("status") String statusName) {
         return cartService.getCartsByStatus(statusName);
     }
@@ -71,5 +69,21 @@ public class CartController {
     @DeleteMapping("/{cartId}")
     public String archiveCart(@PathVariable("cartId") Long cartId) {
         return cartService.archiveCart(cartId);
+    }
+
+    /**
+     * PATCH - Remove a product from a cart by IDs.
+     */
+    @PatchMapping("/{cartId}/products/{productId}")
+    public CartResponseDto removeProductFromCart(
+            @PathVariable Long cartId,
+            @PathVariable Long productId) {
+        return cartService.removeProductFromCart(cartId, productId);
+    }
+
+    // Get all carts (no filter)
+    @GetMapping("/all")
+    public List<CartResponseDto> getAllCarts() {
+        return cartService.getAllCarts();
     }
 }

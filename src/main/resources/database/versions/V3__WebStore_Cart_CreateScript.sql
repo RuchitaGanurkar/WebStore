@@ -69,15 +69,21 @@ CREATE TABLE IF NOT EXISTS web_store.cart_product_status (
     CONSTRAINT uk_cart_product_status_name UNIQUE (status_name)
 );
 
--- Create Cart_Product Table
+-- Create Cart_Product Table (UPDATED to match ERD)
 CREATE TABLE IF NOT EXISTS web_store.cart_product (
     cart_product_id BIGINT NOT NULL DEFAULT nextval('web_store.seq_cart_product_id') PRIMARY KEY,
     cart_id BIGINT NOT NULL,
+    product_id INT NOT NULL,
     status_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by VARCHAR(50),
     CONSTRAINT fk_cart_product_cart
         FOREIGN KEY (cart_id) REFERENCES web_store.cart (cart_id) ON DELETE CASCADE,
+    CONSTRAINT fk_cart_product_product
+        FOREIGN KEY (product_id) REFERENCES web_store.product (product_id),
     CONSTRAINT fk_cart_product_status
         FOREIGN KEY (status_id) REFERENCES web_store.cart_product_status (status_id)
 );
@@ -106,6 +112,7 @@ CREATE INDEX idx_cart_status ON web_store.cart(status_id);
 CREATE INDEX idx_cart_history_cart ON web_store.cart_history(cart_id);
 CREATE INDEX idx_cart_product_cart ON web_store.cart_product(cart_id);
 CREATE INDEX idx_cart_product_status ON web_store.cart_product(status_id);
+CREATE INDEX idx_cart_product_product ON web_store.cart_product(product_id);
 CREATE INDEX idx_cart_product_history_cart_product ON web_store.cart_product_history(cart_product_id);
 CREATE INDEX idx_cart_product_history_product ON web_store.cart_product_history(product_id);
 
@@ -138,55 +145,23 @@ SELECT
     'ADMIN'
 FROM web_store.cart c;
 
--- Insert sample Cart Products (adding products to carts)
-INSERT INTO web_store.cart_product (cart_id, status_id)
+-- Sample Cart Products
+INSERT INTO web_store.cart_product (cart_id, product_id, status_id, quantity, created_by, updated_by)
 VALUES
-    (1, 1), -- First cart, ADDED status
-    (1, 1), -- First cart, ADDED status (second item)
-    (2, 1), -- Second cart, ADDED status
-    (2, 1), -- Second cart, ADDED status (second item)
-    (3, 2), -- Third cart, REMOVED status
-    (1, 1), -- First cart, additional items
-    (1, 1),
-    (1, 1),
-    (4, 1), -- Fourth cart (system user), ADDED
-    (4, 1), -- Fourth cart (system user), ADDED
-    (5, 1), -- Fifth cart (admin second cart), ADDED
-    (5, 1); -- Fifth cart (admin second cart), ADDED
+    (1, (SELECT product_id FROM web_store.product WHERE product_name = 'Carrot' LIMIT 1), 1, 2, 'ADMIN', 'ADMIN'),
+    (1, (SELECT product_id FROM web_store.product WHERE product_name = 'Spinach' LIMIT 1), 1, 1, 'ADMIN', 'ADMIN'),
+    (2, (SELECT product_id FROM web_store.product WHERE product_name = 'Apple' LIMIT 1), 1, 3, 'ADMIN', 'ADMIN'),
+    (2, (SELECT product_id FROM web_store.product WHERE product_name = 'Banana' LIMIT 1), 1, 5, 'ADMIN', 'ADMIN'),
+    (3, (SELECT product_id FROM web_store.product WHERE product_name = 'Milk' LIMIT 1), 2, 0, 'ADMIN', 'ADMIN'),
+    (1, (SELECT product_id FROM web_store.product WHERE product_name = 'Broccoli' LIMIT 1), 1, 1, 'ADMIN', 'ADMIN'),
+    (1, (SELECT product_id FROM web_store.product WHERE product_name = 'Tomato' LIMIT 1), 1, 4, 'ADMIN', 'ADMIN'),
+    (1, (SELECT product_id FROM web_store.product WHERE product_name = 'Rice' LIMIT 1), 1, 2, 'ADMIN', 'ADMIN'),
+    (4, (SELECT product_id FROM web_store.product WHERE product_name = 'Chicken Breast' LIMIT 1), 1, 1, 'ADMIN', 'ADMIN'),
+    (4, (SELECT product_id FROM web_store.product WHERE product_name = 'Salmon Fillet' LIMIT 1), 1, 2, 'ADMIN', 'ADMIN'),
+    (5, (SELECT product_id FROM web_store.product WHERE product_name = 'White Bread' LIMIT 1), 1, 2, 'ADMIN', 'ADMIN'),
+    (5, (SELECT product_id FROM web_store.product WHERE product_name = 'Coffee' LIMIT 1), 1, 1, 'ADMIN', 'ADMIN');
 
--- Insert Cart Product History for the cart products
--- Adding Fresh Vegetables to cart 1
+-- Sample Cart Product History
 INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
-VALUES
-    (1, (SELECT product_id FROM web_store.product WHERE product_name = 'Carrot' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN'),
-    (2, (SELECT product_id FROM web_store.product WHERE product_name = 'Spinach' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN');
-
--- Adding Fresh Fruits to cart 2
-INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
-VALUES
-    (3, (SELECT product_id FROM web_store.product WHERE product_name = 'Apple' LIMIT 1), 0, 3, 'ADMIN', 'ADMIN'),
-    (4, (SELECT product_id FROM web_store.product WHERE product_name = 'Banana' LIMIT 1), 0, 5, 'ADMIN', 'ADMIN');
-
--- Adding and then removing Dairy Products from cart 3
-INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
-VALUES
-    (5, (SELECT product_id FROM web_store.product WHERE product_name = 'Milk' LIMIT 1), 1, 0, 'ADMIN', 'ADMIN');
-
--- Additional history entries for cart 1
-INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
-VALUES
-    (6, (SELECT product_id FROM web_store.product WHERE product_name = 'Broccoli' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN'),
-    (7, (SELECT product_id FROM web_store.product WHERE product_name = 'Tomato' LIMIT 1), 0, 4, 'ADMIN', 'ADMIN'),
-    (8, (SELECT product_id FROM web_store.product WHERE product_name = 'Rice' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN');
-
--- Add history for system user cart (cart 4)
-INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
-VALUES
-    (9, (SELECT product_id FROM web_store.product WHERE product_name = 'Chicken Breast' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN'),
-    (10, (SELECT product_id FROM web_store.product WHERE product_name = 'Salmon Fillet' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN');
-
--- Add history for admin's second cart (cart 5)
-INSERT INTO web_store.cart_product_history (cart_product_id, product_id, old_quantity, new_quantity, created_by, updated_by)
-VALUES
-    (11, (SELECT product_id FROM web_store.product WHERE product_name = 'White Bread' LIMIT 1), 0, 2, 'ADMIN', 'ADMIN'),
-    (12, (SELECT product_id FROM web_store.product WHERE product_name = 'Coffee' LIMIT 1), 0, 1, 'ADMIN', 'ADMIN');
+SELECT cart_product_id, product_id, 0, quantity, 'ADMIN', 'ADMIN'
+FROM web_store.cart_product;

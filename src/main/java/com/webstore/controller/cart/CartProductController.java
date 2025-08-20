@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@RestController
+@RequestMapping("/api/cart-products")
+
 public class CartProductController {
 
     private final CartProductService cartProductService;
@@ -46,5 +50,11 @@ public class CartProductController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         cartProductService.deleteCartProduct(id);
         return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{cartProductId}")
+    public ResponseEntity<CartProductResponseDto> updateCartProduct(
+            @PathVariable Long cartProductId,
+            @Valid @RequestBody CartProductRequestDto requestDto) {
+        return ResponseEntity.ok(cartProductService.updateCartProduct(cartProductId, requestDto));
     }
 }

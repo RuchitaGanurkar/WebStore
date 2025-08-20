@@ -32,8 +32,16 @@ public interface CartService {
      */
     CartResponseDto updateCartStatus(Long cartId, Integer statusId);
 
+    List<CartResponseDto> getCartsByCatalogueId(Integer catalogueId);
+
+    CartResponseDto removeProductFromCart(Long cartId, Long productId);
+
     /**
      * Archive (soft-delete) a cart by setting its status to ARCHIVED or removing it logically.
      */
     String archiveCart(Long cartId);
+
+
+    List<CartResponseDto> getAllCarts();
+
 }

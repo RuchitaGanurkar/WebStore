@@ -9,11 +9,10 @@ import com.webstore.service.cart.CartProductStatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
 
 @Slf4j
 @Service
@@ -22,7 +21,7 @@ public class CartProductStatusServiceImplementation implements CartProductStatus
 
     private final CartProductStatusRepository cartProductStatusRepository;
 
-
+    @Override
     public CartProductStatusResponseDto getCartProductStatusById(Integer statusId) {
         CartProductStatus cartProductStatus = cartProductStatusRepository.findById(statusId)
                 .orElseThrow(() -> new RuntimeException("Cart product status not found with id: " + statusId));
@@ -31,15 +30,14 @@ public class CartProductStatusServiceImplementation implements CartProductStatus
 
     @Override
     public List<CartProductStatusResponseDto> getAllCartProductStatuses() {
-        List<CartProductStatus> statuses = cartProductStatusRepository.findAll();
-        return statuses.stream()
+        return cartProductStatusRepository.findAll()
+                .stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CartProductStatusResponseDto updateCartProductStatus(Integer statusId, CartProductStatusRequestDto
-            requestDto) {
+    public CartProductStatusResponseDto updateCartProductStatus(Integer statusId, CartProductStatusRequestDto requestDto) {
         CartProductStatus cartProductStatus = cartProductStatusRepository.findById(statusId)
                 .orElseThrow(() -> new RuntimeException("Cart product status not found with id: " + statusId));
 
@@ -59,6 +57,7 @@ public class CartProductStatusServiceImplementation implements CartProductStatus
         cartProductStatusRepository.deleteById(statusId);
     }
 
+    // ✅ Utility mapper
     private CartProductStatusResponseDto mapToResponseDto(CartProductStatus cartProductStatus) {
         CartProductStatusResponseDto responseDto = new CartProductStatusResponseDto();
         responseDto.setStatusId(cartProductStatus.getStatusId());

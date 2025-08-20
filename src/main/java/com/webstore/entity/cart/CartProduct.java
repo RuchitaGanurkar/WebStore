@@ -1,6 +1,7 @@
 package com.webstore.entity.cart;
 
 import com.webstore.entity.product.BasicEntities;
+import com.webstore.entity.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,15 @@ public class CartProduct extends BasicEntities {
     @JoinColumn(name = "status_id", nullable = false,
             foreignKey = @ForeignKey(name = "fk_cart_product_status"))
     private CartProductStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @NotNull(message = "Quantity is required")
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
 
     @OneToMany(mappedBy = "cartProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CartProductHistory> cartProductHistories;

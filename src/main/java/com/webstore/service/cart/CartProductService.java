@@ -2,6 +2,7 @@ package com.webstore.service.cart;
 
 import com.webstore.dto.request.cart.CartProductRequestDto;
 import com.webstore.dto.response.cart.CartProductResponseDto;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface CartProductService {
     Long countActiveCartProducts(Long cartId);
 
     void deleteCartProduct(Long id);
+
+    CartProductResponseDto updateCartProduct(Long cartProductId, @Valid CartProductRequestDto requestDto);
 }

@@ -15,4 +15,13 @@ public class CartProductRequestDto {
     @NotNull(groups = CartProductValidation.class, message = "Cart product status ID is required")
     @Positive(groups = CartProductValidation.class, message = "Status ID must be positive")
     private Integer statusId;
+
+    @NotNull(groups = CartProductValidation.class, message = "Product ID is required")
+    @Positive(groups = CartProductValidation.class, message = "Product ID must be positive")
+    private Long productId;
+
+    @NotNull(groups = CartProductValidation.class, message = "Quantity is required")
+    @Positive(groups = CartProductValidation.class, message = "Quantity must be positive")
+    private Integer quantity;
+
 }

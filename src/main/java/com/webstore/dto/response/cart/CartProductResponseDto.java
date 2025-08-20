@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 public class CartProductResponseDto {
     private Long cartProductId;
     private Long cartId;
+    private Long productId;
+    private Integer quantity;
     private Integer statusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
