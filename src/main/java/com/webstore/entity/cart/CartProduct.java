@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.webstore.constant.DatabaseConstants.SCHEMA_NAME;
@@ -18,7 +17,8 @@ import static com.webstore.constant.DatabaseConstants.SCHEMA_NAME;
 @Table(name = "cart_product", schema = SCHEMA_NAME,
         indexes = {
                 @Index(name = "idx_cart_product_cart", columnList = "cart_id"),
-                @Index(name = "idx_cart_product_status", columnList = "status_id")
+                @Index(name = "idx_cart_product_status", columnList = "status_id"),
+                @Index(name = "idx_cart_product_product", columnList = "product_id") // Added missing index
         })
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -45,14 +45,15 @@ public class CartProduct extends BasicEntities {
             foreignKey = @ForeignKey(name = "fk_cart_product_status"))
     private CartProductStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @NotNull(message = "Product cannot be null") // Added validation
+    @ManyToOne(fetch = FetchType.LAZY) // Added fetch type for consistency
+    @JoinColumn(name = "product_id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_cart_product_product")) // Added foreign key annotation
     private Product product;
 
     @NotNull(message = "Quantity is required")
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
-
 
     @OneToMany(mappedBy = "cartProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CartProductHistory> cartProductHistories;
