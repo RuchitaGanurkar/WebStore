@@ -1,7 +1,7 @@
 package com.webstore.entity.cart;
 
-
 import com.webstore.entity.product.BasicEntities;
+import com.webstore.entity.product.ProductPrice;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +16,8 @@ import static com.webstore.constant.DatabaseConstants.SCHEMA_NAME;
 @Table(name = "cart_product_history", schema = SCHEMA_NAME,
         indexes = {
                 @Index(name = "idx_cart_product_history_cart_product", columnList = "cart_product_id"),
-                @Index(name = "idx_cart_product_history_product", columnList = "product_id")
+                @Index(name = "idx_cart_product_history_product", columnList = "product_id"),
+                @Index(name = "idx_cart_product_history_price", columnList = "product_price_id")
         })
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -50,4 +51,11 @@ public class CartProductHistory extends BasicEntities {
     @Min(value = 0, message = "New quantity cannot be negative")
     @Column(name = "new_quantity", nullable = false)
     private Integer newQuantity;
+
+    // New field for tracking the product price at the time of change
+    @NotNull(message = "Product price cannot be null")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_price_id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_cart_product_history_price"))
+    private ProductPrice productPrice;
 }

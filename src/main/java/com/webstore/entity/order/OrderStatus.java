@@ -1,5 +1,6 @@
 package com.webstore.entity.order;
 
+import com.webstore.enums.order.OrderStatusType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -25,9 +26,10 @@ public class OrderStatus {
     @Column(name = "status_id")
     private Integer statusId;
 
-    @NotBlank(message = "Status name cannot be blank")
+    @Enumerated(EnumType.STRING)
     @Column(name = "status_name", nullable = false, length = 20, unique = true)
-    private String statusName;
+    private OrderStatusType statusName;
+
 
     @Column(name = "description", length = 255)
     private String description;

@@ -10,6 +10,8 @@ public class CartResponseDto {
     private Long phoneNumber;
     private Integer catalogueId;
     private Integer statusId;
+    private Integer oldStatusId; // for history tracking
+    private Integer newStatusId; // for history tracking
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

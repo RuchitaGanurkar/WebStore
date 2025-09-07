@@ -19,4 +19,15 @@ public interface CartHistoryService {
     List<CartHistoryResponseDto> getCartHistoriesByUpdatedBy(String updatedBy);
 
     List<CartHistoryResponseDto> getCartHistoriesByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+
+    List<CartHistoryResponseDto> getCartHistoriesByOldStatus(Integer oldStatusId);
+
+    List<CartHistoryResponseDto> getCartHistoriesByNewStatus(Integer newStatusId);
+
 }
+
+
+
+
+
+

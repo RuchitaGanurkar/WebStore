@@ -32,7 +32,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Find orders by status
     @Query("SELECT o FROM Order o WHERE o.status.statusName = :statusName")
-    List<Order> findByStatus(@Param("statusName") OrderStatusType statusName);
+    List<Order> findByStatus(@Param("statusName") OrderStatusType status);
 
     // Find orders by status with pagination
     @Query("SELECT o FROM Order o WHERE o.status.statusName = :statusName")

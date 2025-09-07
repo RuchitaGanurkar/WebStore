@@ -50,4 +50,14 @@ public class CartHistoryController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(cartHistoryService.getCartHistoriesByDateRange(start, end));
     }
+    @GetMapping("/old-status/{statusId}")
+    public ResponseEntity<List<CartHistoryResponseDto>> getByOldStatus(@PathVariable Integer statusId) {
+        return ResponseEntity.ok(cartHistoryService.getCartHistoriesByOldStatus(statusId));
+    }
+
+    @GetMapping("/new-status/{statusId}")
+    public ResponseEntity<List<CartHistoryResponseDto>> getByNewStatus(@PathVariable Integer statusId) {
+        return ResponseEntity.ok(cartHistoryService.getCartHistoriesByNewStatus(statusId));
+    }
+
 }

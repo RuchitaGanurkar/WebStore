@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CartHistoryRepository  extends JpaRepository<CartHistory, Long> {
+public interface CartHistoryRepository extends JpaRepository<CartHistory, Long> {
 
     List<CartHistory> findByCartCartId(Long cartId);
 
@@ -21,5 +21,13 @@ public interface CartHistoryRepository  extends JpaRepository<CartHistory, Long>
 
     @Query("SELECT ch FROM CartHistory ch WHERE ch.createdAt BETWEEN :startDate AND :endDate")
     List<CartHistory> findByDateRange(@Param("startDate") LocalDateTime startDate,
-                                            @Param("endDate") LocalDateTime endDate);
+                                      @Param("endDate") LocalDateTime endDate);
+
+    // ✅ Derived queries (no @Query needed)
+    List<CartHistory> findByOldStatusStatusId(Integer statusId);
+
+    List<CartHistory> findByNewStatusStatusId(Integer statusId);
+
+    List<CartHistory> findByNewStatusStatusName(String statusName);
 }
+

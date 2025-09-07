@@ -61,5 +61,10 @@ public class CartProductHistoryController {
         cartProductHistoryService.deleteCartProductHistory(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/product-price/{productPriceId}")
+    public ResponseEntity<List<CartProductHistoryResponseDto>> getByProductPriceId(@PathVariable Integer productPriceId) {
+        return ResponseEntity.ok(cartProductHistoryService.getCartProductHistoriesByProductPriceId(productPriceId));
+    }
+
 
 }

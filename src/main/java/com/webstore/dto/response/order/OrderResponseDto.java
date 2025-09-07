@@ -1,19 +1,17 @@
-package com.webstore.dto.response.cart;
+package com.webstore.dto.response.order;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class CartProductResponseDto {
-    private Long cartProductId;
+public class OrderResponseDto {
+    private Long orderId;
     private Long cartId;
-    private Long productId;
-    private String productName; // For easier display
     private Integer statusId;
     private String statusName; // For easier display
-    private Integer quantity;
-    private Long orderId; // NEW: Added order_id
+    private BigDecimal totalAmount;
     private String createdBy;
     private String updatedBy;
     private LocalDateTime createdAt;

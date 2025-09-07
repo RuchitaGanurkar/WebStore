@@ -12,9 +12,7 @@ import java.util.Optional;
 @Repository
 public interface OrderStatusRepository extends JpaRepository<OrderStatus, Integer> {
 
-    @Query("SELECT os FROM OrderStatus os WHERE os.statusName = :statusName")
-    Optional<OrderStatus> findByStatusName(@Param("statusName") OrderStatusType statusName);
+    Optional<OrderStatus> findByStatusName(OrderStatusType statusName);
 
-    @Query("SELECT CASE WHEN COUNT(os) > 0 THEN true ELSE false END FROM OrderStatus os WHERE os.statusName = :statusName")
-    boolean existsByStatusName(@Param("statusName") OrderStatusType statusName);
+    boolean existsByStatusName(OrderStatusType statusName);
 }

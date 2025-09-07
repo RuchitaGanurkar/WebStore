@@ -81,8 +81,8 @@ SELECT
     c.cart_id,
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'PENDING') as status_id,
     COALESCE(SUM(cp.quantity * pp.price_amount / 100.0), 0) as total_amount, -- Convert cents to dollars
-    'system' as created_by,
-    'system' as updated_by
+    'ADMIN' as created_by,
+    'ADMIN' as updated_by
 FROM web_store.cart c
 LEFT JOIN web_store.cart_product cp ON c.cart_id = cp.cart_id AND cp.status_id = 1 -- ADDED status
 LEFT JOIN web_store.product_price pp ON cp.product_id = pp.product_id AND pp.currency_id = 1 -- USD
@@ -97,8 +97,8 @@ SELECT
     o.order_id,
     NULL as old_status_id, -- Initial status has no previous status
     o.status_id as new_status_id,
-    'system' as created_by,
-    'system' as updated_by
+    'ADMIN' as created_by,
+    'ADMIN' as updated_by
 FROM web_store.orders o;
 
 -- Update some orders to different statuses with history tracking
@@ -106,40 +106,40 @@ FROM web_store.orders o;
 UPDATE web_store.orders
 SET status_id = (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'),
     updated_at = CURRENT_TIMESTAMP,
-    updated_by = 'system'
+    updated_by = 'ADMIN'
 WHERE order_id = 1;
 
 INSERT INTO web_store.order_history (order_id, old_status_id, new_status_id, created_by, updated_by)
 VALUES (1,
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'PENDING'),
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'),
-    'system', 'system');
+    'ADMIN', 'ADMIN');
 
 -- Update order 2 to SHIPPED (if exists)
 UPDATE web_store.orders
 SET status_id = (SELECT status_id FROM web_store.order_status WHERE status_name = 'SHIPPED'),
     updated_at = CURRENT_TIMESTAMP,
-    updated_by = 'system'
+    updated_by = 'ADMIN'
 WHERE order_id = 2;
 
 INSERT INTO web_store.order_history (order_id, old_status_id, new_status_id, created_by, updated_by)
 SELECT 2,
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'PENDING'),
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'),
-    'system', 'system'
+    'ADMIN', 'ADMIN'
 WHERE EXISTS (SELECT 1 FROM web_store.orders WHERE order_id = 2)
 UNION ALL
 SELECT 2,
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'),
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'SHIPPED'),
-    'system', 'system'
+    'ADMIN', 'ADMIN'
 WHERE EXISTS (SELECT 1 FROM web_store.orders WHERE order_id = 2);
 
 -- Add some additional sample orders for demonstration
 INSERT INTO web_store.orders (cart_id, status_id, total_amount, created_by, updated_by)
 SELECT * FROM (VALUES
-    (1, (SELECT status_id FROM web_store.order_status WHERE status_name = 'DELIVERED'), 15.96, 'system', 'system'),
-    (4, (SELECT status_id FROM web_store.order_status WHERE status_name = 'CANCELLED'), 58.97, 'system', 'system')
+    (1, (SELECT status_id FROM web_store.order_status WHERE status_name = 'DELIVERED'), 15.96, 'ADMIN', 'ADMIN'),
+    (4, (SELECT status_id FROM web_store.order_status WHERE status_name = 'CANCELLED'), 58.97, 'ADMIN', 'ADMIN')
 ) AS new_orders(cart_id, status_id, total_amount, created_by, updated_by)
 WHERE EXISTS (SELECT 1 FROM web_store.cart WHERE cart_id = new_orders.cart_id);
 
@@ -149,17 +149,17 @@ SELECT
     o.order_id,
     NULL as old_status_id,
     o.status_id as new_status_id,
-    'system' as created_by,
-    'system' as updated_by
+    'ADMIN' as created_by,
+    'ADMIN' as updated_by
 FROM web_store.orders o
 WHERE o.order_id > 2; -- Only for the newly added orders
 
 -- Add complete lifecycle history for DELIVERED order (if order_id 3 exists)
 INSERT INTO web_store.order_history (order_id, old_status_id, new_status_id, created_by, updated_by)
 SELECT * FROM (VALUES
-    (3, (SELECT status_id FROM web_store.order_status WHERE status_name = 'PENDING'), (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'), 'system', 'system'),
-    (3, (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'), (SELECT status_id FROM web_store.order_status WHERE status_name = 'SHIPPED'), 'system', 'system'),
-    (3, (SELECT status_id FROM web_store.order_status WHERE status_name = 'SHIPPED'), (SELECT status_id FROM web_store.order_status WHERE status_name = 'DELIVERED'), 'system', 'system')
+    (3, (SELECT status_id FROM web_store.order_status WHERE status_name = 'PENDING'), (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'), 'ADMIN', 'ADMIN'),
+    (3, (SELECT status_id FROM web_store.order_status WHERE status_name = 'CONFIRMED'), (SELECT status_id FROM web_store.order_status WHERE status_name = 'SHIPPED'), 'ADMIN', 'ADMIN'),
+    (3, (SELECT status_id FROM web_store.order_status WHERE status_name = 'SHIPPED'), (SELECT status_id FROM web_store.order_status WHERE status_name = 'DELIVERED'), 'ADMIN', 'ADMIN')
 ) AS history_data(order_id, old_status_id, new_status_id, created_by, updated_by)
 WHERE EXISTS (SELECT 1 FROM web_store.orders WHERE order_id = 3 AND status_id = (SELECT status_id FROM web_store.order_status WHERE status_name = 'DELIVERED'));
 
@@ -168,5 +168,5 @@ INSERT INTO web_store.order_history (order_id, old_status_id, new_status_id, cre
 SELECT 4,
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'PENDING'),
     (SELECT status_id FROM web_store.order_status WHERE status_name = 'CANCELLED'),
-    'system', 'system'
+    'ADMIN', 'ADMIN'
 WHERE EXISTS (SELECT 1 FROM web_store.orders WHERE order_id = 4 AND status_id = (SELECT status_id FROM web_store.order_status WHERE status_name = 'CANCELLED'));

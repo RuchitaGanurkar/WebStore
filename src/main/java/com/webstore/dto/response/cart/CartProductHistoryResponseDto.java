@@ -11,6 +11,7 @@ public class CartProductHistoryResponseDto {
     private Integer productId;
     private Integer oldQuantity;
     private Integer newQuantity;
+    private Integer productPriceId; // new field for active product price
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime updatedAt;

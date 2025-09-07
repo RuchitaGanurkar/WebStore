@@ -33,4 +33,15 @@ public class CartHistory extends BasicEntities {
     @JoinColumn(name = "cart_id", nullable = false,
             foreignKey = @ForeignKey(name = "fk_cart_history_cart"))
     private Cart cart;
+
+    // New fields for tracking status changes
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "old_status_id", foreignKey = @ForeignKey(name = "fk_cart_history_old_status"))
+    private CartStatus oldStatus;
+
+    @NotNull(message = "New status cannot be null")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "new_status_id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_cart_history_new_status"))
+    private CartStatus newStatus;
 }

@@ -31,4 +31,11 @@ public interface CartProductHistoryRepository extends JpaRepository<CartProductH
 
     @Query("SELECT SUM(cph.newQuantity - cph.oldQuantity) FROM CartProductHistory cph WHERE cph.productId = :productId")
     Long getTotalQuantityChangeForProduct(@Param("productId") Integer productId);
+
+    // ✅ NEW queries using productPrice
+    @Query("SELECT cph FROM CartProductHistory cph WHERE cph.productPrice.productPriceId = :productPriceId")
+    List<CartProductHistory> findByProductPriceId(@Param("productPriceId") Integer productPriceId);
+
+    @Query("SELECT cph FROM CartProductHistory cph WHERE cph.productPrice.productId = :productId")
+    List<CartProductHistory> findByProductPriceProductId(@Param("productId") Integer productId);
 }
