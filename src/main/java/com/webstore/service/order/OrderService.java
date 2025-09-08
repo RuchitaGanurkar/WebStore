@@ -23,5 +23,7 @@ public interface OrderService {
 
     OrderResponseDto updateOrder(Long orderId, @Valid OrderRequestDto requestDto);
 
+    OrderResponseDto checkoutCart(Long cartId);
+
     void deleteOrder(Long id);
 }

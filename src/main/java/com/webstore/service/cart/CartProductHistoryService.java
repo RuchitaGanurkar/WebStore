@@ -16,4 +16,6 @@ public interface CartProductHistoryService {
 
     void deleteCartProductHistory(Long id);
 
+    List<CartProductHistoryResponseDto> getCartProductHistoriesByProductPriceId(Integer productPriceId);
+
 }

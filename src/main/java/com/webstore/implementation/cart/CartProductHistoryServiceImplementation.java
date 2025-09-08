@@ -124,6 +124,22 @@ public class CartProductHistoryServiceImplementation implements CartProductHisto
         log.info("Cart product history with ID: {} has been deleted", id);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CartProductHistoryResponseDto> getCartProductHistoriesByProductPriceId(Integer productPriceId) {
+        log.info("Fetching cart product histories for product price ID: {}", productPriceId);
+
+        if (productPriceId == null) {
+            throw new IllegalArgumentException("Product price ID cannot be null");
+        }
+
+        List<CartProductHistory> histories = cartProductHistoryRepository.findByProductPriceId(productPriceId);
+
+        return histories.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private void validateCartProductHistoryRequest(CartProductHistoryRequestDto dto) {
         if (dto == null) {
             throw new IllegalArgumentException("CartProductHistoryRequestDto cannot be null");

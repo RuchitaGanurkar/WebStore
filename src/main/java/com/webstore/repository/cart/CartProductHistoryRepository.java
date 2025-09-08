@@ -36,6 +36,6 @@ public interface CartProductHistoryRepository extends JpaRepository<CartProductH
     @Query("SELECT cph FROM CartProductHistory cph WHERE cph.productPrice.productPriceId = :productPriceId")
     List<CartProductHistory> findByProductPriceId(@Param("productPriceId") Integer productPriceId);
 
-    @Query("SELECT cph FROM CartProductHistory cph WHERE cph.productPrice.productId = :productId")
+    @Query("SELECT cph FROM CartProductHistory cph WHERE cph.productPrice.product.productId = :productId")
     List<CartProductHistory> findByProductPriceProductId(@Param("productId") Integer productId);
 }

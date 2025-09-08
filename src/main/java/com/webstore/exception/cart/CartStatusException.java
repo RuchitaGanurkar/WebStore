@@ -1,6 +1,9 @@
 package com.webstore.exception.cart;
 
-public class CartStatusException extends RuntimeException {
+/**
+ * Thrown when there are issues related to cart status.
+ */
+public class CartStatusException extends CartException {
 
     public CartStatusException(String message) {
         super(message);
@@ -9,5 +12,4 @@ public class CartStatusException extends RuntimeException {
     public CartStatusException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

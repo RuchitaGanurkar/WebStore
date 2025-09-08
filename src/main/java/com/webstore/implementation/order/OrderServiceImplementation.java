@@ -3,59 +3,99 @@ package com.webstore.implementation.order;
 import com.webstore.dto.request.order.OrderRequestDto;
 import com.webstore.dto.response.order.OrderResponseDto;
 import com.webstore.entity.cart.Cart;
+import com.webstore.entity.cart.CartProduct;
+import com.webstore.entity.cart.CartStatus;
 import com.webstore.entity.order.Order;
 import com.webstore.entity.order.OrderStatus;
+import com.webstore.enums.cart.CartStatusType;
 import com.webstore.enums.order.OrderStatusType;
 import com.webstore.exception.cart.CartNotFoundException;
+import com.webstore.exception.cart.EmptyCartException;
+import com.webstore.exception.cart.InvalidCartStatusException;
 import com.webstore.exception.order.OrderNotFoundException;
 import com.webstore.exception.order.OrderStatusNotFoundException;
 import com.webstore.repository.cart.CartRepository;
+import com.webstore.repository.cart.CartStatusRepository;
 import com.webstore.repository.order.OrderRepository;
 import com.webstore.repository.order.OrderStatusRepository;
-import com.webstore.service.order.OrderService;
+import com.webstore.repository.product.ProductPriceRepository;
 import com.webstore.service.order.OrderHistoryService;
+import com.webstore.service.order.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImplementation implements OrderService {
 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
+    private final CartStatusRepository cartStatusRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final OrderHistoryService orderHistoryService;
-
-    public OrderServiceImplementation(OrderRepository orderRepository,
-                                      CartRepository cartRepository,
-                                      OrderStatusRepository orderStatusRepository,
-                                      OrderHistoryService orderHistoryService) {
-        this.orderRepository = orderRepository;
-        this.cartRepository = cartRepository;
-        this.orderStatusRepository = orderStatusRepository;
-        this.orderHistoryService = orderHistoryService;
-    }
+    private final ProductPriceRepository productPriceRepository;
 
     @Override
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+        // 1) Fetch cart
         Cart cart = cartRepository.findById(requestDto.getCartId())
                 .orElseThrow(() -> new CartNotFoundException(requestDto.getCartId()));
 
-        OrderStatus status = orderStatusRepository.findById(requestDto.getStatusId())
-                .orElseThrow(() -> new OrderStatusNotFoundException("Order status not found with ID: " + requestDto.getStatusId()));
+        // 2) Validate cart
+        if (cart.getStatus() == null || cart.getStatus().getStatusName() != CartStatusType.ACTIVE) {
+            throw new InvalidCartStatusException("Only ACTIVE carts can be converted to orders");
+        }
+        if (cart.getCartProducts() == null || cart.getCartProducts().isEmpty()) {
+            throw new EmptyCartException("Cart is empty, cannot create order");
+        }
 
+        // 3) Calculate total amount using ProductPriceRepository
+        BigDecimal totalAmount = cart.getCartProducts().stream()
+                .map(cp -> {
+                    Integer productId = cp.getProduct().getProductId();
+
+                    var price = productPriceRepository.findByProductProductId(productId)
+                            .stream()
+                            .findFirst()
+                            .orElseThrow(() ->
+                                    new RuntimeException("No price configured for product ID: " + productId))
+                            .getPriceAmount(); // BigInteger
+
+                    BigDecimal unitPrice = new BigDecimal(price);
+                    return unitPrice.multiply(BigDecimal.valueOf(cp.getQuantity()));
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 4) Resolve status (default to PENDING if not provided)
+        OrderStatus status = (requestDto.getStatusId() != null)
+                ? orderStatusRepository.findById(requestDto.getStatusId())
+                .orElseThrow(() -> new OrderStatusNotFoundException(
+                        "Order status not found with ID: " + requestDto.getStatusId()))
+                : orderStatusRepository.findByStatusName(OrderStatusType.PENDING)
+                .orElseThrow(() -> new OrderStatusNotFoundException("Default status PENDING not found"));
+
+        // 5) Create order
         Order order = new Order();
         order.setCart(cart);
         order.setStatus(status);
-        order.setTotalAmount(requestDto.getTotalAmount());
+        order.setTotalAmount(totalAmount);
 
         Order saved = orderRepository.save(order);
 
-        // Create initial order history entry
+        // 6) Initial order history
         orderHistoryService.createOrderHistory(saved.getOrderId(), null, status.getStatusId());
+
+        // 7) Archive the cart
+        CartStatus archivedStatus = cartStatusRepository.findByStatusName(CartStatusType.ARCHIVED)
+                .orElseThrow(() -> new InvalidCartStatusException("Cart status 'ARCHIVED' not found"));
+        cart.setStatus(archivedStatus);
+        cartRepository.save(cart);
 
         return mapToDto(saved);
     }
@@ -98,14 +138,14 @@ public class OrderServiceImplementation implements OrderService {
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + orderId));
 
         OrderStatus oldStatus = order.getStatus();
-        OrderStatus status = orderStatusRepository.findByStatusName(newStatus)
+        OrderStatus resolved = orderStatusRepository.findByStatusName(newStatus)
                 .orElseThrow(() -> new OrderStatusNotFoundException("Order status not found: " + newStatus));
 
-        order.setStatus(status);
+        order.setStatus(resolved);
         Order updated = orderRepository.save(order);
 
-        // Create order history entry for status change
-        orderHistoryService.createOrderHistory(orderId, oldStatus.getStatusId(), status.getStatusId());
+        // Log history
+        orderHistoryService.createOrderHistory(orderId, oldStatus.getStatusId(), resolved.getStatusId());
 
         return mapToDto(updated);
     }
@@ -122,7 +162,8 @@ public class OrderServiceImplementation implements OrderService {
 
         if (requestDto.getStatusId() != null) {
             OrderStatus status = orderStatusRepository.findById(requestDto.getStatusId())
-                    .orElseThrow(() -> new OrderStatusNotFoundException("Order status not found with ID: " + requestDto.getStatusId()));
+                    .orElseThrow(() -> new OrderStatusNotFoundException(
+                            "Order status not found with ID: " + requestDto.getStatusId()));
             existing.setStatus(status);
         }
 
@@ -138,13 +179,22 @@ public class OrderServiceImplementation implements OrderService {
         orderRepository.delete(order);
     }
 
-    // Helper method
+    @Override
+    @Transactional
+    public OrderResponseDto checkoutCart(Long cartId) {
+        OrderRequestDto dto = new OrderRequestDto();
+        dto.setCartId(cartId);
+        dto.setStatusId(null); // let it default to PENDING
+        return createOrder(dto);
+    }
+
+    // ===== Helper =====
     private OrderResponseDto mapToDto(Order order) {
         OrderResponseDto dto = new OrderResponseDto();
         dto.setOrderId(order.getOrderId());
         dto.setCartId(order.getCart().getCartId());
         dto.setStatusId(order.getStatus().getStatusId());
-        dto.setStatusName(String.valueOf(order.getStatus().getStatusName()));
+        dto.setStatusName(order.getStatus().getStatusName().name());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setCreatedBy(order.getCreatedBy());
         dto.setUpdatedBy(order.getUpdatedBy());

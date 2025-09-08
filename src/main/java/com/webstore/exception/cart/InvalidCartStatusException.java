@@ -1,6 +1,6 @@
 package com.webstore.exception.cart;
 
-public class InvalidCartStatusException  extends CartStatusException {
+public class InvalidCartStatusException extends CartStatusException {
     public InvalidCartStatusException(String message) {
         super(message);
     }

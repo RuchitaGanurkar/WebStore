@@ -3,6 +3,7 @@ package com.webstore.implementation.cart;
 import com.webstore.dto.request.cart.CartRequestDto;
 import com.webstore.dto.response.cart.CartResponseDto;
 import com.webstore.entity.cart.Cart;
+import com.webstore.entity.cart.CartHistory;
 import com.webstore.entity.cart.CartProduct;
 import com.webstore.entity.cart.CartStatus;
 import com.webstore.entity.product.Catalogue;
@@ -11,6 +12,7 @@ import com.webstore.exception.cart.ResourceNotFoundException;
 import com.webstore.exception.cart.CartNotFoundException;
 import com.webstore.exception.cart.CartStatusNotFoundException;
 import com.webstore.exception.product.CatalogueNotFoundException;
+import com.webstore.repository.cart.CartHistoryRepository;
 import com.webstore.repository.cart.CartProductRepository;
 import com.webstore.repository.cart.CartRepository;
 import com.webstore.repository.cart.CartStatusRepository;
@@ -33,6 +35,7 @@ public class CartServiceImplementation implements CartService {
     private final CartStatusRepository cartStatusRepository;
     private final CatalogueRepository catalogueRepository;
     private final CartProductRepository cartProductRepository;
+    private final CartHistoryRepository cartHistoryRepository; // ✅ NEW
 
     @Override
     public CartResponseDto createCart(CartRequestDto cartRequestDto) {
@@ -49,7 +52,16 @@ public class CartServiceImplementation implements CartService {
         cart.setCreatedAt(LocalDateTime.now());
         cart.setUpdatedAt(LocalDateTime.now());
 
-        return mapToDto(cartRepository.save(cart));
+        Cart savedCart = cartRepository.save(cart);
+
+        // ✅ Log cart creation in history (no old status, only new)
+        CartHistory history = new CartHistory();
+        history.setCart(savedCart);
+        history.setOldStatus(null);
+        history.setNewStatus(status);
+        cartHistoryRepository.save(history);
+
+        return mapToDto(savedCart);
     }
 
     @Override
@@ -81,11 +93,21 @@ public class CartServiceImplementation implements CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + cartId));
 
+        CartStatus oldStatus = cart.getStatus();
         CartStatus newStatus = getStatusById(statusId);
+
         cart.setStatus(newStatus);
         cart.setUpdatedAt(LocalDateTime.now());
+        Cart updatedCart = cartRepository.save(cart);
 
-        return mapToDto(cartRepository.save(cart));
+        // ✅ Log status change in history
+        CartHistory history = new CartHistory();
+        history.setCart(updatedCart);
+        history.setOldStatus(oldStatus);
+        history.setNewStatus(newStatus);
+        cartHistoryRepository.save(history);
+
+        return mapToDto(updatedCart);
     }
 
     @Override
@@ -93,12 +115,20 @@ public class CartServiceImplementation implements CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + cartId));
 
+        CartStatus oldStatus = cart.getStatus();
         CartStatus archivedStatus = cartStatusRepository.findByStatusName(CartStatusType.ARCHIVED)
                 .orElseThrow(() -> new CartStatusNotFoundException("Status 'ARCHIVED' not found"));
 
         cart.setStatus(archivedStatus);
         cart.setUpdatedAt(LocalDateTime.now());
-        cartRepository.save(cart);
+        Cart updatedCart = cartRepository.save(cart);
+
+        // ✅ Log archive in history
+        CartHistory history = new CartHistory();
+        history.setCart(updatedCart);
+        history.setOldStatus(oldStatus);
+        history.setNewStatus(archivedStatus);
+        cartHistoryRepository.save(history);
 
         return String.format("Cart archived successfully, cart_id: %d", cartId);
     }
@@ -121,6 +151,9 @@ public class CartServiceImplementation implements CartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found in cart"));
 
         cartProductRepository.delete(cartProduct);
+
+        // ❓ Do you want to log product removals in cart history as well?
+        // Right now this does NOT create a CartHistory entry.
 
         return mapToDto(cart);
     }

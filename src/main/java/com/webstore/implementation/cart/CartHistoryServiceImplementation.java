@@ -4,9 +4,11 @@ import com.webstore.dto.request.cart.CartHistoryRequestDto;
 import com.webstore.dto.response.cart.CartHistoryResponseDto;
 import com.webstore.entity.cart.Cart;
 import com.webstore.entity.cart.CartHistory;
+import com.webstore.entity.cart.CartStatus;
 import com.webstore.exception.cart.*;
 import com.webstore.repository.cart.CartHistoryRepository;
 import com.webstore.repository.cart.CartRepository;
+import com.webstore.repository.cart.CartStatusRepository;
 import com.webstore.service.cart.CartHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class CartHistoryServiceImplementation implements CartHistoryService {
 
     private final CartHistoryRepository cartHistoryRepository;
     private final CartRepository cartRepository;
+    private final CartStatusRepository cartStatusRepository;
 
     @Override
     public CartHistoryResponseDto createCartHistory(CartHistoryRequestDto requestDto) {
@@ -29,16 +32,24 @@ public class CartHistoryServiceImplementation implements CartHistoryService {
                     .orElseThrow(() -> new CartHistoryValidationException(
                             "Cart with ID " + requestDto.getCartId() + " not found"));
 
+            CartStatus oldStatus = cartStatusRepository.findById(requestDto.getOldStatusId())
+                    .orElseThrow(() -> new CartHistoryValidationException(
+                            "Old status with ID " + requestDto.getOldStatusId() + " not found"));
+
+            CartStatus newStatus = cartStatusRepository.findById(requestDto.getNewStatusId())
+                    .orElseThrow(() -> new CartHistoryValidationException(
+                            "New status with ID " + requestDto.getNewStatusId() + " not found"));
+
             CartHistory history = new CartHistory();
             history.setCart(cart);
-            history.setOldStatusId(requestDto.getOldStatusId());
-            history.setNewStatusId(requestDto.getNewStatusId());
+            history.setOldStatus(oldStatus);
+            history.setNewStatus(newStatus);
 
             CartHistory saved = cartHistoryRepository.save(history);
             return mapToDto(saved);
 
         } catch (CartHistoryValidationException ex) {
-            throw ex; // rethrow validation error
+            throw ex;
         } catch (Exception ex) {
             throw new CartHistoryDatabaseException("Error while creating cart history", ex);
         }
@@ -118,12 +129,42 @@ public class CartHistoryServiceImplementation implements CartHistoryService {
         }
     }
 
+    @Override
+    public List<CartHistoryResponseDto> getCartHistoriesByOldStatus(Integer oldStatusId) {
+        try {
+            List<CartHistory> historyList = cartHistoryRepository.findByOldStatusStatusId(oldStatusId);
+            if (historyList.isEmpty()) {
+                throw new EmptyCartHistoryException("No cart history found for oldStatusId: " + oldStatusId);
+            }
+            return historyList.stream().map(this::mapToDto).collect(Collectors.toList());
+        } catch (EmptyCartHistoryException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new CartHistoryDatabaseException("Error while fetching cart histories by oldStatusId", ex);
+        }
+    }
+
+    @Override
+    public List<CartHistoryResponseDto> getCartHistoriesByNewStatus(Integer newStatusId) {
+        try {
+            List<CartHistory> historyList = cartHistoryRepository.findByNewStatusStatusId(newStatusId);
+            if (historyList.isEmpty()) {
+                throw new EmptyCartHistoryException("No cart history found for newStatusId: " + newStatusId);
+            }
+            return historyList.stream().map(this::mapToDto).collect(Collectors.toList());
+        } catch (EmptyCartHistoryException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new CartHistoryDatabaseException("Error while fetching cart histories by newStatusId", ex);
+        }
+    }
+
     private CartHistoryResponseDto mapToDto(CartHistory entity) {
         CartHistoryResponseDto dto = new CartHistoryResponseDto();
         dto.setCartHistoryId(entity.getCartHistoryId());
         dto.setCartId(entity.getCart().getCartId());
-        dto.setOldStatusId(entity.getOldStatusId());
-        dto.setNewStatusId(entity.getNewStatusId());
+        dto.setOldStatusId(entity.getOldStatus() != null ? entity.getOldStatus().getStatusId() : null);
+        dto.setNewStatusId(entity.getNewStatus() != null ? entity.getNewStatus().getStatusId() : null);
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setCreatedBy(entity.getCreatedBy());
         dto.setUpdatedAt(entity.getUpdatedAt());

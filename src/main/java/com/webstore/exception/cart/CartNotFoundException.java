@@ -1,6 +1,9 @@
 package com.webstore.exception.cart;
 
-public class CartNotFoundException extends RuntimeException {
+/**
+ * Thrown when a cart cannot be found by ID or phone number.
+ */
+public class CartNotFoundException extends CartException {
 
     public CartNotFoundException(String message) {
         super(message);
