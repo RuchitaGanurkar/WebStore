@@ -76,4 +76,14 @@ public class OrderController {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Checkout cart - Convert cart to order
+     * This is the critical endpoint for E2E testing: Cart → Order conversion
+     */
+    @PostMapping("/checkout/{cartId}")
+    public ResponseEntity<OrderResponseDto> checkoutCart(@PathVariable Long cartId) {
+        OrderResponseDto response = orderService.checkoutCart(cartId);
+        return ResponseEntity.ok(response);
+    }
 }

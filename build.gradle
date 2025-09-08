@@ -36,6 +36,12 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql:42.6.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    
+    // H2 Database for testing
+    testImplementation 'com.h2database:h2'
+    
+    // JsonPath for JSON parsing in tests
+    testImplementation 'com.jayway.jsonpath:json-path'
 }
 
 
