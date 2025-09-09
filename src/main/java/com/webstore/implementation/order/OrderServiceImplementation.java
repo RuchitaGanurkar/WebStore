@@ -8,6 +8,7 @@ import com.webstore.entity.cart.CartStatus;
 import com.webstore.entity.order.Order;
 import com.webstore.entity.order.OrderStatus;
 import com.webstore.enums.cart.CartStatusType;
+import com.webstore.enums.cart.CartProductStatusType;
 import com.webstore.enums.order.OrderStatusType;
 import com.webstore.exception.cart.CartNotFoundException;
 import com.webstore.exception.cart.EmptyCartException;
@@ -16,6 +17,7 @@ import com.webstore.exception.order.OrderNotFoundException;
 import com.webstore.exception.order.OrderStatusNotFoundException;
 import com.webstore.repository.cart.CartRepository;
 import com.webstore.repository.cart.CartStatusRepository;
+import com.webstore.repository.cart.CartProductRepository;
 import com.webstore.repository.order.OrderRepository;
 import com.webstore.repository.order.OrderStatusRepository;
 import com.webstore.repository.product.ProductPriceRepository;
@@ -36,6 +38,7 @@ public class OrderServiceImplementation implements OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final CartStatusRepository cartStatusRepository;
+    private final CartProductRepository cartProductRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final OrderHistoryService orderHistoryService;
     private final ProductPriceRepository productPriceRepository;
@@ -43,7 +46,7 @@ public class OrderServiceImplementation implements OrderService {
     @Override
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        // 1) Fetch cart
+        // 1) Fetch cart (no need to eagerly load cart products for validation)
         Cart cart = cartRepository.findById(requestDto.getCartId())
                 .orElseThrow(() -> new CartNotFoundException(requestDto.getCartId()));
 
@@ -51,12 +54,23 @@ public class OrderServiceImplementation implements OrderService {
         if (cart.getStatus() == null || cart.getStatus().getStatusName() != CartStatusType.ACTIVE) {
             throw new InvalidCartStatusException("Only ACTIVE carts can be converted to orders");
         }
-        if (cart.getCartProducts() == null || cart.getCartProducts().isEmpty()) {
+        
+        // Check if cart has any ACTIVE products using repository count
+        Long activeProductCount = cartProductRepository.countByCartIdAndStatusName(
+                requestDto.getCartId(), 
+                CartProductStatusType.ADDED
+        );
+        if (activeProductCount == null || activeProductCount == 0) {
             throw new EmptyCartException("Cart is empty, cannot create order");
         }
 
-        // 3) Calculate total amount using ProductPriceRepository
-        BigDecimal totalAmount = cart.getCartProducts().stream()
+        // 3) Fetch active cart products and calculate total amount
+        List<CartProduct> activeCartProducts = cartProductRepository.findByCartIdAndStatusName(
+                requestDto.getCartId(), 
+                CartProductStatusType.ADDED
+        );
+        
+        BigDecimal totalAmount = activeCartProducts.stream()
                 .map(cp -> {
                     Integer productId = cp.getProduct().getProductId();
 

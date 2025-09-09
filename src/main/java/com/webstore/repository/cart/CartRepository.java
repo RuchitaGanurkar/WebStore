@@ -46,4 +46,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("SELECT c FROM Cart c WHERE c.phoneNumber = :phoneNumber AND c.catalogue.catalogueId = :catalogueId AND c.status.statusName = 'ACTIVE'")
     Optional<Cart> findActiveCartByPhoneNumberAndCatalogueId(@Param("phoneNumber") String phoneNumber,
                                                              @Param("catalogueId") Integer catalogueId);
+
+    // ✅ NEW: Fetch cart with ACTIVE cartProducts eagerly loaded for checkout
+    @Query("SELECT c FROM Cart c LEFT JOIN FETCH c.cartProducts cp LEFT JOIN FETCH cp.status s WHERE c.cartId = :cartId AND (cp.cartProductId IS NULL OR s.statusName = 'ADDED')")
+    Optional<Cart> findByIdWithCartProducts(@Param("cartId") Long cartId);
 }

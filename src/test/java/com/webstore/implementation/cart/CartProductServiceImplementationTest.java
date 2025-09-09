@@ -131,7 +131,7 @@ public class CartProductServiceImplementationTest {
     @Test
     void testGetCartProductsByCartId() {
         when(statusRepository.findByStatusName("ADDED")).thenReturn(Optional.of(status));
-        when(cartProductRepository.findByCartCartIdAndStatus(1L, status)).thenReturn(List.of(cartProduct));
+        when(cartProductRepository.findByCartIdAndStatusName(1L, CartProductStatusType.ADDED)).thenReturn(List.of(cartProduct));
 
         List<CartProductResponseDto> response = cartProductService.getCartProductsByCartId(1L);
 
@@ -158,7 +158,7 @@ public class CartProductServiceImplementationTest {
 
     @Test
     void testGetActiveCartProductsByPhoneNumber() {
-        when(cartProductRepository.findActiveProductsByPhoneNumber("9876543210")).thenReturn(List.of(cartProduct));
+        when(cartProductRepository.findByPhoneAndStatusName("9876543210",CartProductStatusType.ADDED)).thenReturn(List.of(cartProduct));
 
         List<CartProductResponseDto> result = cartProductService.getActiveCartProductsByPhoneNumber("9876543210");
 
@@ -168,7 +168,7 @@ public class CartProductServiceImplementationTest {
 
     @Test
     void testCountActiveCartProducts() {
-        when(cartProductRepository.countActiveProductsInCart(1L)).thenReturn(5L);
+        when(cartProductRepository.countByCartIdAndStatusName(1L, CartProductStatusType.ADDED)).thenReturn(5L);
 
         Long count = cartProductService.countActiveCartProducts(1L);
 

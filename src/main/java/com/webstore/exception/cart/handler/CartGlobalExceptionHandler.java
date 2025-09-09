@@ -23,6 +23,26 @@ public class CartGlobalExceptionHandler {
 
 //    Cart Status Exception Started
 
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<String> handleEmptyCartException(
+            EmptyCartException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Empty Cart Error - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<String> handleCartNotFoundException(
+            CartNotFoundException ex, HttpServletRequest request) {
+
+        String requestId = UUID.randomUUID().toString();
+        log.error("Cart Not Found - Request ID: {} - Error: {}", requestId, ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(CartStatusNotFoundException.class)
     public ResponseEntity<String> handleCartStatusNotFoundException(
             CartStatusNotFoundException ex, HttpServletRequest request) {

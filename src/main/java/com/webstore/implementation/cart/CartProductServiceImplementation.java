@@ -71,19 +71,21 @@ public class CartProductServiceImplementation implements CartProductService {
 
     @Override
     public List<CartProductResponseDto> getCartProductsByCartId(Long cartId) {
-        List<CartProduct> list = cartProductRepository.findByCartIdAndStatusName(cartId, CartProductStatusType.valueOf("ADDED"));
+        List<CartProduct> list = cartProductRepository.findByCartIdAndStatusName(cartId, CartProductStatusType.ADDED);
         return list.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<CartProductResponseDto> getActiveCartProductsByPhoneNumber(String phoneNumber) {
-        return cartProductRepository.findByPhoneAndStatusName(phoneNumber, CartProductStatusType.valueOf("ADDED"))
-                .stream().map(this::mapToDto).collect(Collectors.toList());
+        return cartProductRepository.findByPhoneAndStatusName(phoneNumber, CartProductStatusType.ADDED)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Long countActiveCartProducts(Long cartId) {
-        return cartProductRepository.countByCartIdAndStatusName(cartId, CartProductStatusType.valueOf("ADDED"));
+        return cartProductRepository.countByCartIdAndStatusName(cartId, CartProductStatusType.ADDED);
     }
 
     @Override
